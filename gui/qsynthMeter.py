@@ -313,9 +313,6 @@ class qsynthMeter(QtGui.QFrame):
 
         self.setMinimumSize(minWidth, minHeight)
         self.setMaximumWidth(maxWidth)
-        print "minsize: %d|%d" % (minWidth, minHeight)
-        print "margins: ", self.m_pHBoxLayout.contentsMargins()
-
 
     # Child widget accessors.
     def iec_scale (self, dB ):
