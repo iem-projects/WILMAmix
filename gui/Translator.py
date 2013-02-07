@@ -19,7 +19,7 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 import locale, os
-from PySide.QtCore import QTranslator
+from PySide.QtCore import QTranslator, QLibraryInfo
 
 class Translator:
 
@@ -33,9 +33,9 @@ class Translator:
         
 ##      # Install the appropriate Qt translation file
 ##      oTranslatorQt = QTranslator()
+##      print 'qt_' + sLocale, QLibraryInfo.location(QLibraryInfo.TranslationsPath)
 ##      if oTranslatorQt.load('qt_' + sLocale, QLibraryInfo.location(QLibraryInfo.TranslationsPath)):
 ##        oApp.installTranslator(oTranslatorQt)
           
     except Exception, oEx:
-      print "trans: ",oEx
       pass
