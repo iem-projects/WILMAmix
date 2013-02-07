@@ -27,6 +27,7 @@ class SMmixer(QtGui.QFrame):
     def __init__(self, parent=None, SMs=None):
         super(SMmixer, self).__init__(parent)
         self.sm=[]
+        self.sms=SMs
 
         self.layout = QHBoxLayout()
         self.layout.setSpacing(0)
@@ -47,15 +48,19 @@ class SMmixer(QtGui.QFrame):
 
         # Create widgets
         count = 0
-##        for sm in SMs:
-##            d=SMs[sm]
-##            print sm
-##            self.sm+=[SM(self, sm)]
-##            self.layout.addWidget(self.sm[count])
-##            count+=1
-        for count in range(2):
-            name="SM"+str(count)
-            print name
-            self.sm+=[SM(self, name)]
+        SMs=self.sms
+        for sm in sorted(SMs.keys()):
+            d=SMs[sm]
+            self.sm+=[SM(self, sm, d)]
             self.layout.addWidget(self.sm[count])
-            print "SM: ",self.sm[count].sizeHint()
+            count+=1
+##        for count in range(2):
+##            name="SM"+str(count)
+##            print name
+##            self.sm+=[SM(self, name)]
+##            self.layout.addWidget(self.sm[count])
+##            print "SM: ",self.sm[count].sizeHint()
+
+    def setSM(self, SMs=None):
+        self.sms=SMs
+        self.build()
