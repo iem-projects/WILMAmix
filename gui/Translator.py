@@ -28,8 +28,10 @@ class Translator:
       # Install the appropriate editor translation file
       sLocale = locale.getdefaultlocale()[0]
       oTranslator = QTranslator()
-      if oTranslator.load(os.path.join('i18n', sLocale)):
+      path=os.path.join('i18n', sLocale)
+      if oTranslator.load(path):
         oApp.installTranslator(oTranslator)
+        print "translator: OK"
         
 ##      # Install the appropriate Qt translation file
 ##      oTranslatorQt = QTranslator()
@@ -38,4 +40,5 @@ class Translator:
 ##        oApp.installTranslator(oTranslatorQt)
           
     except Exception, oEx:
+      print "translator: ",oEx
       pass
