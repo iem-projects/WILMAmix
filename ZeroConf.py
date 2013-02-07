@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+## dictionary:
+## name ->
+##        {ip, port, iface}
+
 import dbus, gobject, avahi
 from dbus import DBusException
 from dbus.mainloop.glib import DBusGMainLoop
@@ -31,8 +35,8 @@ class ZeroConf:
             arg_interface, arg_protocol, arg_name, arg_stype, arg_domain,
             avahi.PROTO_UNSPEC, dbus.UInt32(0))
         key=self.getKey(arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags)
-        self.dict[key]={'name': name, 'address': address, 'port': port, 'iface': if_indextoname(interface)}
-        
+        self.dict[key]={'name': str(name), 'address': str(address), 'port': int(port), 'iface': if_indextoname(interface)}
+        print self.getDict()
         
     def delHandler(self, arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags):
         key=self.getKey(arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags)
@@ -40,9 +44,6 @@ class ZeroConf:
             del self.dict[key]
         except:
             print "removed element not in dict: ", key
-
-        ## FIXXME: print
-        print self.dict
 
     def __init__(self, domain='local'):
         self.dict=dict()
@@ -62,7 +63,15 @@ class ZeroConf:
 
     def getDict(self):
         ## FIXXME: this will return a shallow copy, use deepcopy instead!
-        return self.dict
+        ret=dict()
+        for d0 in self.dict:
+            d=self.dict[d0]
+            name=d['name']
+            if name in ret:
+                ret[name]+=[{'address':d['address'], 'port':d['port'], 'iface':d['iface']}]
+            else:
+                ret[name] =[{'address':d['address'], 'port':d['port'], 'iface':d['iface']}]
+        return ret
 
 
 if __name__ == '__main__':
