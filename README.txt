@@ -2,10 +2,17 @@ MINTmix - mixer application for MINT-MASSE
 ==========================================
 
 modules:
-	SMi
+	SM
 		4-channel monitoring
 		single gain
 		WLAN/eth
+
+
+	zeroconf(domain=local)
+		gibt liste von vorhandenen SMi zurück (IPv4)
+			->schnittstelle (lan/wlan)
+			->port
+			
 
 
 Plan:
