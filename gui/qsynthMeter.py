@@ -3,6 +3,7 @@
 
 # Copyright (C) 2004-2007, rncbc aka Rui Nuno Capela.
 # Copyright (C) 2009 Timothée Lecomte
+# Copyright (C) 2013, IOhannes m zmölnig, IEM
 
 # This file is part of Friture.
 #
@@ -215,16 +216,16 @@ class qsynthMeterValue(QtGui.QFrame):
 
 class qsynthMeter(QtGui.QFrame):
     # Constructor.
-    def __init__(self, pParent):
+    def __init__(self, pParent=None, portcount=2, scalepos=[1]):
         QtGui.QFrame.__init__(self, pParent)
 
         # Local instance variables.
-        self.m_iPortCount   = 2    # FIXME: Default port count.
-        self.m_iScalePos    = [1]
+        self.m_iPortCount   = portcount    # FIXME: Default port count.
+        self.m_iScalePos    = scalepos
         self.m_iScaleCount  = len(self.m_iScalePos)
         self.m_iSpaceWidth  = 1
         self.m_iScaleWidth  = 16
-        self.m_iPortWidth   = 8
+        self.m_iPortWidth   = 16
         
         self.m_fScale = 0.
 
@@ -258,12 +259,10 @@ class qsynthMeter(QtGui.QFrame):
         self.setBackgroundRole(QtGui.QPalette.NoRole)
 
         self.m_pHBoxLayout = QtGui.QHBoxLayout()
-        #self.m_pHBoxLayout.setMargin(0)
         self.m_pHBoxLayout.setSpacing(0)
+        self.m_pHBoxLayout.setContentsMargins(0,0,0,0)
         self.setLayout(self.m_pHBoxLayout)
-
         self.build()
-
         self.setSizePolicy(
             QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding))
 
@@ -314,6 +313,9 @@ class qsynthMeter(QtGui.QFrame):
 
         self.setMinimumSize(minWidth, minHeight)
         self.setMaximumWidth(maxWidth)
+        print "minsize: %d|%d" % (minWidth, minHeight)
+        print "margins: ", self.m_pHBoxLayout.contentsMargins()
+
 
     # Child widget accessors.
     def iec_scale (self, dB ):
