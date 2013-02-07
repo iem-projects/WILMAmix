@@ -40,12 +40,12 @@ QSYNTH_METER_PEAK_FALLOFF = 32 # default : 16
 
 class qsynthMeterScale(QtGui.QWidget):
     # Constructor.
-    def __init__(self, pMeter):
+    def __init__(self, pMeter, width=16):
         QtGui.QWidget.__init__(self, pMeter)
         self.m_pMeter = pMeter
         self.m_iLastY = 0
 
-        self.setMinimumWidth(16)
+        self.setMinimumWidth(width)
         #self.setBackgroundRole(QPalette.Mid)
 
         self.setFont(QtGui.QFont(self.font().family(), 5))
@@ -83,13 +83,13 @@ class qsynthMeterScale(QtGui.QWidget):
 # qsynthMeterValue -- Meter bridge value widget.
 class qsynthMeterValue(QtGui.QFrame):
     # Constructor.
-    def __init__(self, pMeter):
+    def __init__(self, pMeter, width=16):
         QtGui.QFrame.__init__(self, pMeter)
 
         # Local instance variables.
         self.m_pMeter      = pMeter
         self.m_fValue      = 0.0
-        self.m_iValue  = 0
+        self.m_iValue      = 0
         #self.m_fValueDecay = QSYNTH_METER_DECAY_RATE1
         self.m_iPeak       = 0
         self.m_iPeakHold   = 0
@@ -98,7 +98,7 @@ class qsynthMeterValue(QtGui.QFrame):
 
         self.paint_time = 0.
 
-        self.setMinimumWidth(12)
+        self.setMinimumWidth(width-4)
         self.setBackgroundRole(QtGui.QPalette.NoRole)
 
     # Reset peak holder.
@@ -220,8 +220,12 @@ class qsynthMeter(QtGui.QFrame):
 
         # Local instance variables.
         self.m_iPortCount   = 2    # FIXME: Default port count.
-        self.m_iScaleCount  = self.m_iPortCount
-
+        self.m_iScalePos    = [1]
+        self.m_iScaleCount  = len(self.m_iScalePos)
+        self.m_iSpaceWidth  = 1
+        self.m_iScaleWidth  = 16
+        self.m_iPortWidth   = 8
+        
         self.m_fScale = 0.
 
         if 1: #CONFIG_GRADIENT
@@ -274,35 +278,42 @@ class qsynthMeter(QtGui.QFrame):
             if w:
                 w.deleteLater()
 
+        minWidth=2
+        maxWidth=4
+        minHeight=120
+        spaceCount=0
+        
         if self.m_iPortCount > 0 and self.m_iPortCount < 4:
             self.m_iScaleCount = 1
             self.m_ppValues = []
             self.m_ppScales = []
             for iPort in range(0, self.m_iPortCount):
-                self.m_ppValues += [qsynthMeterValue(self)]
+                self.m_ppValues += [qsynthMeterValue(self, self.m_iPortWidth)]
                 self.m_pHBoxLayout.addWidget(self.m_ppValues[iPort])
                 if iPort < self.m_iScaleCount:
-                    self.m_ppScales += [qsynthMeterScale(self)]
+                    self.m_ppScales += [qsynthMeterScale(self, self.m_iScaleWidth)]
                     self.m_pHBoxLayout.addWidget(self.m_ppScales[iPort])
-            self.setMinimumSize(16 * self.m_iPortCount + 16 * self.m_iScaleCount, 120)
-            self.setMaximumWidth(16 * self.m_iPortCount + 16 * self.m_iScaleCount)
+            minWidth = maxWidth = self.m_iPortWidth * self.m_iPortCount + self.m_iSpaceWidth * spaceCount + self.m_iScaleWidth * self.m_iScaleCount
         elif self.m_iPortCount >= 4:
-            self.m_iScaleCount = 1
+            self.m_iScaleCount = 0
             self.m_ppValues = []
             self.m_ppScales = []
             for iPort in range(0, self.m_iPortCount):
-                self.m_ppValues += [qsynthMeterValue(self)]
+                self.m_ppValues += [qsynthMeterValue(self, self.m_iPortWidth)]
                 self.m_pHBoxLayout.addWidget(self.m_ppValues[iPort])
-                if iPort == 1:
-                    self.m_ppScales += [qsynthMeterScale(self)]
+                try:
+                    self.m_iScalePos.index(iPort)
+                    self.m_iScaleCount = self.m_iScaleCount + 1
+                    self.m_ppScales += [qsynthMeterScale(self, self.m_iScaleWidth)]
                     self.m_pHBoxLayout.addWidget(self.m_ppScales[-1])
-                if iPort % 2 == 0:
-                    self.m_pHBoxLayout.addSpacing(1)
-            self.setMinimumSize(16 * self.m_iPortCount + 16 * self.m_iScaleCount, 120)
-            self.setMaximumWidth(16 * self.m_iPortCount + 16 * self.m_iScaleCount)
-        else:
-            self.setMinimumSize(2, 120)
-            self.setMaximumWidth(4)
+                except ValueError:
+                    self.m_pHBoxLayout.addSpacing(self.m_iSpaceWidth)
+                    spaceCount=spaceCount+1
+
+            minWidth = maxWidth = self.m_iPortWidth * self.m_iPortCount + self.m_iSpaceWidth * spaceCount + self.m_iScaleWidth * self.m_iScaleCount
+
+        self.setMinimumSize(minWidth, minHeight)
+        self.setMaximumWidth(maxWidth)
 
     # Child widget accessors.
     def iec_scale (self, dB ):
@@ -335,6 +346,18 @@ class qsynthMeter(QtGui.QFrame):
 
     def setPortCount (self, count):
         self.m_iPortCount = count
+        self.build()
+
+    def setScales(self, scalePositions=None):
+        if scalePositions is None:
+            self.m_iScalePos = []
+        elif(type(scalePositions) is list):
+            self.m_iScalePos = scalePositions
+        else:
+            try:
+                self.m_iScalePos = [int(scalePositions)]
+            except:
+                pass
         self.build()
 
     # Peak falloff mode setting.
