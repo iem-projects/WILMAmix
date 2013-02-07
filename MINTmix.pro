@@ -6,4 +6,4 @@ SOURCES = \
 	DiscoverSM.py \
 	test.py
 
-TRANSLATIONS = i18n/de.ts
+TRANSLATIONS = i18n/de_DE.ts
