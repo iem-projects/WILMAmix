@@ -5,7 +5,7 @@
 ## name ->
 ##        {ip, port, iface}
 
-import dbus, gobject, avahi
+import dbus, avahi
 from dbus import DBusException
 from dbus.mainloop.glib import DBusGMainLoop
 
@@ -36,7 +36,6 @@ class ZeroConf:
             avahi.PROTO_UNSPEC, dbus.UInt32(0))
         key=self.getKey(arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags)
         self.dict[key]={'name': str(name), 'address': str(address), 'port': int(port), 'iface': if_indextoname(interface)}
-        print self.getDict()
         
     def delHandler(self, arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags):
         key=self.getKey(arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags)
@@ -76,4 +75,5 @@ class ZeroConf:
 
 if __name__ == '__main__':
     zc = ZeroConf()
+    import gobject
     gobject.MainLoop().run()
