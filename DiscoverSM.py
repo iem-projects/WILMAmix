@@ -52,7 +52,7 @@ class DiscoverSM:
                                       avahi.DBUS_INTERFACE_SERVER)
         sbrowser = dbus.Interface(bus.get_object(avahi.DBUS_NAME,
                                                  self.server.ServiceBrowserNew(avahi.IF_UNSPEC,
-                                                                               avahi.PROTO_UNSPEC,
+                                                                               avahi.PROTO_INET,
                                                                                TYPE,
                                                                                domain,
                                                                                dbus.UInt32(0))),
