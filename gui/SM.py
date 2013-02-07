@@ -30,8 +30,8 @@ class SM(QtGui.QGroupBox):
         self.setTitle(name)
 
         # Create widgets
-        self.enable = QtGui.QCheckBox("enabled", self)
-        self.enable.setDown(True)
+        self.stream = QtGui.QCheckBox("streaming", self)
+        self.stream.setDown(True)
 
         mixframe=QtGui.QFrame(self)
         sublayout=QHBoxLayout()
@@ -52,8 +52,13 @@ class SM(QtGui.QGroupBox):
         layout = QVBoxLayout()
         layout.setContentsMargins(2,2,2,2)
 
-        layout.addWidget(self.enable)
+        layout.addWidget(self.stream)
         layout.addWidget(mixframe)
         layout.addWidget(self.iface)
    
         self.setLayout(layout)
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.stream.setText(QtGui.QApplication.translate("SM", "streaming", None, QtGui.QApplication.UnicodeUTF8))
+
