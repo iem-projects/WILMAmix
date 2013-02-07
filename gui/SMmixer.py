@@ -49,17 +49,19 @@ class SMmixer(QtGui.QFrame):
         # Create widgets
         count = 0
         SMs=self.sms
-        for sm in sorted(SMs.keys()):
-            d=SMs[sm]
-            self.sm+=[SM(self, sm, d)]
-            self.layout.addWidget(self.sm[count])
-            count+=1
-##        for count in range(2):
-##            name="SM"+str(count)
-##            print name
-##            self.sm+=[SM(self, name)]
-##            self.layout.addWidget(self.sm[count])
-##            print "SM: ",self.sm[count].sizeHint()
+        if True:
+            for sm in sorted(SMs.keys()):
+                d=SMs[sm]
+                self.sm+=[SM(self, sm, d)]
+                self.layout.addWidget(self.sm[count])
+                count+=1
+        else:
+            for count in range(16):
+                name="SM"+str(count)
+                print name
+                self.sm+=[SM(self, name)]
+                self.layout.addWidget(self.sm[count])
+                print "SM: ",self.sm[count].sizeHint()
 
     def setSM(self, SMs=None):
         self.sms=SMs
