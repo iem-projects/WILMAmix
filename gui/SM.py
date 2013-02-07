@@ -28,17 +28,32 @@ class SM(QtGui.QGroupBox):
     def __init__(self, parent=None, name="SM??", confs=None):
         super(SM, self).__init__(parent)
         self.setTitle(name)
+
         # Create widgets
-        self.meter = qsynthMeter(self, 4, [])
+        self.enable = QtGui.QCheckBox("enabled", self)
+        self.enable.setDown(True)
+
+        mixframe=QtGui.QFrame(self)
+        sublayout=QHBoxLayout()
+        sublayout.setContentsMargins(0,0,0,0)
+        mixframe.setLayout(sublayout)
+
+        self.fader = QSlider()
+        sublayout.addWidget(self.fader)
+        self.meter = qsynthMeter(self, 4, [-1])
+        #self.meter = qsynthMeter(self, 4, [])
+        sublayout.addWidget(self.meter)
         
         self.iface = QtGui.QComboBox()
-        for conf in confs:
-            self.iface.addItem(conf['iface'])
+        if confs != None:
+            for conf in confs:
+                self.iface.addItem(conf['iface'])
 
         layout = QVBoxLayout()
         layout.setContentsMargins(2,2,2,2)
 
-        layout.addWidget(self.meter)
+        layout.addWidget(self.enable)
+        layout.addWidget(mixframe)
         layout.addWidget(self.iface)
    
         self.setLayout(layout)
