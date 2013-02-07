@@ -297,6 +297,10 @@ class qsynthMeter(QtGui.QFrame):
             self.m_iScaleCount = 0
             self.m_ppValues = []
             self.m_ppScales = []
+            if -1 in self.m_iScalePos:
+                self.m_iScaleCount = self.m_iScaleCount + 1
+                self.m_ppScales += [qsynthMeterScale(self, self.m_iScaleWidth)]
+                self.m_pHBoxLayout.addWidget(self.m_ppScales[-1])
             for iPort in range(0, self.m_iPortCount):
                 self.m_ppValues += [qsynthMeterValue(self, self.m_iPortWidth)]
                 self.m_pHBoxLayout.addWidget(self.m_ppValues[iPort])
