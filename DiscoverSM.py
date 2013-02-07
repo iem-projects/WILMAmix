@@ -24,7 +24,7 @@ def if_indextoname(index):
         ifname="net:%02d" % (index)
     return ifname
 
-class ZeroConf:
+class DiscoverSM:
 
     def getKey(self, arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags):
         key = "["+str(arg_interface)+'/'+str(arg_protocol)+'/'+str(arg_name)+'/'+str(arg_stype)+'/'+str(arg_domain)+"]"
@@ -74,6 +74,6 @@ class ZeroConf:
 
 
 if __name__ == '__main__':
-    zc = ZeroConf()
+    discover = DiscoverSM()
     import gobject
     gobject.MainLoop().run()
