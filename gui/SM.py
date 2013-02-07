@@ -25,13 +25,15 @@ from PySide.QtGui import *
 
 class SM(QtGui.QGroupBox):
     
-    def __init__(self, parent=None, name="SM??"):
+    def __init__(self, parent=None, name="SM??", confs=None):
         super(SM, self).__init__(parent)
         self.setTitle(name)
         # Create widgets
         self.meter = qsynthMeter(self, 4, [])
         
         self.iface = QtGui.QComboBox()
+        for conf in confs:
+            self.iface.addItem(conf['iface'])
 
         layout = QVBoxLayout()
         layout.setContentsMargins(2,2,2,2)
