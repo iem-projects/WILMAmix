@@ -6,7 +6,7 @@ from DiscoverSM import DiscoverSM
 from PySide.QtCore import *
 from PySide.QtGui import *
 import sys
-from gui import SMmixer
+from gui import SMmixer, Translator
 
 class Form(QDialog):
    
@@ -43,6 +43,7 @@ class Form(QDialog):
 if __name__ == '__main__':
     # Create the Qt Application
     app = QApplication(sys.argv)
+    translator = Translator(app)
     # Create and show the form
     form = Form()
     form.show()
