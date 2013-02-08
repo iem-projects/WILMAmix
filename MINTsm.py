@@ -18,7 +18,16 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
+from MINTsm import Publish
+import gobject
+
 if __name__ == '__main__':
     print "SM..."
+    pub = Publish("morzerl")
+    main_loop = gobject.MainLoop()
+    try:
+        main_loop.run()
+    except KeyboardInterrupt:
+        pass
 
 
