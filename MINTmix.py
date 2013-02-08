@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 
-from DiscoverSM import DiscoverSM
 from PySide.QtCore import *
 from PySide.QtGui import *
 import sys
-from gui import SMmixer, Translator
+from MINTmix import DiscoverSM
+from MINTmix.gui import SMmixer, Translator
 
 class Form(QDialog):
    
