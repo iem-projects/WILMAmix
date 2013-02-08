@@ -28,6 +28,7 @@ from dbus.mainloop.glib import DBusGMainLoop
 
 class Publish:
     def __init__(self, name=None, service='_mint-sm._udp', port=7777):
+        DBusGMainLoop( set_as_default=True )
         self.group       = None #our entry group
         self.domain      = "" # Domain to publish on, default to .local
         self.host        = "" # Host to publish records for, default to localhost
@@ -38,19 +39,26 @@ class Publish:
         self.serviceTXT  = "linux rulez" #TXT record for the service
 
 
-        bus = dbus.SystemBus()
+        self.bus = dbus.SystemBus()
 
-        server = dbus.Interface(
-            bus.get_object( avahi.DBUS_NAME, avahi.DBUS_PATH_SERVER ),
+        self.server = dbus.Interface(
+            self.bus.get_object( avahi.DBUS_NAME, avahi.DBUS_PATH_SERVER ),
             avahi.DBUS_INTERFACE_SERVER )
 
-        server.connect_to_signal( "StateChanged", self.server_state_changed )
-        self.server_state_changed( server.GetState() ) 
+        self.server.connect_to_signal( "StateChanged", self.server_state_changed )
+        self.server_state_changed( self.server.GetState() )
+        print "Publisher initialized"
+
+    def __del__(self):
+        if not self.group is None:
+            self.group.Free()
+        print "Publisher deleted"
+
 
     def add_service(self):
         if self.group is None:
             self.group = dbus.Interface(
-                bus.get_object( avahi.DBUS_NAME, server.EntryGroupNew()),
+                self.bus.get_object( avahi.DBUS_NAME, self.server.EntryGroupNew()),
                 avahi.DBUS_INTERFACE_ENTRY_GROUP)
             self.group.connect_to_signal('StateChanged', self.entry_group_state_changed)
 
@@ -83,7 +91,7 @@ class Publish:
         if state == avahi.ENTRY_GROUP_ESTABLISHED:
             print "Service established."
         elif state == avahi.ENTRY_GROUP_COLLISION:
-            self.serviceName = server.GetAlternativeServiceName(self.serviceName)
+            self.serviceName = self.server.GetAlternativeServiceName(self.serviceName)
             print "WARNING: Service name collision, changing name to '%s' ..." % self.serviceName
             self.remove_service()
             self.add_service()
@@ -96,23 +104,11 @@ class Publish:
 
 
 if __name__ == '__main__':
-    DBusGMainLoop( set_as_default=True )
+    #DBusGMainLoop( set_as_default=True )
+    pub = Publish("mozzarella")
 
     main_loop = gobject.MainLoop()
-    bus = dbus.SystemBus()
-
-    server = dbus.Interface(
-            bus.get_object( avahi.DBUS_NAME, avahi.DBUS_PATH_SERVER ),
-            avahi.DBUS_INTERFACE_SERVER )
-
-    server.connect_to_signal( "StateChanged", server_state_changed )
-    server_state_changed( server.GetState() )
-
-
     try:
         main_loop.run()
     except KeyboardInterrupt:
         pass
-
-    if not group is None:
-        group.Free()
