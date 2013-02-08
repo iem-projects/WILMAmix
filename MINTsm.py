@@ -23,7 +23,7 @@ import gobject
 
 if __name__ == '__main__':
     print "SM..."
-    pub = Publish("morzerl")
+    pub = Publish()
     main_loop = gobject.MainLoop()
     try:
         main_loop.run()
