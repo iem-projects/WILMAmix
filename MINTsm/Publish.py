@@ -22,7 +22,6 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 import dbus
-import gobject
 import avahi
 from dbus.mainloop.glib import DBusGMainLoop
 
@@ -104,9 +103,9 @@ class Publish:
 
 
 if __name__ == '__main__':
-    #DBusGMainLoop( set_as_default=True )
-    pub = Publish("mozzarella")
+    import gobject
 
+    pub = Publish("mozzarella")
     main_loop = gobject.MainLoop()
     try:
         main_loop.run()
