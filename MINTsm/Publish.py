@@ -26,16 +26,23 @@ import avahi
 from dbus.mainloop.glib import DBusGMainLoop
 
 class Publish:
-    def __init__(self, name=None, service='_mint-sm._udp', port=7777):
+    def __init__(self,  service='_mint-sm._udp', port=7777, name=None):
         DBusGMainLoop( set_as_default=True )
         self.group       = None #our entry group
         self.domain      = "" # Domain to publish on, default to .local
         self.host        = "" # Host to publish records for, default to localhost
+
+        if name is None:
+            import socket
+            name = socket.gethostname()
+
+        if type(name) is not str:
+            name = str(name)
         
         self.serviceName = name
         self.serviceType = service
         self.servicePort = port
-        self.serviceTXT  = "linux rulez" #TXT record for the service
+        self.serviceTXT  = ["linux = rulez", "protocol = OSC"] #TXT record for the service
 
 
         self.bus = dbus.SystemBus()
@@ -46,12 +53,10 @@ class Publish:
 
         self.server.connect_to_signal( "StateChanged", self.server_state_changed )
         self.server_state_changed( self.server.GetState() )
-        print "Publisher initialized"
 
     def __del__(self):
         if not self.group is None:
             self.group.Free()
-        print "Publisher deleted"
 
 
     def add_service(self):
@@ -61,7 +66,7 @@ class Publish:
                 avahi.DBUS_INTERFACE_ENTRY_GROUP)
             self.group.connect_to_signal('StateChanged', self.entry_group_state_changed)
 
-        print "Adding service '%s' of type '%s' ..." % (self.serviceName, self.serviceType)
+        #print "Adding service '%s' of type '%s' ..." % (self.serviceName, self.serviceType)
 
         self.group.AddService(
             avahi.IF_UNSPEC,  #interface
@@ -79,19 +84,20 @@ class Publish:
 
     def server_state_changed(self, state):
         if state == avahi.SERVER_COLLISION:
-            print "WARNING: Server name collision"
+            #print "WARNING: Server name collision"
             self.remove_service()
         elif state == avahi.SERVER_RUNNING:
             self.add_service()
 
     def entry_group_state_changed(self, state, error):
-        print "state change: %i" % state
+        #print "state change: %i" % state
 
         if state == avahi.ENTRY_GROUP_ESTABLISHED:
-            print "Service established."
+            #print "Service established."
+            pass
         elif state == avahi.ENTRY_GROUP_COLLISION:
             self.serviceName = self.server.GetAlternativeServiceName(self.serviceName)
-            print "WARNING: Service name collision, changing name to '%s' ..." % self.serviceName
+            #print "WARNING: Service name collision, changing name to '%s' ..." % self.serviceName
             self.remove_service()
             self.add_service()
         elif state == avahi.ENTRY_GROUP_FAILURE:
@@ -105,7 +111,9 @@ class Publish:
 if __name__ == '__main__':
     import gobject
 
-    pub = Publish("mozzarella")
+    tcp = Publish('_mint-sm._tcp')
+    udp = Publish('_mint-sm._udp')
+    
     main_loop = gobject.MainLoop()
     try:
         main_loop.run()
