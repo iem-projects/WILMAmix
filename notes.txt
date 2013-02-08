@@ -1,6 +1,3 @@
-MINTmix - mixer application for MINT-MASSE
-==========================================
-
 modules:
 	SM
 		4-channel monitoring
@@ -13,7 +10,6 @@ modules:
 			->schnittstelle (lan/wlan)
 			->port
 			
-
 
 Plan:
 	auf SMi's rennen python-controller der über OSC ferngesteuert wird und
