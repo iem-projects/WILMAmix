@@ -23,8 +23,8 @@ MINTmix architecture
 --------------------
 MINTmix has two components:
 - MINTmix: a GUI running on the GOD machine. it allows the user to configure and
-           monitor the SMi's
-- MINTsm : the daemon running on the SMi's, that does what the MINTmix request
+           monitor the SMi's.
+- MINTsm : the daemon running on the SMi's that does what the MINTmix requests.
 
 
 Communication
