@@ -3,7 +3,7 @@
 
 # Copyright (C) 2004-2007, rncbc aka Rui Nuno Capela.
 # Copyright (C) 2009 Timothée Lecomte
-# Copyright (C) 2013, IOhannes m zmölnig, IEM
+# Copyright © 2013, IOhannes m zmölnig, IEM
 
 # This file is part of Friture.
 #
