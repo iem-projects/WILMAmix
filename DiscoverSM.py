@@ -9,7 +9,7 @@ import dbus, avahi
 from dbus import DBusException
 from dbus.mainloop.glib import DBusGMainLoop
 
-TYPE = '_mintOSC._udp'
+TYPE = '_mint-sm._udp'
 
 if_index2name=[]
 try:
