@@ -4,3 +4,4 @@ python-pyside.qtgui
 python-avahi
 python-netifaces
 python-numpy
+avahi-daemon
