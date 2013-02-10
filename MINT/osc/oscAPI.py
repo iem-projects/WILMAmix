@@ -117,7 +117,7 @@ class OSCServer(Thread) :
             while self.isRunning :
                 try :
                     while 1:
-                        addressManager.handle( self.socket.recv(1024) ) # self.socket.recvfrom(2**13)
+                        addressManager.handle( self.socket.recvfrom(1024) ) # self.socket.recvfrom(2**13)
                 except :
                     return "no data arrived" # not data arrived
 
@@ -166,7 +166,7 @@ def getOSC(inSocket):
     """
     try:
         while 1:
-            addressManager.handle( inSocket.recv(1024) ) # self.socket.recvfrom(2**13)
+            addressManager.handle( inSocket.recvfrom(1024) ) # self.socket.recvfrom(2**13)
     except:
         return "no data arrived" # not data arrived
 ##########################################
@@ -176,6 +176,8 @@ def getOSC(inSocket):
 
 if __name__ == '__main__':
     # example of how to use oscAPI
+    # initialize address manager and sockets
+    init()
     
     listen() # defaults to "127.0.0.1", 9001
 
@@ -201,10 +203,5 @@ if __name__ == '__main__':
     sendBundle(bundle, "127.0.0.1", 9000)
     sendBundle(bundle) # defaults to "127.0.0.1", 9000
 
-    dontListen()  # finally close the connection bfore exiting or program
-
-
-
-
-
+    dontListen()  # finally close the connection before exiting our program
 
