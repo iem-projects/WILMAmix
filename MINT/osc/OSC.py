@@ -264,7 +264,7 @@ class CallbackManager:
         self.dispatch(decoded, source)
 
     def dispatch(self, message, source = None):
-        """Sends decoded OSC data to an appropriate calback"""
+        """Sends decoded OSC data to an appropriate callback"""
         try:
             if type(message[0]) == str :
                 # got a single message
