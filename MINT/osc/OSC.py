@@ -1,4 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 #
 # Open SoundControl for Python
 # Copyright (C) 2002 Daniel Holth, Clinton McChesney
