@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013, IOhannes m zmölnig, IEM
-
-# publish a service on ZeroConf
-#
+# Copyright Â© 2013, IOhannes m zmÃ¶lnig, IEM
 
 # This file is part of MINTmix
 #
@@ -21,11 +18,81 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-import dbus
-import avahi
+## dictionary:
+## name ->
+##        {ip, port, iface}
+
+import dbus, avahi
+from dbus import DBusException
 from dbus.mainloop.glib import DBusGMainLoop
 
-class Publish:
+
+if_index2name=[]
+try:
+    import netifaces
+    if_index2name = netifaces.interfaces()
+except: pass
+
+def if_indextoname(index):
+    try:
+        ifname=if_index2name[index-1]
+    except:
+        ifname="net:%02d" % (index)
+    return ifname
+
+class Discoverer:
+    def getKey(self, arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags):
+        key = "["+str(arg_interface)+'/'+str(arg_protocol)+'/'+str(arg_name)+'/'+str(arg_stype)+'/'+str(arg_domain)+"]"
+        return key
+
+    def newHandler(self, arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags):
+        interface, protocol, name, stype, domain, host, aprotocol, address, port, txt, flags = self.server.ResolveService(
+            arg_interface, arg_protocol, arg_name, arg_stype, arg_domain,
+            avahi.PROTO_UNSPEC, dbus.UInt32(0))
+        key=self.getKey(arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags)
+        self.dict[key]={'name': str(name), 'address': str(address), 'port': int(port), 'iface': if_indextoname(interface)}
+	#print "added...", self.dict
+        
+    def delHandler(self, arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags):
+        key=self.getKey(arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags)
+        try:
+            del self.dict[key]
+        except:
+            print "removed element not in dict: ", key
+	#print "deleted...", self.dict
+
+    def __init__(self, service = '_mint-sm._udp', domain='local'):
+        self.dict=dict()
+        loop = DBusGMainLoop()
+        bus = dbus.SystemBus(mainloop=loop)
+        self.server = dbus.Interface( bus.get_object(avahi.DBUS_NAME, '/'),
+                                      avahi.DBUS_INTERFACE_SERVER)
+        sbrowser = dbus.Interface(bus.get_object(avahi.DBUS_NAME,
+                                                 self.server.ServiceBrowserNew(avahi.IF_UNSPEC,
+                                                                               avahi.PROTO_INET,
+                                                                               service,
+                                                                               domain,
+                                                                               dbus.UInt32(0))),
+                                  avahi.DBUS_INTERFACE_SERVICE_BROWSER)
+        sbrowser.connect_to_signal("ItemNew", self.newHandler)
+        sbrowser.connect_to_signal("ItemRemove", self.delHandler)
+
+    def getDict(self):
+        ## FIXXME: this will return a shallow copy, use deepcopy instead!
+        ret=dict()
+        for d0 in self.dict:
+            d=self.dict[d0]
+            name=d['name']
+            if name in ret:
+                ret[name]+=[{'address':d['address'], 'port':d['port'], 'iface':d['iface']}]
+            else:
+                ret[name] =[{'address':d['address'], 'port':d['port'], 'iface':d['iface']}]
+        return ret
+
+
+############## JMZ
+
+class Publisher:
     def __init__(self,  service='_mint-sm._udp', port=7777, name=None):
         DBusGMainLoop( set_as_default=True )
         self.group       = None #our entry group
@@ -106,16 +173,35 @@ class Publish:
             return
 
 
-
-
-if __name__ == '__main__':
+def test_doloop():
     import gobject
-
-    tcp = Publish('_mint-sm._tcp')
-    udp = Publish('_mint-sm._udp')
-    
-    main_loop = gobject.MainLoop()
     try:
-        main_loop.run()
+        gobject.MainLoop().run()
     except KeyboardInterrupt:
         pass
+
+
+def test_discover():
+    discover = Discoverer()
+    test_doloop()
+
+
+def test_publish():
+    tcp = Publisher('_mint-sm._tcp')
+    udp = Publisher('_mint-sm._udp')
+    test_doloop()
+
+if __name__ == '__main__':
+    import sys
+    if len(sys.argv)>1:
+        typ=sys.argv[1]
+        if typ == "publish":
+            test_publish()
+        elif typ == "discover":
+            test_discover()
+        else:
+            print "%s publish|discover" % (sys.argv[0])
+    else:
+        print "defaulting to 'discover'"
+        test_discover()
+
