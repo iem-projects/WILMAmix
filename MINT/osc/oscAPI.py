@@ -108,7 +108,7 @@ class OSCServer(Thread) :
             # self.socket.settimeout(1.0) # make sure its not blocking forever...
             self.haveSocket = True
         except socket.error :
-            print 'there was an error binding to ip %s and port %i , maybe the port is already taken by another process?' % (ipAddr. port)
+            print 'there was an error binding to ip %s and port %i , maybe the port is already taken by another process?' % (ipAddr, port)
             self.haveSocket=False
             
     def run(self) :
