@@ -173,12 +173,13 @@ if __name__ == '__main__':
     listen() # defaults to "127.0.0.1", 9001
 
     # add addresses to callback manager
-    def printStuff(msg):
+    def printStuff(msg, src):
         """deals with "print" tagged OSC addresses
         """
         print "printing in the printStuff function ", msg
         print "the oscaddress is ", msg[0]
         print "the value is ", msg[2]
+	print "originating from ",src
 
     bind(printStuff, "/test")
 
