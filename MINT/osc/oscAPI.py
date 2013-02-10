@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """     simpleOSC 0.2
     ixi software - July, 2006
     www.ixi-software.net
@@ -54,11 +57,20 @@ def bind(func, oscaddress):
     addressManager.add(func, oscaddress)
 
 
-def sendMsg(oscAddress, dataArray=[], ipAddr='127.0.0.1', port=9000) :
+def sendMsg(oscAddress, dataArray=[], ipAddr='127.0.0.1', port=9000, outsocket=outSocket) :
     """create and send normal OSC msgs
         defaults to '127.0.0.1', port 9000
     """
-    outSocket.sendto( createBinaryMsg(oscAddress, dataArray),  (ipAddr, port))
+    outsocket.sendto( createBinaryMsg(oscAddress, dataArray),  (ipAddr, port))
+
+
+def sendMsgBack(oscAddress, dataArray=[]):
+    global oscThread
+    oscThread.sendMsg(oscAddress, dataArray)
+
+def sendBundleBack(bundle):
+    global oscThread
+    oscThread.sendBundle(bundle)
 
 
 def createBundle():
@@ -78,10 +90,10 @@ def appendToBundle(bundle, oscAddress, dataArray):
     bundle.append( createBinaryMsg(oscAddress, dataArray),  'b')
 
 
-def sendBundle(bundle, ipAddr='127.0.0.1', port=9000) :
+def sendBundle(bundle, ipAddr='127.0.0.1', port=9000, outsocket=outSocket) :
     """convert bundle to a binary and send it
     """
-    outSocket.sendto(bundle.message, (ipAddr, port))
+    outsocket.sendto(bundle.message, (ipAddr, port))
 
 
 def createBinaryMsg(oscAddress, dataArray):
@@ -102,6 +114,7 @@ def createBinaryMsg(oscAddress, dataArray):
 class OSCServer(Thread) :
     def __init__(self, ipAddr='127.0.0.1', port = 9001) :
         Thread.__init__(self)
+        self.sender = None
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try :
             self.socket.bind( (ipAddr, port) )
@@ -110,17 +123,28 @@ class OSCServer(Thread) :
         except socket.error :
             print 'there was an error binding to ip %s and port %i , maybe the port is already taken by another process?' % (ipAddr, port)
             self.haveSocket=False
-            
+
+    def recvFrom(self, data):
+        self.sender=data[1]
+        addressManager.handle(data[0], data[1])
+
     def run(self) :
         if self.haveSocket :
             self.isRunning = True
             while self.isRunning :
                 try :
                     while 1:
-                        addressManager.handle( self.socket.recvfrom(1024) ) # self.socket.recvfrom(2**13)
+                        self.recvFrom( self.socket.recvfrom(1024) ) # self.socket.recvfrom(2**13)
                 except :
                     return "no data arrived" # not data arrived
 
+    def sendMsg(self, oscAddress, dataArray=[]):
+        if self.sender is not None:
+            sendMsg(oscAddress, dataArray, self.sender[0], self.sender[1], self.socket)
+
+    def sendBundle(self, bundle):
+        if self.sender is not None:
+            sendBundle(bundle, self.sender[0], self.sender[1], self.socket)
 
 def listen(ipAddr='127.0.0.1', port = 9001) :
     """  creates a new thread listening to that port 
@@ -136,8 +160,9 @@ def dontListen() :
     """
     global oscThread
     if oscThread :
-        oscThread.socket.close()
         oscThread.isRunning = 0 # kill it and free the socket
+        oscThread.socket.close()
+        ot=oscThread
         oscThread = 0
         
 
