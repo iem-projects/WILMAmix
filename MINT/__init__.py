@@ -4,6 +4,6 @@
 __version__ = "0"
 __author__ = "IOhannes m zmölnig, IEM"
 __license__ = "GNU General Public License"
-__all__ = ["DiscoverSM", ]
+__all__ = ["Discovery", ]
 
-from DiscoverSM import *
+from Discovery import *

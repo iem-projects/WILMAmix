@@ -21,14 +21,14 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 import sys
-from MINTmix import DiscoverSM
-from MINTmix.gui import SMmixer, Translator
+from MINT import Discoverer
+from MINT.gui import SMmixer, Translator
 
 class Form(QDialog):
    
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
-        self.discover=DiscoverSM()
+        self.discover=Discoverer()
         # Create widgets
         self.dict=self.discover.getDict()
         print self.dict
