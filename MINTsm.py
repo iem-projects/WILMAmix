@@ -19,27 +19,45 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 from MINT import NetServer, AudioMixer
+from MINT.osc import createBundle, appendToBundle
+
 import gobject
+
+class State:
+    def __init__(self):
+        self.mixer = AudioMixer()
+
+    def update(self):
+        self.gains=self.mixer.gain()
+
 
 class MINTsm:
     def __init__(self):
-        self.server = NetServer(port=7777)
+        self.state=State()
+        self.server = NetServer()
+        self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
-        self.mixer = AudioMixer()
+        self.mixer = self.state.mixer
 
     def setGain(self, msg, src):
         gains=self.mixer.gain(msg[2:])
-        #self.server.sendMsg('/gain', gains)
+
+    def ping(self, msg, src):
+        self.state.update()
+        print "gains", self.state.gains
+        bundle = createBundle()
+        appendToBundle(bundle, '/ferrari/gain', self.state.gains)
+        self.server.sendBundle(bundle)
+        
+        
 
 if __name__ == '__main__':
     print "SM..."
     sm = MINTsm()
     import time
     
-    main_loop = gobject.MainLoop()
-    print "start loop"
     try:
-        main_loop.run()
+        gobject.MainLoop().run()
     except KeyboardInterrupt:
         pass
 
