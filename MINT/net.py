@@ -29,12 +29,15 @@ class NetServer:
     sends back OSC-messages
     """
 
-    def __init__(self, host='', port=0):
+    def __init__(self, host='', port=0, oscprefix=None):
         """creates a listener on any (or specified) port"""
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((host, port))
         self.keepListening=True
+        self.oscPrefix=oscprefix
+        if self.oscPrefix is None:
+            self.oscPrefix='/'+socket.gethostname()
         
         gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
         
@@ -81,12 +84,12 @@ class NetServer:
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
         if self.addressManager is not None:
-            self.addressManager.add(callback, oscAddress)
+            self.addressManager.add(callback, self.oscPrefix+oscAddress)
 
     def sendMsg(self, oscAddress, dataArray=[]):
         """send an OSC-message to connected client(s)"""
         if self.socket is not None and self.remote is not None:
-            self.socket.sendto( osc.createBinaryMsg(oscAddress, dataArray),  self.remote)
+            self.socket.sendto( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray),  self.remote)
 
     def sendBundle(self, bundle):
         """send an OSC-bundle to connected client(s)"""
@@ -99,12 +102,14 @@ class NetClient:
     sends OSC-messages to SMi.
     receives OSC-messages from SMi (and emits signals with the data)
     """
-    def __init__(self, host, port):
+    def __init__(self, host, port, oscprefix=''):
         print "NetClient"
         self.addressManager = osc.CallbackManager()
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.remote = (host, port) ## FIXXME: 'host' is not canonicalized
         self.keepListening=True
+        self.oscPrefix=oscprefix
+
         gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
       
 
@@ -139,12 +144,12 @@ class NetClient:
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
         if self.addressManager is not None:
-            self.addressManager.add(callback, oscAddress)
+            self.addressManager.add(callback,  self.oscPrefix+oscAddress)
 
     def sendMsg(self, oscAddress, dataArray=[]):
         """send an OSC-message to the server"""
         if self.socket is not None and self.remote is not None:
-            self.socket.sendto( osc.createBinaryMsg(oscAddress, dataArray),  self.remote)
+            self.socket.sendto( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray),  self.remote)
 
     def sendBundle(self, bundle):
         """send an OSC-bundle to the server"""
