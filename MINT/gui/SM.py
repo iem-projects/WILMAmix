@@ -23,11 +23,20 @@ from PySide import QtCore, QtGui
 from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
 
+import MINT
+
 class SM(QtGui.QGroupBox):
     
-    def __init__(self, parent=None, name="SM??", confs=None):
+    def __init__(self, parent=None, name="SMi", confs=None):
         super(SM, self).__init__(parent)
         self.setTitle(name)
+        #if confs is not None:
+        #    print confs
+
+        defaultconf = sorted(confs.keys())[0]
+        config = confs[defaultconf]
+
+        self.connection = MINT.NetClient(config['address'], config['port'], oscprefix='/'+name)
 
         # Create widgets
         self.stream = QtGui.QCheckBox(self.tr("streaming"), self)
