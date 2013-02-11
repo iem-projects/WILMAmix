@@ -18,7 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-from MINT import NetServer, AudioMixer
+from MINT import NetServer
+from MINT.audio import AudioMixer
 from MINT.osc import createBundle, appendToBundle
 
 import gobject
