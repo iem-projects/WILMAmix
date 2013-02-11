@@ -102,15 +102,18 @@ class NetClient:
     sends OSC-messages to SMi.
     receives OSC-messages from SMi (and emits signals with the data)
     """
+    from PySide.QtNetwork import QUdpSocket
+
     def __init__(self, host, port, oscprefix=''):
         print "NetClient"
         self.addressManager = osc.CallbackManager()
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket = self.QUdpSocket()
+        self.socket.readyRead.connect(self._callback)
+        self.socket.connectToHost(host, port);
+        
         self.remote = (host, port) ## FIXXME: 'host' is not canonicalized
         self.keepListening=True
         self.oscPrefix=oscprefix
-
-        gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
       
 
     def __del__(self):
@@ -130,16 +133,11 @@ class NetClient:
         self.remote = None
         self.socket = None
 
-    def _callback(self, socket, *args):
+    def _callback(self):
         '''Asynchronous connection listener. Starts a handler for each connection.'''
-        # sock == self.socket
-        data, client = socket.recvfrom(8192)
-        #print "DATA: ", data
-        if self.keepListening and (self.addressManager is not None):
-            #self.socket = socket
-            #self.remote = client
-            self.addressManager.handle(data, client)
-        return self.keepListening
+        while self.socket.hasPendingDatagrams():
+            datagram, sender, senderPort = self.socket.readDatagram(self.socket.pendingDatagramSize())
+            self.addressManager.handle(datagram.data(), (sender.toString(), senderPort))
 
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
@@ -148,8 +146,11 @@ class NetClient:
 
     def sendMsg(self, oscAddress, dataArray=[]):
         """send an OSC-message to the server"""
+        from PySide.QtNetwork import QHostAddress
+
         if self.socket is not None and self.remote is not None:
-            self.socket.sendto( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray),  self.remote)
+            #self.socket.writeDatagram( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray),  QHostAddress(self.remote[0]), self.remote[1])
+            self.socket.writeDatagram( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray),  QHostAddress(self.remote[0]), self.remote[1])
 
     def sendBundle(self, bundle):
         """send an OSC-bundle to the server"""
