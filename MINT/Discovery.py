@@ -122,9 +122,12 @@ class Publisher:
         self.server_state_changed( self.server.GetState() )
 
     def __del__(self):
+        self.shutdown()
+
+    def shutdown(self):
+        self.remove_service()
         if not self.group is None:
             self.group.Free()
-
 
     def add_service(self):
         if self.group is None:
