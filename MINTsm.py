@@ -18,18 +18,18 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-from MINT import NetServer
+from MINT import NetServer, AudioMixer
 import gobject
 
 class MINTsm:
     def __init__(self):
         self.server = NetServer(port=7777)
         self.server.add(self.setGain, '/gain')
-        print "MINTsm for server", self.server
+        self.mixer = AudioMixer()
 
     def setGain(self, msg, src):
-        print "gain msg: ", msg
-        print "gain src: ", src
+        gains=self.mixer.gain(msg[2:])
+        #self.server.sendMsg('/gain', gains)
 
 if __name__ == '__main__':
     print "SM..."
