@@ -28,7 +28,9 @@ class AudioMixer:
         if value is not None:
             for i,v in enumerate(value):
                 self.mixer.setvolume(v, i)
-        return self.mixer.getvolume()
+        gains = self.mixer.getvolume()
+        gainsi = [int(i) for i in gains]
+        return  gainsi
 
 if __name__ == '__main__':
     print "SM..."
