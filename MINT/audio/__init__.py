@@ -4,8 +4,6 @@
 __version__ = "0"
 __author__ = "IOhannes m zmölnig, IEM"
 __license__ = "GNU General Public License"
-__all__ = ["Discovery", "net", "Metro"]
+__all__ = ["AudioMixer", ]
 
-from Discovery import Publisher, Discoverer
-from net import NetServer, NetClient
-from Metro import Metro
+from AudioMixer import AudioMixer
