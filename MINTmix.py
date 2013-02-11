@@ -21,7 +21,7 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 import sys
-from MINT import Discoverer
+from MINT import Discoverer, Metro
 from MINT.gui import SMmixer, Translator
 
 class Form(QDialog):
@@ -45,6 +45,7 @@ class Form(QDialog):
         # Add button signal to greetings slot
         self.bRefresh.clicked.connect(self.refreshIt)
         self.bPrint.clicked.connect(self.printIt)
+        self.metro = Metro(self.ping, 100)
 
         self.refreshIt()
 
@@ -55,6 +56,9 @@ class Form(QDialog):
 
     def printIt(self):
         print self.dict
+
+    def ping(self):
+        self.mixer.ping()
 
 if __name__ == '__main__':
     # Create the Qt Application
