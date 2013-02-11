@@ -48,6 +48,7 @@ class SM(QtGui.QGroupBox):
         mixframe.setLayout(sublayout)
 
         self.fader = QSlider()
+        self.fader.valueChanged.connect(self.faderSet)
         sublayout.addWidget(self.fader)
         self.meter = qsynthMeter(self, 4, [-1])
         #self.meter = qsynthMeter(self, 4, [])
@@ -68,3 +69,5 @@ class SM(QtGui.QGroupBox):
         self.setLayout(layout)
         
 
+    def faderSet(self, value):
+        self.connection.sendMsg('/gain', [value,])
