@@ -32,6 +32,7 @@ class AudioMixer:
         gainsi = [int(i) for i in gains]
         return  gainsi
 
+
 if __name__ == '__main__':
     print "SM..."
     sm = MINTsm()
