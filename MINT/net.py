@@ -19,29 +19,8 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 import osc
-import socket
+import socket, gobject
 from Discovery import Publisher
-from threading import Thread
-import SocketServer
-
-# global dict to get the associated server in the callback
-_serverdict = dict()
-
-class _UDPHandler(SocketServer.BaseRequestHandler):
-    def handle(self):
-        data = self.request[0].strip()
-        socket = self.request[1]
-        print "UDPhandle:", data
-        self.server.netserver._callback(socket, self.client_address, data)
-##        print "{} wrote:".format(self.client_address[0])
-##        print data
-##        socket.sendto(data.upper(), self.client_address)
-
-class _ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
-    pass
-
-class _ThreadedUDPServer(SocketServer.ThreadingMixIn, SocketServer.UDPServer):
-    pass
 
 class NetServer:
     """ OSC-server running on SMi.
@@ -49,20 +28,19 @@ class NetServer:
     receives OSC-messages (and emits signals with the data),
     sends back OSC-messages
     """
+
     def __init__(self, host='', port=0):
         """creates a listener on any (or specified) port"""
-        self.server = _ThreadedUDPServer((host, port), _UDPHandler)
-        self.server.netserver = self
-
-        self.socket = None
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.bind((host, port))
+        self.keepListening=True
+        
+        gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
+        
         self.remote = None
 
-        ip, port = self.server.server_address
-        # more thread for each request
-        server_thread = Thread(target=self.server.serve_forever)
-        # Exit the server thread when the main thread terminates
-        server_thread.daemon = True
-        server_thread.start()
+        ip, port = self.socket.getsockname()
 
         self.addressManager = osc.CallbackManager()
         self.publisher = Publisher(port=port)
@@ -71,25 +49,34 @@ class NetServer:
         self.shutdown()
 
     def shutdown(self):
+        self.keepListening=False
+        if self.socket is not None:
+            try:
+                self.socket.shutdown()
+                self.socket.close()
+            except:
+                pass
         if self.publisher is not None:
             self.publisher.shutdown()
             del self.publisher
             self.publisher = None
-        if self.server is not None:
-            self.server.shutdown()
-            del self.server
-            self.server = None
         if self.addressManager is not None:
             del self.addressManager
             self.addressManager = None
         self.remote = None
         self.socket = None
 
-    def _callback(self, socket, client, data):
-        if self.addressManager is not None:
-            self.socket = socket
-            self.remote = client
+
+    def _callback(self, socket, *args):
+        '''Asynchronous connection listener. Starts a handler for each connection.'''
+        # sock == self.socket
+        data, address = socket.recvfrom(8192)
+        if self.keepListening and (self.addressManager is not None):
+            #self.socket = socket
+            self.remote = address
             self.addressManager.handle(data)
+
+        return self.keepListening
 
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
@@ -107,37 +94,6 @@ class NetServer:
             self.socket.sendto(bundle.message, self.remote)
 
 
-class _ClientReceiver(Thread):
-    def __init__(self, socket, callback):
-        Thread.__init__(self)
-        self.socket=socket
-        self.callback=callback
-        self.socket.settimeout(0.5)
-
-    def run(self):
-        self.isRunning = True
-        while self.isRunning :
-            try:
-                data, remote=self.socket.recvfrom(1024)
-                self.callback(self.socket, remote, data)
-            except:
-                pass
-                #return
-
-    def shutdown(self):
-        self.isRunning = False
-        if self.socket is not None:
-            try:
-                self.socket.shutdown()
-            except:
-                pass
-            self.socket.close()
-            try:
-                self.socket.sendto( range(64),  ('localhost', 0))
-            except:
-                pass
-            del self.socket
-
 class NetClient:
     """ OSC-client running on GOD.
     sends OSC-messages to SMi.
@@ -148,29 +104,37 @@ class NetClient:
         self.addressManager = osc.CallbackManager()
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.remote = (host, port) ## FIXXME: 'host' is not canonicalized
-        self.receiver= _ClientReceiver(self.socket, self._callback)
-        self.receiver.start()
+        self.keepListening=True
+        gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
+      
 
     def __del__(self):
         self.shutdown()
 
     def shutdown(self):
-        if self.receiver is not None:
-            self.receiver.shutdown()
-            del self.receiver
-            self.receiver = None
+        self.keepListening=False
+        if self.socket is not None:
+            try:
+                self.socket.shutdown()
+                self.socket.close()
+            except:
+                pass
         if self.addressManager is not None:
             del self.addressManager
             self.addressManager = None
         self.remote = None
         self.socket = None
 
-    def _callback(self, socket, client, data):
+    def _callback(self, socket, *args):
+        '''Asynchronous connection listener. Starts a handler for each connection.'''
+        # sock == self.socket
+        data, client = socket.recvfrom(8192)
         #print "DATA: ", data
-        if self.addressManager is not None:
+        if self.keepListening and (self.addressManager is not None):
             #self.socket = socket
             #self.remote = client
             self.addressManager.handle(data)
+        return self.keepListening
 
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
@@ -191,8 +155,8 @@ def _callback(message, source):
     print "callback (no class): ", message
 
 class _TestServer:
-    def __init__(self):
-        self.serv = NetServer()
+    def __init__(self, port=0):
+        self.serv = NetServer(port=port)
         self.serv.add(self.callback, '/test')
 
     def __del__(self):
@@ -202,41 +166,39 @@ class _TestServer:
             self.serv = None
 
     def callback(self, message, source):
+        print "callback: ",message
         self.serv.sendMsg(message[0], message[2:])
 
-def test_server():
-    import time
-    n = _TestServer()
-    time.sleep(50)
-    print "cleanup"
-    n.__del__()
-    del n
-    n = None
-    time.sleep(10)
+    def shutdown(self):
+        self.serv.shutdown()
 
-def test_client():
+n = None
+def _test_server():
+    global n
+    n = _TestServer(port=7777)
+
+def _test_client():
     import time
+    global n
     n = NetClient('localhost', 7777)
-    try:
-        time.sleep(1)
-        n.add(_callback, '/foo')
-        print "sending data"
-        n.sendMsg('/foo');
-        print "sent data"
-        time.sleep(50)
-    except:
-        pass
-    print "shutdown"
-    n.shutdown()
-    del n
-    print "snooze"
-    time.sleep(1)
-    print "bye"
-
+    n.add(_callback, '/foo')
+    n.sendMsg('/foo');
 
 if __name__ == '__main__':
     if 1 is 0:
-        test_server()
+        _test_server()
     else:
-        test_client()
+        _test_client()
+
+    try:
+        gobject.MainLoop().run()
+    except KeyboardInterrupt:
+        pass
+    print n
+    if n is not None:
+        n.shutdown()
+        del n
+    print "bye"
+        
+
 
