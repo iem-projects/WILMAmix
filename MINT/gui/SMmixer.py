@@ -66,3 +66,7 @@ class SMmixer(QtGui.QFrame):
     def setSM(self, SMs=None):
         self.sms=SMs
         self.build()
+
+    def ping(self):
+        for sm in self.sm:
+            sm.ping()
