@@ -46,8 +46,8 @@ class SM(QtGui.QGroupBox):
         
         self.iface = QtGui.QComboBox()
         if confs != None:
-            for conf in confs:
-                self.iface.addItem(conf['iface'])
+            for conf in sorted(confs.keys()):
+                self.iface.addItem(conf)
 
         layout = QVBoxLayout()
         layout.setContentsMargins(2,2,2,2)

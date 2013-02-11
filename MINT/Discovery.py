@@ -20,7 +20,7 @@
 
 ## dictionary:
 ## name ->
-##        {ip, port, iface}
+##        iface -> {ip, port}
 
 import dbus, avahi
 from dbus import DBusException
@@ -83,10 +83,10 @@ class Discoverer:
         for d0 in self.dict:
             d=self.dict[d0]
             name=d['name']
-            if name in ret:
-                ret[name]+=[{'address':d['address'], 'port':d['port'], 'iface':d['iface']}]
-            else:
-                ret[name] =[{'address':d['address'], 'port':d['port'], 'iface':d['iface']}]
+
+            if not name in ret:
+                ret[name]=dict()
+            (ret[name])[d['iface']]={'address':d['address'], 'port':d['port']}
         return ret
 
 
