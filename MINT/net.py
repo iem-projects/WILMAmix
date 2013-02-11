@@ -74,7 +74,7 @@ class NetServer:
         if self.keepListening and (self.addressManager is not None):
             #self.socket = socket
             self.remote = address
-            self.addressManager.handle(data)
+            self.addressManager.handle(data, address)
 
         return self.keepListening
 
@@ -133,7 +133,7 @@ class NetClient:
         if self.keepListening and (self.addressManager is not None):
             #self.socket = socket
             #self.remote = client
-            self.addressManager.handle(data)
+            self.addressManager.handle(data, client)
         return self.keepListening
 
     def add(self, callback, oscAddress):
