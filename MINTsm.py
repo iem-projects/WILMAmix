@@ -18,13 +18,26 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-from MINT import Publisher
+from MINT import NetServer
 import gobject
+
+class MINTsm:
+    def __init__(self):
+        self.server = NetServer(port=7777)
+        self.server.add(self.setGain, '/gain')
+        print "MINTsm for server", self.server
+
+    def setGain(self, msg, src):
+        print "gain msg: ", msg
+        print "gain src: ", src
 
 if __name__ == '__main__':
     print "SM..."
-    pub = Publisher()
+    sm = MINTsm()
+    import time
+    
     main_loop = gobject.MainLoop()
+    print "start loop"
     try:
         main_loop.run()
     except KeyboardInterrupt:
