@@ -31,6 +31,7 @@ class _UDPHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         data = self.request[0].strip()
         socket = self.request[1]
+        print "UDPhandle:", data
         self.server.netserver._callback(socket, self.client_address, data)
 ##        print "{} wrote:".format(self.client_address[0])
 ##        print data
@@ -54,7 +55,7 @@ class NetServer:
         self.server.netserver = self
 
         self.socket = None
-        self.client = None
+        self.remote = None
 
         ip, port = self.server.server_address
         # more thread for each request
@@ -81,13 +82,13 @@ class NetServer:
         if self.addressManager is not None:
             del self.addressManager
             self.addressManager = None
-        self.client = None
+        self.remote = None
         self.socket = None
 
     def _callback(self, socket, client, data):
         if self.addressManager is not None:
             self.socket = socket
-            self.client = client
+            self.remote = client
             self.addressManager.handle(data)
 
     def add(self, callback, oscAddress):
@@ -97,21 +98,94 @@ class NetServer:
 
     def sendMsg(self, oscAddress, dataArray=[]):
         """send an OSC-message to connected client(s)"""
-        if self.socket is not None and self.client is not None:
-            self.socket.sendto( osc.createBinaryMsg(oscAddress, dataArray),  self.client)
+        if self.socket is not None and self.remote is not None:
+            self.socket.sendto( osc.createBinaryMsg(oscAddress, dataArray),  self.remote)
 
     def sendBundle(self, bundle):
         """send an OSC-bundle to connected client(s)"""
-        if self.socket is not None and self.client is not None:
-            self.socket.sendto(bundle.message, self.client)
+        if self.socket is not None and self.remote is not None:
+            self.socket.sendto(bundle.message, self.remote)
+
+
+class _ClientReceiver(Thread):
+    def __init__(self, socket, callback):
+        Thread.__init__(self)
+        self.socket=socket
+        self.callback=callback
+        self.socket.settimeout(0.5)
+
+    def run(self):
+        self.isRunning = True
+        while self.isRunning :
+            try:
+                data, remote=self.socket.recvfrom(1024)
+                self.callback(self.socket, remote, data)
+            except:
+                pass
+                #return
+
+    def shutdown(self):
+        self.isRunning = False
+        if self.socket is not None:
+            try:
+                self.socket.shutdown()
+            except:
+                pass
+            self.socket.close()
+            try:
+                self.socket.sendto( range(64),  ('localhost', 0))
+            except:
+                pass
+            del self.socket
 
 class NetClient:
     """ OSC-client running on GOD.
     sends OSC-messages to SMi.
-    receives OSC-messages from SMi (and emits signals with the data),
+    receives OSC-messages from SMi (and emits signals with the data)
     """
     def __init__(self, host, port):
         print "NetClient"
+        self.addressManager = osc.CallbackManager()
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.remote = (host, port) ## FIXXME: 'host' is not canonicalized
+        self.receiver= _ClientReceiver(self.socket, self._callback)
+        self.receiver.start()
+
+    def __del__(self):
+        self.shutdown()
+
+    def shutdown(self):
+        if self.receiver is not None:
+            self.receiver.shutdown()
+            del self.receiver
+            self.receiver = None
+        if self.addressManager is not None:
+            del self.addressManager
+            self.addressManager = None
+        self.remote = None
+        self.socket = None
+
+    def _callback(self, socket, client, data):
+        #print "DATA: ", data
+        if self.addressManager is not None:
+            #self.socket = socket
+            #self.remote = client
+            self.addressManager.handle(data)
+
+    def add(self, callback, oscAddress):
+        """add a callback for oscAddress"""
+        if self.addressManager is not None:
+            self.addressManager.add(callback, oscAddress)
+
+    def sendMsg(self, oscAddress, dataArray=[]):
+        """send an OSC-message to the server"""
+        if self.socket is not None and self.remote is not None:
+            self.socket.sendto( osc.createBinaryMsg(oscAddress, dataArray),  self.remote)
+
+    def sendBundle(self, bundle):
+        """send an OSC-bundle to the server"""
+        if self.socket is not None and self.remote is not None:
+            self.socket.sendto(bundle.message, self.remote)
 
 def _callback(message, source):
     print "callback (no class): ", message
@@ -140,7 +214,29 @@ def test_server():
     n = None
     time.sleep(10)
 
+def test_client():
+    import time
+    n = NetClient('localhost', 7777)
+    try:
+        time.sleep(1)
+        n.add(_callback, '/foo')
+        print "sending data"
+        n.sendMsg('/foo');
+        print "sent data"
+        time.sleep(50)
+    except:
+        pass
+    print "shutdown"
+    n.shutdown()
+    del n
+    print "snooze"
+    time.sleep(1)
+    print "bye"
+
 
 if __name__ == '__main__':
-    test_server()
+    if 1 is 0:
+        test_server()
+    else:
+        test_client()
 
