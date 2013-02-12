@@ -31,10 +31,9 @@
     Thanks for the support to Buchsenhausen, Innsbruck, Austria.
 """
 
-import OSC
+import OSC, Bundle
 import socket
 from threading import Thread
-import Bundle
 
 # globals
 outSocket = 0 
@@ -88,7 +87,7 @@ def createBundle():
 def appendToBundle(bundle, oscAddress, dataArray):
     """create OSC mesage and append it to a given bundle
     """
-    if isinstance(bundle, Bundle):
+    if isinstance(bundle, Bundle.Bundle):
         bundle.append((oscAddress, dataArray))
     else:
         bundle.append( createBinaryMsg(oscAddress, dataArray),  'b')
@@ -97,7 +96,7 @@ def appendToBundle(bundle, oscAddress, dataArray):
 def sendBundle(bundle, ipAddr='127.0.0.1', port=9000, outsocket=outSocket) :
     """convert bundle to a binary and send it
     """
-    if isinstance(bundle, Bundle):
+    if isinstance(bundle, Bundle.Bundle):
         outsocket.sendto(bundle.data(), (ipAddr, port))
     else:
         outsocket.sendto(bundle.message, (ipAddr, port))
