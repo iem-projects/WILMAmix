@@ -39,23 +39,30 @@
 ################################################################
 
 
-import alsaaudio
+import pyalsa.alsahcontrol
 
 class AudioMixer:
+    ControlID = 1 ## FIXME '4' is hardcoded to the SMi's 'Amp' control
     def __init__(self):
-        try:
-            self.mixer=alsaaudio.Mixer('Amp')
-        except alsaaudio.ALSAAudioError:
-            self.mixer=alsaaudio.Mixer()
+        self.hctl =  pyalsa.alsahcontrol.HControl()
+        self.element = pyalsa.alsahcontrol.Element(self.hctl, AudioMixer.ControlID) 
+        self.info = pyalsa.alsahcontrol.Info(self.element)
+        self.value = pyalsa.alsahcontrol.Value(self.element)
 
     def gain(self, value=None):
         if value is not None:
-            for i,v in enumerate(value):
-                self.mixer.setvolume(v, i)
-        gains = self.mixer.getvolume()
-        gainsi = [int(i) for i in gains]
+            if type(value) is not list:
+                value=[float(value)]*self.info.count
+            elif 1 is len(value):
+                v=float(value[0])
+                value=[v]*self.info.count
+            value=[float(v)*self.info.max for v in value]
+            self.value.set_array(self.info.type, value)
+            self.value.write()
+        self.value.read()
+        gains = self.value.get_array(self.info.type, self.info.count)
+        gainsi = [float(i)/float(self.info.max) for i in gains]
         return  gainsi
-
 
 if __name__ == '__main__':
     print "SM..."
