@@ -283,7 +283,7 @@ class CallbackManager:
             print 'address %s not found ' % address
             pprint.pprint(message)
         except IndexError, e:
-            print 'got malformed OSC message'
+            print 'got malformed OSC message', message
             pass
         except None, e:
             print "Exception in", address, "callback :", e
