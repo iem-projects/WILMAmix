@@ -31,7 +31,7 @@ class NetClient:
     def __init__(self, host, port, oscprefix=''):
         print "NetClient"
         self.addressManager = osc.CallbackManager()
-        self.socket = self.QUdpSocket()
+        self.socket = QUdpSocket()
         self.socket.readyRead.connect(self._callback)
         self.socket.connectToHost(host, port);
         
