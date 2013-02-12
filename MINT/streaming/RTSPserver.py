@@ -37,9 +37,10 @@ class RTSPserver:
         self.server = gst.rtspserver.Server()
         #server.set_service('7777')                # port
         mapping =self.server.get_media_mapping()
-        factory =gst.rtspserver.MediaFactory()
-        factory.set_launch(pipeline)
-        mapping.add_factory(self.mountpoint, factory)
+        self.factory =gst.rtspserver.MediaFactory()
+        self.factory.set_launch(pipeline)
+        #print "pipeline: ", self.factory.get_launch()
+        mapping.add_factory(self.mountpoint, self.factory)
 
         self.serverID=0L
   
