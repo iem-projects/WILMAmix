@@ -19,9 +19,13 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 from OSC import OSCMessage
+import socket
+
 
 class Bundle:
     def __init__(self, prefix=None, timestamp=None):
+        if prefix is None:
+            prefix= '/'+socket.gethostname()
         b = OSCMessage()
         b.address = ""
         b.append("#bundle")
