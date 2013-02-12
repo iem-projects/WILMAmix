@@ -34,6 +34,7 @@
 import OSC
 import socket
 from threading import Thread
+import Bundle
 
 # globals
 outSocket = 0 
@@ -87,13 +88,19 @@ def createBundle():
 def appendToBundle(bundle, oscAddress, dataArray):
     """create OSC mesage and append it to a given bundle
     """
-    bundle.append( createBinaryMsg(oscAddress, dataArray),  'b')
+    if isinstance(bundle, Bundle):
+        bundle.append((oscAddress, dataArray))
+    else:
+        bundle.append( createBinaryMsg(oscAddress, dataArray),  'b')
 
 
 def sendBundle(bundle, ipAddr='127.0.0.1', port=9000, outsocket=outSocket) :
     """convert bundle to a binary and send it
     """
-    outsocket.sendto(bundle.message, (ipAddr, port))
+    if isinstance(bundle, Bundle):
+        outsocket.sendto(bundle.data(), (ipAddr, port))
+    else:
+        outsocket.sendto(bundle.message, (ipAddr, port))
 
 
 def createBinaryMsg(oscAddress, dataArray):
