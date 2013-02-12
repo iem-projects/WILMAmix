@@ -75,10 +75,13 @@ class RTSPserver:
         return True
 
 if __name__ == '__main__':
-    import time
+    import time, gobject
     s=RTSPserver()
     s.start()
     print "URI: ", s.getURI()
-    time.sleep(10)
+    try:
+        gobject.MainLoop().run()
+    except KeyboardInterrupt:
+        pass
     s.stop()
     print "bye"

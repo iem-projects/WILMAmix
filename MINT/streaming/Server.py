@@ -31,22 +31,52 @@ def Server(type, profile='L16', source='audiotestsrc'):
 
 if __name__ == '__main__':
     import time
+    import gobject
+
+    timestamp=0
+    state=0
+    s=None
+    def next():
+        global timestamp
+        now=time.time()
+        delta=now-timestamp
+        if delta>10:
+            timestamp=now
+            print "next"
+            return True
+        return False
+    def idler():
+        global state, s
+        if not next():
+            return True
+        state+=1
+        if 1 is state:
+          s=Server('rtsp')
+          s.start()
+          print "URI: ", s.getURI()
+        elif 2 is state:
+            s.stop()
+            s.start()
+            print "URI: ", s.getURI()
+        elif 3 is state:
+            s.stop()
+            s=Server('rtsp')
+            s.start()
+            print "URI: ", s.getURI()
+        elif 4 is state:
+            s.stop()
+        elif state>4:
+            print "bye"
+            gobject.MainLoop().quit()
+
+        return True
+
+
     s=Server(type='rtsp')
+    gobject.idle_add(idler)
 
-    s.start()
-    print "URI: ", s.getURI()
-    time.sleep(10)
-    s.stop()
-
-    s.start()
-    print "URI: ", s.getURI()
-    time.sleep(10)
-    s.stop()
-
-    s=Server(type='rtsp')
-    s.start()
-    print "URI: ", s.getURI()
-    time.sleep(10)
-    s.stop()
-    
-    print "bye"
+    try:
+        gobject.MainLoop().run()
+    except KeyboardInterrupt:
+        pass
+    print "ciao"
