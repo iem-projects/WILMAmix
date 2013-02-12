@@ -1,0 +1,9 @@
+OSC:
+	pattern matching
+	catch errors with unknown tags
+		(currently the addressManager will shutdown itself if an unknown
+		typetag arrives)
+	Bundle class
+		settable prefix
+		easy appending (__add__)
+

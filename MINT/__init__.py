@@ -7,5 +7,15 @@ __license__ = "GNU General Public License"
 __all__ = ["Discovery", "net", "Metro"]
 
 from Discovery import Publisher, Discoverer
-from net import NetServer, NetClient
-from Metro import Metro
+try:
+  from net import NetServer
+except:
+  print "Unable to import NetServer"
+try:
+  from net import NetClient
+except:
+  print "Unable to import NetClient"
+try:
+  from Metro import Metro
+except:
+  print "Unable to import Metro"

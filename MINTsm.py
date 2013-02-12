@@ -21,6 +21,8 @@
 from MINT import NetServer
 from MINT.osc import createBundle, appendToBundle
 
+from MINT.streaming import Server as StreamingServer
+
 import gobject
 
 class State:
@@ -41,14 +43,38 @@ class State:
 class MINTsm:
     def __init__(self):
         self.state=State()
-        self.server = NetServer()
+        self.server = NetServer(port=7777)
         self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
+        self.server.add(self.controlStream, '/stream')
         self.mixer = self.state.mixer
+        self.streamer = None
 
     def setGain(self, msg, src):
         if self.mixer is not None:
             gains=self.mixer.gain(msg[2:])
+
+    def controlStream(self, msg, src):
+        state=msg[2]
+        print "controlStream", state
+        if state is not None and int(state) > 0:
+            self.startStream()
+        else:
+            self.stopStream()
+
+    def startStream(self):
+        print "startstream"
+        if self.streamer is not None:
+            self.stopStream()
+        self.streamer = StreamingServer(type='rtsp')
+        self.streamer.start()
+        print self.streamer.getURI()
+
+    def stopStream(self):
+        print "stopstream"
+        if self.streamer is not None:
+            self.streamer.stop()
+        self.streamer = None
 
     def ping(self, msg, src):
         self.state.update()
