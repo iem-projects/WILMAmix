@@ -6,8 +6,6 @@ __author__ = "IOhannes m zmölnig, IEM"
 __license__ = "GNU General Public License"
 __all__ = []
 
-from utils import *
-
 from Discovery import Publisher, Discoverer
 __all__+=["Discovery"]
 

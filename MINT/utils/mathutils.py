@@ -21,7 +21,8 @@
 
 def scale(x, minIn, maxIn, minOut=0., maxOut=1.):
     """scale a value from between minIn..maxIn to minOut..maxOut"""
-    y=(x-minIn)*(minOut-maxOut)/(minIn-maxIn)+minOut
+    x=float(x)
+    y=(x-minIn)*float(minOut-maxOut)/float(minIn-maxIn)+minOut
     return y
 
 def clamp(x, lo=0.0, hi=1.0):
