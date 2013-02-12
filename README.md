@@ -48,6 +48,7 @@ Dependencies (MINTsm)
 ---------------------
 - python
 - python-avahi
+- python-pyalsa
 - python-gst0.10 (?)
 - python-gst0.10-rtsp
 - avahi-daemon
