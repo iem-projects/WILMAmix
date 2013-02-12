@@ -18,16 +18,18 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-
-def scale(x, minIn, maxIn, minOut=0., maxOut=1.):
-    """scale a value from between minIn..maxIn to minOut..maxOut"""
-    x=float(x)
-    y=(x-minIn)*float(minOut-maxOut)/float(minIn-maxIn)+minOut
-    return y
-
-def clamp(x, lo=0.0, hi=1.0):
+def CLAMP(x, lo=0.0, hi=1.0):
     if(x<lo):
         return lo
     elif(x>hi):
         return hi
     return x
+
+def SCALE(x, minIn, maxIn, minOut=0., maxOut=1., clamp=False):
+    """scale a value from between minIn..maxIn to minOut..maxOut"""
+    x=float(x)
+    y=(x-minIn)*float(minOut-maxOut)/float(minIn-maxIn)+minOut
+    if clamp:
+        y=CLAMP(y, minOut, maxOut)
+    return y
+
