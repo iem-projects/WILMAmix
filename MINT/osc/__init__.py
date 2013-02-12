@@ -8,4 +8,4 @@ __all__ = ["oscAPI", "OSC"]
 from OSC import *
 from oscAPI import *
 
-
+from Bundle import Bundle
