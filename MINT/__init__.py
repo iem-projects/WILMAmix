@@ -7,6 +7,20 @@ __license__ = "GNU General Public License"
 __all__ = ["Discovery", "net", "AudioMixer", "Metro"]
 
 from Discovery import Publisher, Discoverer
-from net import NetServer, NetClient
-from AudioMixer import AudioMixer
-from Metro import Metro
+try:
+  from net import NetServer
+except:
+  print "Unable to import NetServer"
+try:
+  from net import NetClient
+except:
+  print "Unable to import NetClient"
+try:
+  from AudioMixer import AudioMixer
+except:
+  print "Unable to import AudioMixer"
+try:
+  from Metro import Metro
+except:
+  print "Unable to import Metro"
+
