@@ -4,18 +4,25 @@
 __version__ = "0"
 __author__ = "IOhannes m zmölnig, IEM"
 __license__ = "GNU General Public License"
-__all__ = ["Discovery", "net", "Metro"]
+__all__ = []
 
 from Discovery import Publisher, Discoverer
+__all__+=["Discovery"]
+
 try:
-  from net import NetServer
+  from NetServer import NetServer
+  __all__+=["NetServer"]
 except:
   print "Unable to import NetServer"
+
 try:
-  from net import NetClient
+  from NetClient import NetClient
+  __all__+=["NetClient"]
 except:
   print "Unable to import NetClient"
+
 try:
   from Metro import Metro
+  __all__+=["Metro"]
 except:
   print "Unable to import Metro"

@@ -96,67 +96,6 @@ class NetServer:
         if self.socket is not None and self.remote is not None:
             self.socket.sendto(bundle.message, self.remote)
 
-
-class NetClient:
-    """ OSC-client running on GOD.
-    sends OSC-messages to SMi.
-    receives OSC-messages from SMi (and emits signals with the data)
-    """
-    from PySide.QtNetwork import QUdpSocket
-
-    def __init__(self, host, port, oscprefix=''):
-        print "NetClient"
-        self.addressManager = osc.CallbackManager()
-        self.socket = self.QUdpSocket()
-        self.socket.readyRead.connect(self._callback)
-        self.socket.connectToHost(host, port);
-        
-        self.remote = (host, port) ## FIXXME: 'host' is not canonicalized
-        self.keepListening=True
-        self.oscPrefix=oscprefix
-      
-
-    def __del__(self):
-        self.shutdown()
-
-    def shutdown(self):
-        self.keepListening=False
-        if self.socket is not None:
-            try:
-                self.socket.shutdown()
-                self.socket.close()
-            except:
-                pass
-        if self.addressManager is not None:
-            del self.addressManager
-            self.addressManager = None
-        self.remote = None
-        self.socket = None
-
-    def _callback(self):
-        '''Asynchronous connection listener. Starts a handler for each connection.'''
-        while self.socket.hasPendingDatagrams():
-            datagram, sender, senderPort = self.socket.readDatagram(self.socket.pendingDatagramSize())
-            self.addressManager.handle(datagram.data(), (sender.toString(), senderPort))
-
-    def add(self, callback, oscAddress):
-        """add a callback for oscAddress"""
-        if self.addressManager is not None:
-            self.addressManager.add(callback,  self.oscPrefix+oscAddress)
-
-    def sendMsg(self, oscAddress, dataArray=[]):
-        """send an OSC-message to the server"""
-        from PySide.QtNetwork import QHostAddress
-
-        if self.socket is not None and self.remote is not None:
-            #self.socket.writeDatagram( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray),  QHostAddress(self.remote[0]), self.remote[1])
-            self.socket.writeDatagram( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray),  QHostAddress(self.remote[0]), self.remote[1])
-
-    def sendBundle(self, bundle):
-        """send an OSC-bundle to the server"""
-        if self.socket is not None and self.remote is not None:
-            self.socket.sendto(bundle.message, self.remote)
-
 def _callback(message, source):
     print "callback (no class): ", message
 
@@ -178,23 +117,8 @@ class _TestServer:
     def shutdown(self):
         self.serv.shutdown()
 
-n = None
-def _test_server():
-    global n
-    n = _TestServer(port=7777)
-
-def _test_client():
-    import time
-    global n
-    n = NetClient('localhost', 7777)
-    n.add(_callback, '/foo')
-    n.sendMsg('/foo');
-
 if __name__ == '__main__':
-    if 1 is 0:
-        _test_server()
-    else:
-        _test_client()
+    n = _TestServer(port=7777)
 
     try:
         gobject.MainLoop().run()
