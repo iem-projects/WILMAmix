@@ -6,4 +6,4 @@ __author__ = "IOhannes m zmölnig, IEM"
 __license__ = "GNU General Public License"
 __all__ = ["AudioMixer", ]
 
-from AudioMixer import AudioMixer
+from mixer import AudioMixer
