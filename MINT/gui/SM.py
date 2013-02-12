@@ -71,12 +71,16 @@ class SM(QtGui.QGroupBox):
         
 
     def faderSet(self, value):
-        self.connection.sendMsg('/gain', [value,])
+        gain=(value)/(1.0*self.fader.maximum())
+        
+        print "user: ",gain
+        self.connection.sendMsg('/gain', [gain,]) #FIXME get max.value from slider
 
     def faderCb(self, msg, src):
-        gain=msg[2]
-        if self.fader.value() != gain:
-            self.fader.setValue(gain)
+        gain=int((msg[2])*self.fader.maximum()+0.5)
+        self.fader.blockSignals(True)
+        self.fader.setValue(gain)
+        self.fader.blockSignals(False)
 
     def ping(self):
         self.connection.sendMsg('/ping')
