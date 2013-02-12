@@ -39,9 +39,8 @@ class Bundle:
         data=message[1]
         m.address = address
         for x in data:
-            m.append(x)
-        self.b.append(m, 'b')
-    def __add__(self, message):
-        return self.append(message)
+            m.append(x)        
+        self.b.append(m.getBinary(), 'b')
+
     def data(self):
         return self.b.message
