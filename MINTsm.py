@@ -19,17 +19,23 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 from MINT import NetServer
-from MINT.audio import AudioMixer
 from MINT.osc import createBundle, appendToBundle
 
 import gobject
 
 class State:
     def __init__(self):
-        self.mixer = AudioMixer()
+        self.mixer=None
+        self.gains=[]
+        try:
+            from MINT.audio import AudioMixer
+            self.mixer = AudioMixer()
+        except ImportError:
+            print "no AudioMixer available"
 
     def update(self):
-        self.gains=self.mixer.gain()
+        if self.gains is not None:
+            self.gains=self.mixer.gain()
 
 
 class MINTsm:
@@ -41,7 +47,8 @@ class MINTsm:
         self.mixer = self.state.mixer
 
     def setGain(self, msg, src):
-        gains=self.mixer.gain(msg[2:])
+        if self.mixer is not None:
+            gains=self.mixer.gain(msg[2:])
 
     def ping(self, msg, src):
         self.state.update()
