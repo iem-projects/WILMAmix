@@ -100,8 +100,8 @@ class Publisher:
         self.host        = "" # Host to publish records for, default to localhost
 
         if name is None:
-            import socket
-            name = socket.gethostname()
+            import MINT.utils
+            name = MINT.utils.Constants.MINT_HOSTNAME
 
         if type(name) is not str:
             name = str(name)

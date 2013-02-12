@@ -20,12 +20,13 @@
 
 from OSC import OSCMessage
 import socket
+import MINT.utils
 
 
 class Bundle:
     def __init__(self, prefix=None, timestamp=None):
         if prefix is None:
-            prefix= '/'+socket.gethostname()
+            prefix= '/'+MINT.utils.Constants.MINT_HOSTNAME
         b = OSCMessage()
         b.address = ""
         b.append("#bundle")

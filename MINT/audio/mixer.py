@@ -43,7 +43,7 @@ import pyalsa.alsahcontrol
 import MINT.utils
 
 class AudioMixer:
-    ControlID = 1 ## FIXME '4' is hardcoded to the SMi's 'Amp' control
+    ControlID = MINT.utils.Constants.MINT_MIXER_CONTROLNUM
     def __init__(self):
         self.hctl =  pyalsa.alsahcontrol.HControl()
         self.element = pyalsa.alsahcontrol.Element(self.hctl, AudioMixer.ControlID) 

@@ -21,6 +21,7 @@
 import osc
 import socket, gobject
 from Discovery import Publisher
+from MINT.utils import Constants
 
 class NetServer:
     """ OSC-server running on SMi.
@@ -37,7 +38,7 @@ class NetServer:
         self.keepListening=True
         self.oscPrefix=oscprefix
         if self.oscPrefix is None:
-            self.oscPrefix='/'+socket.gethostname()
+            self.oscPrefix='/'+Constants.MINT_HOSTNAME
         
         gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
         
