@@ -18,11 +18,35 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
+
+
+################################################################
+##import pyalsa.alsahcontrol as alsahcontrol
+##hctl = alsahcontrol.HControl()
+###hctl.list()
+###element = alsahcontrol.Element(hctl,(4, 2, 0, 0, 'Amp Capture Volume', 0))
+##element = alsahcontrol.Element(hctl,4)
+##info = alsahcontrol.Info(element)
+
+##value = alsahcontrol.Value(element)
+
+##value.read()
+##values = value.get_tuple(info.type, info.count)
+
+
+##value.set_tuple(info.type, (10,))
+##value.write()
+################################################################
+
+
 import alsaaudio
 
 class AudioMixer:
     def __init__(self):
-        self.mixer=alsaaudio.Mixer()
+        try:
+            self.mixer=alsaaudio.Mixer('Amp')
+        except alsaaudio.ALSAAudioError:
+            self.mixer=alsaaudio.Mixer()
 
     def gain(self, value=None):
         if value is not None:
