@@ -40,6 +40,7 @@
 
 
 import pyalsa.alsahcontrol
+import MINT.utils
 
 class AudioMixer:
     ControlID = 1 ## FIXME '4' is hardcoded to the SMi's 'Amp' control
@@ -56,12 +57,12 @@ class AudioMixer:
             elif 1 is len(value):
                 v=float(value[0])
                 value=[v]*self.info.count
-            value=[float(v)*self.info.max for v in value]
+            value=[MINT.utils.SCALE(v, 0, 1, self.info.min, self.info.max, True) for v in value]
             self.value.set_array(self.info.type, value)
             self.value.write()
         self.value.read()
         gains = self.value.get_array(self.info.type, self.info.count)
-        gainsi = [float(i)/float(self.info.max) for i in gains]
+        gainsi = [MINT.utils.SCALE(i, self.info.min, self.info.max, 0., 1., True) for i in gains]
         return  gainsi
 
 if __name__ == '__main__':

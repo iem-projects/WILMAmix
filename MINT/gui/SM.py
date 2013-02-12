@@ -23,7 +23,7 @@ from PySide import QtCore, QtGui
 from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
 
-import MINT
+import MINT, MINT.utils
 
 class SM(QtGui.QGroupBox):
     
@@ -71,13 +71,12 @@ class SM(QtGui.QGroupBox):
         
 
     def faderSet(self, value):
-        gain=(value)/(1.0*self.fader.maximum())
-        
-        print "user: ",gain
+        gain=MINT.utils.SCALE(value, self.fader.minimum(), self.fader.maximum(), 0., 1., True)
         self.connection.sendMsg('/gain', [gain,]) #FIXME get max.value from slider
 
     def faderCb(self, msg, src):
-        gain=int((msg[2])*self.fader.maximum()+0.5)
+        gainF=msg[2]
+        gain=MINT.utils.SCALE(gainF, 0., 1., self.fader.minimum(), self.fader.maximum(), True)
         self.fader.blockSignals(True)
         self.fader.setValue(gain)
         self.fader.blockSignals(False)
