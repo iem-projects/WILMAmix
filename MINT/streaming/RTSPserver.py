@@ -53,13 +53,18 @@ class RTSPserver:
             return None
         port=int(self.server.get_service())
         ip=socket.gethostbyname(socket.gethostname())
-        
-        return 'rtsp://'+ip+':'+str(port)+self.mountpoint
+        uri= 'rtsp://'+ip+':'+str(port)+self.mountpoint
+        #print "URI: ", uri
+        return uri
 
     def start(self):
+        #print "start", self
         self.serverID=self.server.attach()
+        #print "started: ", self.serverID
+        self.getURI()
 
     def stop(self):
+        #print "stop", self
         # ouch, how to do that?
         glib.source_remove(self.serverID)
         self.serverID=0L
