@@ -19,7 +19,7 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 from MINT import NetServer
-from MINT.osc import createBundle, appendToBundle
+from MINT.osc import Bundle
 
 from MINT.streaming import Server as StreamingServer
 
@@ -78,9 +78,8 @@ class MINTsm:
 
     def ping(self, msg, src):
         self.state.update()
-        print "gains", self.state.gains
-        bundle = createBundle()
-        appendToBundle(bundle, '/ferrari/gain', self.state.gains)
+        bundle = Bundle()
+        bundle.append(('/gain', self.state.gains))
         self.server.sendBundle(bundle)
         
         
