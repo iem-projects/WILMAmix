@@ -94,7 +94,10 @@ class NetServer:
     def sendBundle(self, bundle):
         """send an OSC-bundle to connected client(s)"""
         if self.socket is not None and self.remote is not None:
-            self.socket.sendto(bundle.message, self.remote)
+            if isinstance(bundle, osc.Bundle):
+                self.socket.sendto(bundle.data(), self.remote)
+            else:
+                self.socket.sendto(bundle.message, self.remote)
 
 def _callback(message, source):
     print "callback (no class): ", message

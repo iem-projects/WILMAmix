@@ -79,7 +79,10 @@ class NetClient:
     def sendBundle(self, bundle):
         """send an OSC-bundle to the server"""
         if self.socket is not None and self.remote is not None:
-            self.socket.sendto(bundle.message, self.remote)
+            if isinstance(bundle, osc.Bundle):
+                self.socket.sendto(bundle.data(), self.remote)
+            else:
+                self.socket.sendto(bundle.message, self.remote)
 
 
 
