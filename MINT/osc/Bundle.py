@@ -27,19 +27,19 @@ except ImportError:
 
 
 class Bundle:
-    def __init__(self, prefix=None, timestamp=None):
-        if prefix is None:
+    def __init__(self, oscprefix=None, timestamp=None):
+        if oscprefix is None:
             try:
-                prefix= '/'+MINT.utils.Constants.MINT_HOSTNAME
+                oscprefix= '/'+MINT.utils.Constants.MINT_HOSTNAME
             except NameError:
-                prefix=''
+                oscprefix=''
         b = OSCMessage()
         b.address = ""
         b.append("#bundle")
         b.append(0)
         b.append(0)
         self.b=b
-        self.prefix=prefix
+        self.prefix=oscprefix
     def append(self, message):
         m = OSCMessage()
         address=self.prefix+message[0]
