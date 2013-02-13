@@ -39,10 +39,16 @@ class State:
         self.gains=self.mixer.gain()
         self.levels=self.meter.getLevels()
 
+class Setting:
+    def __init__(self):
+        self.streamtype='rtsp'
+        self.streamprofile='L16'
+
 
 class MINTsm:
     def __init__(self):
         self.state=State()
+        self.setting=Setting()
         self.server = NetServer(port=7777)
         self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
@@ -53,6 +59,13 @@ class MINTsm:
     def setGain(self, msg, src):
         if self.mixer is not None:
             gains=self.mixer.gain(msg[2:])
+
+    def controlStreamSettings(self, msg, src):
+        try:
+            self.setting.streamtype=msg[2]
+            self.setting.streamprofile=msg[3]
+        except IndexError:
+            pass
 
     def controlStream(self, msg, src):
         state=msg[2]
@@ -66,7 +79,7 @@ class MINTsm:
         print "startstream"
         if self.streamer is not None:
             self.stopStream()
-        self.streamer = StreamingServer(type='rtsp')
+        self.streamer = StreamingServer(type=self.setting.streamtype, profile=self.setting.streamprofile)
         self.streamer.start()
         print self.streamer.getURI()
 
