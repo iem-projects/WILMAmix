@@ -417,6 +417,12 @@ class qsynthMeter(QtGui.QFrame):
     def setValue ( self, iPort, fValue ):
         self.m_ppValues[iPort].setValue(fValue)
 
+    def setValues( self, fValues ):
+        if len(fValues) is 1:
+            fValues = [fValues] * len(self.m_ppValues)
+        for i, v in enumerate(fValues):
+            self.setValue(i, v)
+
 
     # Common resource accessor.
     def color ( self, iIndex ):
