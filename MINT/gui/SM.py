@@ -105,7 +105,9 @@ class SM(QtGui.QGroupBox):
 
     def startStream(self):
         b=MINT.osc.Bundle(oscprefix='/'+self.name)
-        b+=('/stream/setting', [self.setting.streamtype, self.setting.streamprofile])
+        b+=('/stream/setting/type', [self.setting.streamtype])
+        b+=('/stream/setting/profile', [self.setting.streamprofile])
+        b+=('/stream/setting/channels', [4])
         b+=('/stream', [True])
         self.connection.sendBundle(b)
         pass
