@@ -22,6 +22,7 @@ from MINT import NetServer
 from MINT.osc import Bundle
 
 from MINT.streaming import Server as StreamingServer
+from MINT.audio import AudioMeter, AudioMixer
 
 import gobject
 
@@ -29,15 +30,14 @@ class State:
     def __init__(self):
         self.mixer=None
         self.gains=[]
-        try:
-            from MINT.audio import AudioMixer
-            self.mixer = AudioMixer()
-        except ImportError:
-            print "no AudioMixer available"
+        self.levels=[]
+        self.mixer = AudioMixer()
+        self.meter = AudioMeter()
+        self.meter.start()
 
     def update(self):
-        if self.gains is not None:
-            self.gains=self.mixer.gain()
+        self.gains=self.mixer.gain()
+        self.levels=self.meter.getLevels()
 
 
 class MINTsm:
@@ -80,6 +80,7 @@ class MINTsm:
         self.state.update()
         bundle = Bundle()
         bundle.append(('/gain', self.state.gains))
+        bundle.append(('/level', self.state.levels))
         self.server.sendBundle(bundle)
         
         
