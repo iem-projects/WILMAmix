@@ -198,9 +198,18 @@ def OSCArgument(next):
     elif type(next) == type(13):
         binary  = struct.pack(">i", next)
         tag = "i"
+    elif type(next) == type(True):
+        binary = ''
+        if next is True:
+            tag = "T"
+        else:
+            tag = "F"
+    elif next is None:
+        binary = ''
+        tag = 'N'
     else:
         binary  = ""
-        tag = ""
+        tag = "N" ## better than nothing...
 
     return (tag, binary)
 
