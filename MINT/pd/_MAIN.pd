@@ -1,0 +1,2 @@
+#N canvas 4 49 450 300 10;
+#X obj 130 104 _loader;
