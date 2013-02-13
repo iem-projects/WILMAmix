@@ -23,5 +23,7 @@ import socket
 class Constants:
     MINT_HOSTNAME = socket.gethostname()
     MINT_MIXER_CONTROLNUM = 4  ## FIXME '4' is hardcoded to the SMi's 'Amp' control
-    if MINT_HOSTNAME is 'umlautO':
+    if MINT_HOSTNAME == 'umlautO':
         MINT_MIXER_CONTROLNUM = 1  ## stub
+    elif MINT_HOSTNAME == 'ferrari':
+        MINT_MIXER_CONTROLNUM = 3  ## stub
