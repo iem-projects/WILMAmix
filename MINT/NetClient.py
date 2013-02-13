@@ -73,16 +73,16 @@ class NetClient:
         from PySide.QtNetwork import QHostAddress
 
         if self.socket is not None and self.remote is not None:
-            #self.socket.writeDatagram( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray),  QHostAddress(self.remote[0]), self.remote[1])
             self.socket.writeDatagram( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray),  QHostAddress(self.remote[0]), self.remote[1])
 
     def sendBundle(self, bundle):
         """send an OSC-bundle to the server"""
+        from PySide.QtNetwork import QHostAddress
         if self.socket is not None and self.remote is not None:
             if isinstance(bundle, osc.Bundle):
-                self.socket.sendto(bundle.data(), self.remote)
+                self.socket.writeDatagram(bundle.data(),  QHostAddress(self.remote[0]), self.remote[1])
             else:
-                self.socket.sendto(bundle.message, self.remote)
+                self.socket.writeDatagram(bundle.message, QHostAddress(self.remote[0]), self.remote[1])
 
 
 
