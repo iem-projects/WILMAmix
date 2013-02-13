@@ -294,10 +294,13 @@ class CallbackManager:
         """Adds a callback to our set of callbacks,
         or removes the callback with name if callback
         is None."""
-        if callback == None:
-            del self.callbacks[name]
+        if type(name) is str:
+            if callback == None:
+                del self.callbacks[name]
+            else:
+                self.callbacks[name] = callback
         else:
-            self.callbacks[name] = callback
+            raise Exception("name needs to be a string: "+str(name))
 
     def unbundler(self, messages):
         """Dispatch the messages in a decoded bundle."""
