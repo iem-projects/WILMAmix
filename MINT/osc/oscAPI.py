@@ -57,10 +57,12 @@ def bind(func, oscaddress):
     addressManager.add(func, oscaddress)
 
 
-def sendMsg(oscAddress, dataArray=[], ipAddr='127.0.0.1', port=9000, outsocket=outSocket) :
+def sendMsg(oscAddress, dataArray=[], ipAddr='127.0.0.1', port=9000, outsocket=None) :
     """create and send normal OSC msgs
         defaults to '127.0.0.1', port 9000
     """
+    if outsocket is None:
+        outsocket=outSocket
     outsocket.sendto( createBinaryMsg(oscAddress, dataArray),  (ipAddr, port))
 
 
@@ -93,9 +95,11 @@ def appendToBundle(bundle, oscAddress, dataArray):
         bundle.append( createBinaryMsg(oscAddress, dataArray),  'b')
 
 
-def sendBundle(bundle, ipAddr='127.0.0.1', port=9000, outsocket=outSocket) :
+def sendBundle(bundle, ipAddr='127.0.0.1', port=9000, outsocket=None) :
     """convert bundle to a binary and send it
     """
+    if outsocket is None:
+        outsocket=outSocket
     if isinstance(bundle, Bundle.Bundle):
         outsocket.sendto(bundle.data(), (ipAddr, port))
     else:
