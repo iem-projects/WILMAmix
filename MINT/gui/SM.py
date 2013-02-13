@@ -109,5 +109,5 @@ class SM(QtGui.QGroupBox):
         pass
 
     def stopStream(self):
-        self.connection.sendMsg('/stream')
+        self.connection.sendMsg('/stream', [False])
         pass
