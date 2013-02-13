@@ -68,14 +68,15 @@ class RTSPserver:
         #print "stop", self
         # ouch, how to do that?
         print "server stopping"
-        self._timeout(self.server)
         glib.source_remove(self.serverID)
         glib.source_remove(self.timeoutID)
         self.serverID=0L
         self.timeoutID=0L
 
-    def _timeout(self, server, ignored):
-        pool = server.get_session_pool()
+    def _timeout(self):
+        """ timeout gets called periodically and should clean up all terminating sessions.
+        it does NOT remove connected servers"""
+        pool = self.server.get_session_pool()
         pool.cleanup()
         return True
 
