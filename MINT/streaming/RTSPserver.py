@@ -61,11 +61,12 @@ class RTSPserver:
         #print "start", self
         self.serverID=self.server.attach()
         #print "started: ", self.serverID
-        self.getURI()
+        #self.getURI()
 
     def stop(self):
         #print "stop", self
         # ouch, how to do that?
+        print "server stopping"
         glib.source_remove(self.serverID)
         self.serverID=0L
 
