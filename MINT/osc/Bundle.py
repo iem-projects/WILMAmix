@@ -48,6 +48,8 @@ class Bundle:
         for x in data:
             m.append(x)        
         self.b.append(m.getBinary(), 'b')
-
+        return self
+    def __iadd__(self, message):
+        return self.append(message)
     def data(self):
         return self.b.message
