@@ -45,6 +45,7 @@ class SM(QtGui.QGroupBox):
         self.connection = MINT.NetClient(config['address'], config['port'], oscprefix='/'+name)
         self.connection.add(self.faderCb, '/gain')
         self.connection.add(self.levelCb, '/level')
+        self.connection.add(self.streamURI, '/stream/uri')
 
         # Create widgets
         self.stream = QtGui.QCheckBox(self.tr("streaming"), self)
@@ -112,3 +113,6 @@ class SM(QtGui.QGroupBox):
     def stopStream(self):
         self.connection.sendMsg('/stream', [False])
         pass
+
+    def streamURI(self, msg, src):
+        print "URI: ", msg[2]
