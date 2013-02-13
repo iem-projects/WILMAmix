@@ -23,12 +23,17 @@ from PySide import QtCore, QtGui
 from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
 
-import MINT, MINT.utils
+import MINT, MINT.utils, MINT.osc
 
 class SM(QtGui.QGroupBox):
+    class Setting:
+        def __init__(self):
+            self.streamtype='rtsp'
+            self.streamprofile='L16'
     
     def __init__(self, parent=None, name="SMi", confs=None):
         super(SM, self).__init__(parent)
+        self.setting = SM.Setting()
         self.setTitle(name)
         #if confs is not None:
         #    print confs
@@ -42,7 +47,7 @@ class SM(QtGui.QGroupBox):
 
         # Create widgets
         self.stream = QtGui.QCheckBox(self.tr("streaming"), self)
-        self.stream.setDown(True)
+        self.stream.stateChanged.connect(self.streamSet)
 
         mixframe=QtGui.QFrame(self)
         sublayout=QHBoxLayout()
@@ -50,6 +55,7 @@ class SM(QtGui.QGroupBox):
         mixframe.setLayout(sublayout)
 
         self.fader = QSlider()
+        self.fader.setEnabled(False)
         self.fader.valueChanged.connect(self.faderSet)
         sublayout.addWidget(self.fader)
         self.meter = qsynthMeter(self, 4, [-1])
@@ -88,3 +94,20 @@ class SM(QtGui.QGroupBox):
 
     def ping(self):
         self.connection.sendMsg('/ping')
+
+    def streamSet(self, value):
+        if value is 0:
+            self.stopStream()
+        else:
+            self.startStream()
+
+    def startStream(self):
+        b=MINT.osc.Bundle()
+        b+=('/stream/setting', [self.setting.streamtype, self.setting.streamprofile])
+        b+=('/stream', [True])
+        self.connection.sendBundle(b)
+        pass
+
+    def stopStream(self):
+        self.connection.sendMsg('/stream')
+        pass
