@@ -56,7 +56,7 @@ class MINTsm:
 
     def controlStream(self, msg, src):
         state=msg[2]
-        print "controlStream", state
+        print "controlStream", msg
         if state is not None and int(state) > 0:
             self.startStream()
         else:
