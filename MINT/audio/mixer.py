@@ -62,7 +62,12 @@ class AudioMixer:
             self.value.write()
         self.value.read()
         gains = self.value.get_array(self.info.type, self.info.count)
-        gainsi = [MINT.utils.SCALE(i, self.info.min, self.info.max, 0., 1., True) for i in gains]
+        try:
+            gainsi = [MINT.utils.SCALE(i, self.info.min, self.info.max, 0., 1., True) for i in gains]
+        except:
+            print "OUCH: ", gains
+            print "mixer: ", self.info.name
+            gainsi=[0]
         return  gainsi
 
 if __name__ == '__main__':
