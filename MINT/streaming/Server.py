@@ -19,7 +19,7 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def Server(type, profile='L16', source='jackaudiosrc'):
+def Server(type, profile='L16', channels=1, source='jackaudiosrc'):
     if 'rtsp' == type:
         try:
             import RTSPserver

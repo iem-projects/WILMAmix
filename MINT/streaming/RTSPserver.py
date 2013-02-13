@@ -24,14 +24,14 @@ import glib
 import socket
 
 class RTSPserver:
-    def __init__(self, profile='L16', source='audiotestsrc'):
+    def __init__(self, profile='L16', channels=2, source='audiotestsrc'):
         profile = profile.replace(' ', '')
         depayelement='rtp'+profile+'pay'
         if not ( gstutils.checkElement(source) and gstutils.checkElement(depayelement) ):
             print ouch
             return
         
-        pipeline=source + " ! audioconvert ! audio/x-raw-int ! "+depayelement+" name=pay0"
+        pipeline=source + " ! audioconvert ! audio/x-raw-int/channels="+channels+" ! "+depayelement+" name=pay0"
         self.mountpoint='/'+profile
 
         self.server = gst.rtspserver.Server()
