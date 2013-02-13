@@ -36,20 +36,20 @@ Audio data is sent back to GOD using RTSP/RTP, using a user-selected codec
 
 Dependencies (MINTmix)
 ----------------------
-- python
-- python-pyside.qtcore
-- python-pyside.qtgui
-- python-avahi
-- python-netifaces
-- python-numpy
-- avahi-daemon
++ python
++ python-pyside.qtcore
++ python-pyside.qtgui
++ python-avahi
++ python-netifaces
++ python-numpy
++ avahi-daemon
 
 Dependencies (MINTsm)
 ---------------------
-- python
-- python-avahi
-- python-pyalsa
-- python-gst0.10
-- python-gst0.10-rtsp
-- avahi-daemon
++ python
++ python-avahi
++ python-pyalsa
++ python-gst0.10
++ python-gst0.10-rtsp
++ avahi-daemon
 - gstreamer0.10-alsa
