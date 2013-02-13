@@ -25,7 +25,7 @@ import gst
 class AudioMeter:
     def __init__(self):
         self.name = 'mymeter'
-        pipestring='jackaudiosrc ! audio/x-raw-float,channels=4 ! audioconvert ! level name='+self.name+' ! fakesink'
+        pipestring='jackaudiosrc client-name="MINTmeter" ! audio/x-raw-float,channels=4 ! audioconvert ! level name='+self.name+' ! fakesink'
         self.pipeline = gst.parse_launch(pipestring)
         self.meter = self.pipeline.get_by_name(self.name)
         self.bus = self.pipeline.get_bus()
@@ -34,7 +34,7 @@ class AudioMeter:
 
     def _handler(self, bus, message, data):
         if (gst.MESSAGE_ELEMENT is message.type) and (message.src.get_name() == self.name):
-            self.levels = message.structure['rms']
+            self.levels = message.structure['peak']
         return True
 
     def start(self):
