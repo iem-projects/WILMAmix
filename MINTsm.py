@@ -53,6 +53,7 @@ class MINTsm:
         self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
         self.server.add(self.controlStream, '/stream')
+        self.server.add(self.controlStreamSetting, '/stream/setting')
         self.mixer = self.state.mixer
         self.streamer = None
 
@@ -60,7 +61,7 @@ class MINTsm:
         if self.mixer is not None:
             gains=self.mixer.gain(msg[2:])
 
-    def controlStreamSettings(self, msg, src):
+    def controlStreamSetting(self, msg, src):
         try:
             self.setting.streamtype=msg[2]
             self.setting.streamprofile=msg[3]
@@ -81,7 +82,7 @@ class MINTsm:
             self.stopStream()
         self.streamer = StreamingServer(type=self.setting.streamtype, profile=self.setting.streamprofile)
         self.streamer.start()
-        print self.streamer.getURI()
+        self.server.sendmsg('/stream/uri', [self.streamer.getURI()])
 
     def stopStream(self):
         print "stopstream"
