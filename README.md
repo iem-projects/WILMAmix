@@ -39,6 +39,7 @@ Dependencies (MINTmix)
 + python
 + python-pyside.qtcore
 + python-pyside.qtgui
++ python-pyside.qtnetwork
 + python-avahi
 + python-netifaces
 + python-numpy
