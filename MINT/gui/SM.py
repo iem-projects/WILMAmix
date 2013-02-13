@@ -34,6 +34,7 @@ class SM(QtGui.QGroupBox):
     def __init__(self, parent=None, name="SMi", confs=None):
         super(SM, self).__init__(parent)
         self.setting = SM.Setting()
+        self.name = name
         self.setTitle(name)
         #if confs is not None:
         #    print confs
@@ -102,7 +103,7 @@ class SM(QtGui.QGroupBox):
             self.startStream()
 
     def startStream(self):
-        b=MINT.osc.Bundle()
+        b=MINT.osc.Bundle(oscprefix='/'+self.name)
         b+=('/stream/setting', [self.setting.streamtype, self.setting.streamprofile])
         b+=('/stream', [True])
         self.connection.sendBundle(b)
