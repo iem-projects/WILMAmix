@@ -88,7 +88,7 @@ class MINTsm:
             self.stopStream()
         self.streamer = StreamingServer(type=self.setting.streamtype, profile=self.setting.streamprofile, channels=self.setting.streamchannels)
         self.streamer.start()
-        self.server.sendmsg('/stream/uri', [self.streamer.getURI()])
+        self.server.sendMsg('/stream/uri', [self.streamer.getURI()])
 
     def stopStream(self):
         print "stopstream"
