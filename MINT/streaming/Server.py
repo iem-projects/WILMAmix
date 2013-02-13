@@ -24,10 +24,10 @@ def Server(type, profile='L16', channels=1, source='jackaudiosrc'):
         try:
             import RTSPserver
             return RTSPserver.RTSPserver(profile, source)
-        except:
+        except ImportError:
             pass
 
-    return None
+    raise Exception("invalid streame type: "+type)
 
 if __name__ == '__main__':
     import time
