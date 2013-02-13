@@ -144,8 +144,6 @@ def readDouble(data):
     rest = data[8:]
     return (big, rest)
 
-
-
 def readFloat(data):
     if(len(data)<4):
         print "Error: too few bytes for float", data, len(data)
@@ -157,6 +155,17 @@ def readFloat(data):
 
     return (float, rest)
 
+def readTrue(data):
+    return (True, data)
+
+def readFalse(data):
+    return (False, data)
+
+def readNil(data):
+    return (None, data)
+
+def readInf(data):
+    return (float('Inf'), data)
 
 def OSCBlob(next):
     """Convert a string into an OSC Blob,
@@ -219,8 +228,25 @@ def parseArgs(args):
 
 
 def decodeOSC(data):
+##    i + 32bit integer
+##    h + 64bit integer
+##    f + 32bit floating point number
+##    d + 64bit (double) floating point number
+##    s + string
+##    S + symbol
+##    c - char
+##    m - 4 byte midi packet (8 digits hexadecimal)
+##    T + TRUE
+##    F + FALSE
+##    N + NIL
+##    I + INFINITUM
+
     """Converts a typetagged OSC message to a Python list."""
-    table = { "i" : readInt, "f" : readFloat, "s" : readString, "b" : readBlob, "d" : readDouble }
+    table = { "i" : readInt, "f" : readFloat, "s" : readString, "b" : readBlob, "d" : readDouble,
+              "h" : readLong,
+              "S" : readString,
+              "T" : readTrue, "F": readFalse, "N": readNil, "I": readInf
+              }
     decoded = []
     address,  rest = readString(data)
     typetags = ""
@@ -240,7 +266,10 @@ def decodeOSC(data):
         decoded.append(typetags)
         if typetags[0] == ",":
             for tag in typetags[1:]:
-                value, rest = table[tag](rest)
+                try:
+                    value, rest = table[tag](rest)
+                except:
+                    return decoded
                 decoded.append(value)
         else:
             print "Oops, typetag lacks the magic ,"
