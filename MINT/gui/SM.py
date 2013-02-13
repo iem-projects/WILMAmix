@@ -38,6 +38,7 @@ class SM(QtGui.QGroupBox):
 
         self.connection = MINT.NetClient(config['address'], config['port'], oscprefix='/'+name)
         self.connection.add(self.faderCb, '/gain')
+        self.connection.add(self.levelCb, '/level')
 
         # Create widgets
         self.stream = QtGui.QCheckBox(self.tr("streaming"), self)
@@ -80,6 +81,10 @@ class SM(QtGui.QGroupBox):
         self.fader.blockSignals(True)
         self.fader.setValue(gain)
         self.fader.blockSignals(False)
+
+    def levelCb(self, msg, src):
+        levels_dB=msg[2:]
+        self.meter.setValues(levels_dB)
 
     def ping(self):
         self.connection.sendMsg('/ping')
