@@ -43,6 +43,7 @@ class Setting:
     def __init__(self):
         self.streamtype='rtsp'
         self.streamprofile='L16'
+        self.streamchannels=4
 
 
 class MINTsm:
@@ -53,7 +54,9 @@ class MINTsm:
         self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
         self.server.add(self.controlStream, '/stream')
-        self.server.add(self.controlStreamSetting, '/stream/setting')
+        self.server.add(self.controlStreamType, '/stream/settings/type')
+        self.server.add(self.controlStreamProfile, '/stream/settings/profile')
+        self.server.add(self.controlStreamChannels, '/stream/settings/channels')
         self.mixer = self.state.mixer
         self.streamer = None
 
@@ -61,12 +64,15 @@ class MINTsm:
         if self.mixer is not None:
             gains=self.mixer.gain(msg[2:])
 
-    def controlStreamSetting(self, msg, src):
-        try:
-            self.setting.streamtype=msg[2]
-            self.setting.streamprofile=msg[3]
-        except IndexError:
-            pass
+    def controlStreamType(self, msg, src):
+        self.setting.streamtype=msg[2]
+
+    def controlStreamProfile(self, msg, src):
+        self.setting.streamprofile=msg[2]
+
+    def controlStreamChannels(self, msg, src):
+        self.setting.streamchannels=msg[2]
+
 
     def controlStream(self, msg, src):
         state=msg[2]
@@ -80,7 +86,7 @@ class MINTsm:
         print "startstream"
         if self.streamer is not None:
             self.stopStream()
-        self.streamer = StreamingServer(type=self.setting.streamtype, profile=self.setting.streamprofile)
+        self.streamer = StreamingServer(type=self.setting.streamtype, profile=self.setting.streamprofile, channels=self.setting.streamchannels)
         self.streamer.start()
         self.server.sendmsg('/stream/uri', [self.streamer.getURI()])
 
