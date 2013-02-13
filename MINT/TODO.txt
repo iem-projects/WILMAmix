@@ -1,3 +1,7 @@
 OSC:
 	pattern matching
 	allow catchall callback
+
+
+RTSPserver:
+	if the server shuts down and a client is still listening, the server segfaults once the client quits
