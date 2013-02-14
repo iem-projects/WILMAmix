@@ -293,8 +293,9 @@ class CallbackManager:
     of decoded OSC arguments, including the address and
     the typetags as the first two arguments."""
 
-    def __init__(self):
+    def __init__(self, verbose=False):
         self.callbacks = {}
+        self.verbose=verbose
         self.add(self.unbundler, "#bundle")
 
     def handle(self, data, source = None):
@@ -305,6 +306,8 @@ class CallbackManager:
 
     def dispatch(self, message, source = None):
         """Sends decoded OSC data to an appropriate callback"""
+        if self.verbose :
+            print "dispatching: '", message, "' from ", source
         try:
             if type(message[0]) == str :
                 # got a single message
