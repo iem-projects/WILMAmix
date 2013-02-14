@@ -20,6 +20,7 @@
 
 from MINT import NetServer
 from MINT.osc import Bundle
+import MINT.constants
 
 from MINT.streaming import Server as StreamingServer
 from MINT.audio import AudioMeter, AudioMixer
@@ -50,7 +51,7 @@ class MINTsm:
     def __init__(self):
         self.state=State()
         self.setting=Setting()
-        self.server = NetServer(port=7777)
+        self.server = NetServer(port=MINT.constants.SM_PORT)
         self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
         self.server.add(self.controlStream, '/stream')
