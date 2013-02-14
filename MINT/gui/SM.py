@@ -31,10 +31,12 @@ class SM(QtGui.QGroupBox):
             self.streamtype='rtsp'
             self.streamprofile='L16'
     
-    def __init__(self, parent=None, name="SMi", confs=None):
+    def __init__(self, parent=None, name="SMi", confs=None, maxwidth=None):
         super(SM, self).__init__(parent)
         self.setting = SM.Setting()
         self.name = name
+        self.maxWidth=maxwidth
+
         self.setTitle(name)
         #if confs is not None:
         #    print confs
@@ -60,8 +62,7 @@ class SM(QtGui.QGroupBox):
         self.fader.setEnabled(False)
         self.fader.valueChanged.connect(self.faderSet)
         sublayout.addWidget(self.fader)
-        self.meter = qsynthMeter(self, 4, [-1])
-        #self.meter = qsynthMeter(self, 4, [])
+        self.meter = qsynthMeter(self, 4, [-1], maxwidth=self.maxWidth) # maxwidth should be dynamic and ack the fader width
         sublayout.addWidget(self.meter)
         
         self.iface = QtGui.QComboBox()
@@ -77,7 +78,7 @@ class SM(QtGui.QGroupBox):
         layout.addWidget(self.iface)
    
         self.setLayout(layout)
-        
+        self.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
 
     def faderSet(self, value):
         gain=MINT.utils.SCALE(value, self.fader.minimum(), self.fader.maximum(), 0., 1., True)
