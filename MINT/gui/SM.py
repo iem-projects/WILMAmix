@@ -70,12 +70,16 @@ class SM(QtGui.QGroupBox):
             for conf in sorted(confs.keys()):
                 self.iface.addItem(conf)
 
+        getinfo = QtGui.QPushButton("Dump")
+        getinfo.clicked.connect(self.dumpInfo)
+
         layout = QVBoxLayout()
         layout.setContentsMargins(2,2,2,2)
 
         layout.addWidget(self.stream)
         layout.addWidget(mixframe)
         layout.addWidget(self.iface)
+        layout.addWidget(getinfo)
    
         self.setLayout(layout)
         self.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
@@ -119,3 +123,6 @@ class SM(QtGui.QGroupBox):
 
     def streamURI(self, msg, src):
         print "URI: ", msg[2]
+
+    def dumpInfo(self):
+        self.connection.sendMsg('/dump')
