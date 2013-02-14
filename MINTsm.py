@@ -77,14 +77,13 @@ class MINTsm:
 
     def controlStream(self, msg, src):
         state=msg[2]
-        print "controlStream", msg
+        #print "controlStream", msg
         if state is not None and int(state) > 0:
             self.startStream()
         else:
             self.stopStream()
 
     def startStream(self):
-        print "startstream"
         if self.streamer is not None:
             self.stopStream()
         self.streamer = StreamingServer(type=self.setting.streamtype, profile=self.setting.streamprofile, channels=self.setting.streamchannels)
@@ -92,7 +91,6 @@ class MINTsm:
         self.server.sendMsg('/stream/uri', [self.streamer.getURI()])
 
     def stopStream(self):
-        print "stopstream"
         if self.streamer is not None:
             self.streamer.stop()
         self.streamer = None
