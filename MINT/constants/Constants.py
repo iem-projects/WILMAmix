@@ -27,15 +27,21 @@ print "read config from",_config.read(['MINTmix.conf',
                                        os.path.expanduser('~/.config/iem.at/MINTmix.conf'),
                                        ])
 
-def _configSetInt(config, section, option, varname):
-    if _config.has_section('SMi'):
-        try: globals()[varname] = _config.getint('SMi', 'gain control');
+def _configGetInt(config, section, option, varname):
+    if _config.has_section(section):
+        try: globals()[varname] = _config.getint(section, option);
         except ConfigParser.NoOptionError:
             pass
         except ValueError:
             pass
 
-
+def _configGetString(config, section, option, varname):
+    if _config.has_section(section):
+        try: globals()[varname] = _config.get(section, option);
+        except ConfigParser.NoOptionError:
+            pass
+        except ValueError:
+            pass
 
 ####################################################
 # default values
@@ -44,8 +50,8 @@ HOSTNAME = socket.gethostname()
 MIXER_CONTROLNUM = 4
 
 # override values via config files
-_configSetInt(_config, 'General', 'ID', 'HOSTNAME')
-_configSetInt(_config, 'SMi', 'gain control', 'MIXER_CONTROLNUM')
+_configGetInt(_config, 'General', 'ID', 'HOSTNAME')
+_configGetString(_config, 'SMi', 'gain control', 'MIXER_CONTROLNUM')
 
 #
 ####################################################
