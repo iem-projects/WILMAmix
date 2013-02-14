@@ -69,7 +69,7 @@ class RTSPserver:
         # ouch, how to do that?
         print "server stopping"
         glib.source_remove(self.serverID)
-        glib.source_remove(self.timeoutID)
+        #glib.source_remove(self.timeoutID)
         self.serverID=0L
         self.timeoutID=0L
 
