@@ -88,18 +88,29 @@ class NetServer:
         if self.addressManager is not None:
             self.addressManager.add(callback, self.oscPrefix+oscAddress)
 
+    def _send(self, data):
+        if self.socket is not None and self.remote is not None:
+            if self.verbose:
+                print "sending '", data, "' to ", self.remote
+            self.socket.sendto( data,  self.remote)
+
     def sendMsg(self, oscAddress, dataArray=[]):
         """send an OSC-message to connected client(s)"""
-        if self.socket is not None and self.remote is not None:
-            self.socket.sendto( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray),  self.remote)
+        self._send(osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray))
+
 
     def sendBundle(self, bundle):
         """send an OSC-bundle to connected client(s)"""
         if self.socket is not None and self.remote is not None:
             if isinstance(bundle, osc.Bundle):
-                self.socket.sendto(bundle.data(), self.remote)
+                self._send(bundle.data())
             else:
-                self.socket.sendto(bundle.message, self.remote)
+                self._send(bundle.message)
+
+
+
+
+######################################################################
 
 def _callback(message, source):
     print "callback (no class): ", message
@@ -134,6 +145,3 @@ if __name__ == '__main__':
         n.shutdown()
         del n
     print "bye"
-        
-
-
