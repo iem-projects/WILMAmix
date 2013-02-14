@@ -99,7 +99,10 @@ class qsynthMeterValue(QtGui.QFrame):
 
         self.paint_time = 0.
 
-        self.setMinimumWidth(width-4)
+        if(width>4):
+            self.setMinimumWidth(width-4)
+        else:
+            self.setMinimumWidth(width)
         self.setBackgroundRole(QtGui.QPalette.NoRole)
 
     # Reset peak holder.
@@ -216,7 +219,7 @@ class qsynthMeterValue(QtGui.QFrame):
 
 class qsynthMeter(QtGui.QFrame):
     # Constructor.
-    def __init__(self, pParent=None, portcount=2, scalepos=[1]):
+    def __init__(self, pParent=None, portcount=2, scalepos=[1], maxwidth=None):
         QtGui.QFrame.__init__(self, pParent)
 
         # Local instance variables.
@@ -226,7 +229,8 @@ class qsynthMeter(QtGui.QFrame):
         self.m_iSpaceWidth  = 1
         self.m_iScaleWidth  = 16
         self.m_iPortWidth   = 16
-        
+        self.m_iMaxWidth    = maxwidth
+
         self.m_fScale = 0.
 
         if 1: #CONFIG_GRADIENT
@@ -266,6 +270,55 @@ class qsynthMeter(QtGui.QFrame):
         self.setSizePolicy(
             QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding))
 
+    def fixWidth(self):
+        # maxwidth = PortWidth*PortCount + ScaleWidth*ScaleCount + SpaceWidth*spaceCount
+
+        if self.m_iMaxWidth is None:
+            return
+        maxWidth=self.m_iMaxWidth
+        portMin=1
+        portMax=16
+        portWidth=self.m_iPortWidth
+
+        spaceMin=0
+        spaceMax=1
+        spaceWidth=1 # either 0 or 1
+
+        scaleMin  =16
+        scaleMax  =16
+        scaleWidth=16 # fixed
+
+        rest = maxWidth
+        portWidth   = rest / self.m_iPortCount;
+        if  (portWidth<portMin): portWidth=portMin
+        elif(portWidth>portMax): portWidth=portMax
+
+        portsWidth = portWidth*self.m_iPortCount;
+
+        rest=maxWidth - portsWidth
+        scaleWidth   = rest / self.m_iScaleCount;
+        if  (scaleWidth<scaleMin): scaleWidth=scaleMin
+        elif(scaleWidth>scaleMax): scaleWidth=scaleMax
+        scalesWidth = scaleWidth*self.m_iScaleCount;
+
+        if (scalesWidth+portsWidth) > maxWidth:
+            scalesWidth=0
+            scaleWidth=0
+            self.m_iScaleCount=0;
+            self.m_iScalePos=[];
+
+        rest=maxWidth - portsWidth - scalesWidth
+        spaceCount = self.m_iPortCount - 1 - self.m_iScaleCount;
+        if(spaceCount < 0): spaceCount = 0
+        spaceWidth   = rest / spaceCount;
+        if  (spaceWidth<spaceMin): spaceWidth=spaceMin
+        elif(spaceWidth>spaceMax): spaceWidth=spaceMax
+        #spacesWidth = spaceWidth*spaceCount
+
+        self.m_iPortWidth = portWidth
+        self.m_iScaleWidth= scaleWidth
+        self.m_iSpaceWidh = spaceWidth
+
     # build the widget layout depending on the port count.
     def build(self):
         while self.m_pHBoxLayout.count() > 0:
@@ -281,6 +334,8 @@ class qsynthMeter(QtGui.QFrame):
         maxWidth=4
         minHeight=120
         spaceCount=0
+
+        self.fixWidth()
         
         if self.m_iPortCount > 0 and self.m_iPortCount < 4:
             self.m_iScaleCount = 1
@@ -309,8 +364,8 @@ class qsynthMeter(QtGui.QFrame):
                     self.m_iScaleCount = self.m_iScaleCount + 1
                     self.m_ppScales += [qsynthMeterScale(self, self.m_iScaleWidth)]
                     self.m_pHBoxLayout.addWidget(self.m_ppScales[-1])
-                except ValueError:
-                    self.m_pHBoxLayout.addSpacing(self.m_iSpaceWidth)
+                except ValueError: # if there is no scale, add a space
+                    if(self.m_iSpaceWidth>0):self.m_pHBoxLayout.addSpacing(self.m_iSpaceWidth)
                     spaceCount=spaceCount+1
 
             minWidth = maxWidth = self.m_iPortWidth * self.m_iPortCount + self.m_iSpaceWidth * spaceCount + self.m_iScaleWidth * self.m_iScaleCount
