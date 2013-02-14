@@ -49,9 +49,12 @@ def _configGetString(config, section, option, varname):
 HOSTNAME = socket.gethostname()
 MIXER_CONTROLNUM = 4
 
+SM_PORT=7777 # LATER change to 0
+
 # override values via config files
 _configGetString(_config, 'General', 'ID', 'HOSTNAME')
 _configGetInt(_config, 'SMi', 'gain control', 'MIXER_CONTROLNUM')
+_configGetInt(_config, 'SMi', 'port', 'SM_PORT')
 
 #
 ####################################################
