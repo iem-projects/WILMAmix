@@ -12,17 +12,17 @@ __all__+=["Discovery"]
 try:
   from NetServer import NetServer
   __all__+=["NetServer"]
-except:
+except ImportError:
   print "Unable to import NetServer"
 
 try:
   from NetClient import NetClient
   __all__+=["NetClient"]
-except:
+except ImportError:
   print "Unable to import NetClient"
 
 try:
   from Metro import Metro
   __all__+=["Metro"]
-except:
+except ImportError:
   print "Unable to import Metro"
