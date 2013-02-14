@@ -28,17 +28,17 @@ class NetClient:
     receives OSC-messages from SMi (and emits signals with the data)
     """
 
-    def __init__(self, host, port, oscprefix=''):
-        print "NetClient"
-        self.addressManager = osc.CallbackManager()
+    def __init__(self, host, port, oscprefix='', verbose=False):
+        self.addressManager = osc.CallbackManager(verbose=verbose)
         self.socket = QUdpSocket()
         self.socket.readyRead.connect(self._callback)
         self.socket.connectToHost(host, port);
-        
+
         self.remote = (host, port) ## FIXXME: 'host' is not canonicalized
         self.keepListening=True
         self.oscPrefix=oscprefix
-      
+        self.verbose=verbose
+
 
     def __del__(self):
         self.shutdown()
@@ -112,6 +112,6 @@ if __name__ == '__main__':
         n.shutdown()
         del n
     print "bye"
-        
+
 
 

@@ -30,8 +30,9 @@ class NetServer:
     sends back OSC-messages
     """
 
-    def __init__(self, host='', port=0, oscprefix=None):
+    def __init__(self, host='', port=0, oscprefix=None, verbose=False):
         """creates a listener on any (or specified) port"""
+        self.verbose=verbose
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((host, port))
@@ -46,7 +47,7 @@ class NetServer:
 
         ip, port = self.socket.getsockname()
 
-        self.addressManager = osc.CallbackManager()
+        self.addressManager = osc.CallbackManager(verbose=verbose)
         self.publisher = Publisher(port=port)
 
     def __del__(self):
