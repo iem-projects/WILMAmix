@@ -70,6 +70,9 @@ class AudioMixer:
             gainsi=[0]
         return  gainsi
 
+
+######################################################################
+
 if __name__ == '__main__':
     print "SM..."
     sm = MINTsm()

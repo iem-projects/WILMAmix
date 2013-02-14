@@ -46,6 +46,10 @@ class AudioMeter:
     def getLevels(self):
         return self.levels
 
+
+
+######################################################################
+
 if __name__ == '__main__':
     meter = AudioMeter()
     meter.start()

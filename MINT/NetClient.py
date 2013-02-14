@@ -91,6 +91,8 @@ class NetClient:
 
 
 
+######################################################################
+
 def _callback(message, source):
     print "callback (no class): ", message
 

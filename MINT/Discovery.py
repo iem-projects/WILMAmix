@@ -90,7 +90,7 @@ class Discoverer:
         return ret
 
 
-############## JMZ
+##############
 
 class Publisher:
     def __init__(self,  service='_mint-sm._udp', port=7777, name=None):
@@ -175,6 +175,8 @@ class Publisher:
             #main_loop.quit()
             return
 
+
+######################################################################
 
 def test_doloop():
     import gobject

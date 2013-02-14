@@ -86,6 +86,8 @@ class PdFile:
     def getOutlets(self):
         return self.outlets
 
+######################################################################
+
 if __name__ == '__main__':
     import sys
     for arg in sys.argv[1:]:

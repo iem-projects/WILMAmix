@@ -29,6 +29,10 @@ def Server(type, profile='L16', channels=1, source='jackaudiosrc'):
 
     raise Exception("invalid streame type: "+type)
 
+
+
+######################################################################
+
 if __name__ == '__main__':
     import time
     import gobject

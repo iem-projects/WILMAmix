@@ -80,6 +80,10 @@ class RTSPserver:
         pool.cleanup()
         return True
 
+
+
+######################################################################
+
 if __name__ == '__main__':
     import time, gobject
     s=RTSPserver()
