@@ -30,7 +30,7 @@ class Bundle:
     def __init__(self, oscprefix=None, timestamp=None):
         if oscprefix is None:
             try:
-                oscprefix= '/'+MINT.utils.Constants.MINT_HOSTNAME
+                oscprefix= '/'+MINT.constants.HOSTNAME
             except NameError:
                 oscprefix=''
         b = OSCMessage()

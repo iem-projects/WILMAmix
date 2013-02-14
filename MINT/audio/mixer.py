@@ -40,10 +40,10 @@
 
 
 import pyalsa.alsahcontrol
-import MINT.utils
+import MINT.constants
 
 class AudioMixer:
-    ControlID = MINT.utils.Constants.MINT_MIXER_CONTROLNUM
+    ControlID = MINT.constants.MIXER_CONTROLNUM
     def __init__(self):
         self.hctl =  pyalsa.alsahcontrol.HControl()
         self.element = pyalsa.alsahcontrol.Element(self.hctl, AudioMixer.ControlID) 
