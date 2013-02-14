@@ -50,8 +50,8 @@ HOSTNAME = socket.gethostname()
 MIXER_CONTROLNUM = 4
 
 # override values via config files
-_configGetInt(_config, 'General', 'ID', 'HOSTNAME')
-_configGetString(_config, 'SMi', 'gain control', 'MIXER_CONTROLNUM')
+_configGetString(_config, 'General', 'ID', 'HOSTNAME')
+_configGetInt(_config, 'SMi', 'gain control', 'MIXER_CONTROLNUM')
 
 #
 ####################################################

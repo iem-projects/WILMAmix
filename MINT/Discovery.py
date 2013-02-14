@@ -105,7 +105,7 @@ class Publisher:
 
         if type(name) is not str:
             name = str(name)
-        
+
         self.serviceName = name
         self.serviceType = service
         self.servicePort = port
