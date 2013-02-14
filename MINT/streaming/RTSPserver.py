@@ -73,6 +73,11 @@ class RTSPserver:
         self.serverID=0L
         self.timeoutID=0L
 
+        ## the following produces weird errors on program exit,
+        ## but doesn't help closing client-connections
+        #mapping =self.server.get_media_mapping()
+        #mapping.remove_factory(self.mountpoint)
+
     def _timeout(self):
         """ timeout gets called periodically and should clean up all terminating sessions.
         it does NOT remove connected servers"""
