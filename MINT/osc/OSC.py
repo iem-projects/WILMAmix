@@ -318,8 +318,11 @@ class CallbackManager:
 
         except KeyError, e:
             # address not found
-            print 'address %s not found ' % address
-            pprint.pprint(message)
+            if None in self.callbacks:
+                self.callbacks[None](message, source)
+            else:
+                print 'address %s not found ' % address
+                pprint.pprint(message)
         except IndexError, e:
             print 'got malformed OSC message', message
             pass
@@ -332,7 +335,7 @@ class CallbackManager:
         """Adds a callback to our set of callbacks,
         or removes the callback with name if callback
         is None."""
-        if type(name) is str:
+        if (name is None) or (type(name) is str):
             if callback == None:
                 del self.callbacks[name]
             else:
