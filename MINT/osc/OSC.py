@@ -338,8 +338,10 @@ class CallbackManager:
         if (name is None) or (type(name) is str):
             if callback == None:
                 del self.callbacks[name]
-            else:
+            else if callable(callback):
                 self.callbacks[name] = callback
+            else:
+                raise Exception("callback needs to be callable: "+str(callback))
         else:
             raise Exception("name needs to be a string: "+str(name))
 
