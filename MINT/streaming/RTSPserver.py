@@ -58,7 +58,7 @@ class RTSPserver:
         return uri
 
     def start(self):
-        #print "start", self
+        print "start", self
         self.timeoutID=gobject.timeout_add_seconds(2, self._timeout)
         self.serverID=self.server.attach()
         #print "started: ", self.serverID
@@ -79,6 +79,18 @@ class RTSPserver:
         pool = self.server.get_session_pool()
         pool.cleanup()
         return True
+
+    def dumpInfo(self):
+        print "server: ", dir(self.server)
+        print "server: ", self.server.__dict__
+        print "address  : ", self.server.get_address()
+        print "backlog  : ", self.server.get_backlog()
+        print "mapping  : ", self.server.get_media_mapping().__dict__
+        print "pool  : ", self.server.get_session_pool().__dict__
+
+        print "sessions: ", self.server.get_session_pool().get_n_sessions ()
+        print "sessions: ", self.server.get_session_pool().get_max_sessions ()
+
 
 
 

@@ -57,6 +57,7 @@ class MINTsm:
         self.server.add(self.controlStreamType, '/stream/settings/type')
         self.server.add(self.controlStreamProfile, '/stream/settings/profile')
         self.server.add(self.controlStreamChannels, '/stream/settings/channels')
+        self.server.add(self.dumpInfo, '/dump') ## debugging
         self.mixer = self.state.mixer
         self.streamer = None
 
@@ -102,14 +103,21 @@ class MINTsm:
         bundle.append(('/gain', self.state.gains))
         bundle.append(('/level', self.state.levels))
         self.server.sendBundle(bundle)
-        
-        
+
+    def dumpInfo(self, msg, src):
+        print "setting: ", self.setting.__dict__
+        print "state  : ", self.state.__dict__
+        if self.streamer is not None:
+            self.streamer.dumpInfo()
+
+
+
 
 if __name__ == '__main__':
     print "SM..."
     sm = MINTsm()
     import time
-    
+
     try:
         gobject.MainLoop().run()
     except KeyboardInterrupt:
