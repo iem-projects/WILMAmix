@@ -85,7 +85,6 @@ if __name__ == '__main__':
     print "launcher", p
     p.launch()
     #time.sleep( 1 )
-    print "starting"
     import gobject
 
     try:
@@ -93,10 +92,9 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         pass
 
-    print p
     if p is not None:
-        print "running: ", p.isRunning()
-        p.shutdown('hallo')
-        del p
-        pass
-    print "bye"
+        print "\nrunning: ", p.isRunning()
+        p.shutdown(1)
+        print "ERR: ",p.err
+        print "OUT: ",p.out
+    print "\nbye"
