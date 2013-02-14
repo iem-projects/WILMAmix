@@ -34,12 +34,18 @@ class Launcher(Thread):
         self.cwd=cwd
         self.process=None
         self._starting=False
+        self.out = None
+        self.err = None
 
     def run(self):
-        self.process = subprocess.Popen(self.prog, cwd=self.cwd)
+        self.process = subprocess.Popen(self.prog, cwd=self.cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         self._starting = False
-        #self.out, self.err = self.process.communicate()
-        self.process.wait()
+        if True:
+            ## attaching to the stdout/stderr will make the process defunct
+            ## between it's natural death and a shutdown()
+            self.out, self.err = self.process.communicate()
+        else:
+            self.process.wait()
 
     def launch(self):
         if self.process is not None:
@@ -51,9 +57,11 @@ class Launcher(Thread):
         
 
     def shutdown(self, timeout=0):
-        print "stopping ", self.process.pic
-        if (self.process is not None) and self.process.poll():
-            self.process.join(timeout)
+        if self.process is None:
+            return
+        if self.process.poll():
+            #print "shutting down process", self.process.pid
+            self.join(timeout)
             if self.is_alive():
                 self.process.terminate()
                 self.join()
@@ -61,10 +69,16 @@ class Launcher(Thread):
                 #os.kill(self.process.pid, signal.SIGKILL)
         self.process = None
 
+    def isRunning(self):
+        if self.process is None:
+            return False
+        return 0 is not self.process.poll()
+
 ######################################################################
 
 if __name__ == '__main__':
     p = Launcher('pd', [
+        '-nogui',
         '-open', 'MINT/pd/test.pd',
         '-send', '_config foo bar',
         ])
@@ -74,15 +88,15 @@ if __name__ == '__main__':
     print "starting"
     import gobject
 
-    #try:
-    if True:
+    try:
         gobject.MainLoop().run()
-    #except KeyboardInterrupt:
-    #    pass
+    except KeyboardInterrupt:
+        pass
 
     print p
     if p is not None:
-        #p.shutdown()
-        #del p
+        print "running: ", p.isRunning()
+        p.shutdown('hallo')
+        del p
         pass
     print "bye"
