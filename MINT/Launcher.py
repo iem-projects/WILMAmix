@@ -79,7 +79,7 @@ class Launcher(Thread):
 if __name__ == '__main__':
     p = Launcher('pd', [
         '-nogui',
-        '-open', 'MINT/pd/test.pd',
+        '-open', 'pd/test.pd',
         '-send', '_config foo bar',
         ])
     print "launcher", p
@@ -94,7 +94,13 @@ if __name__ == '__main__':
 
     if p is not None:
         print "\nrunning: ", p.isRunning()
+        print "<ERR: ",p.err
+        print "<OUT: ",p.out
+        time.sleep(1)
         p.shutdown(1)
-        print "ERR: ",p.err
-        print "OUT: ",p.out
+        time.sleep(1)
+        print ">ERR: ",p.err
+        print ">OUT: ",p.out
+
+
     print "\nbye"
