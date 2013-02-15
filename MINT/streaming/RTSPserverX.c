@@ -118,7 +118,6 @@ main (int argc, char *argv[])
     char portS[6];
     portS[5]=0;
     snprintf(portS, 6, "%d", port);
-    printf("port: %d == %s\n", port, portS);
     gst_rtsp_server_set_service(server, portS);
     serverID=gst_rtsp_server_attach (server, NULL);
     if(port>=65530)
@@ -130,7 +129,8 @@ main (int argc, char *argv[])
   g_timeout_add_seconds (2, (GSourceFunc) timeout, server);
 
   printf("rtsp://@HOSTNAME@:%s%s\n", gst_rtsp_server_get_service(server), mountpoint);
- 
+  fflush(stdout);
+
   /* start serving, this never stops */
   g_main_loop_run (loop);
  
@@ -139,7 +139,7 @@ main (int argc, char *argv[])
   /* ERRORS */
 failed:
   {
-    g_error ("failed to attach the server\n");
+    g_warning ("failed to attach the server");
     return -1;
   }
 }
