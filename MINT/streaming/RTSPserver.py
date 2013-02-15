@@ -102,11 +102,19 @@ class RTSPserver:
 ######################################################################
 
 if __name__ == '__main__':
+    class Test:
+        def __init__(self, server):
+            self.server = server
+        def quit(self):
+            print "stopping server"
+            self.server.stop()
     import time, gobject
     s=RTSPserver()
+    t=Test(s)
     s.start()
     print "URI: ", s.getURI()
     try:
+        gobject.timeout_add_seconds(20, t.quit)
         gobject.MainLoop().run()
     except KeyboardInterrupt:
         pass
