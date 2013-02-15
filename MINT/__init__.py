@@ -26,3 +26,10 @@ try:
   __all__+=["Metro"]
 except ImportError:
   print "Unable to import Metro"
+
+
+try:
+  from Launcher import Launcher
+  __all__+=["Launcher"]
+except ImportError:
+  print "Unable to import Launcher"
