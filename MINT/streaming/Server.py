@@ -22,8 +22,8 @@
 def Server(type, profile='L16', channels=1, source='jackaudiosrc'):
     if 'rtsp' == type:
         try:
-            import RTSPserver
-            return RTSPserver.RTSPserver(profile, source)
+            import RTSPserverX
+            return RTSPserverX.RTSPserverX(profile, source)
         except ImportError:
             pass
 
