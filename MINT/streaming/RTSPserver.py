@@ -31,7 +31,7 @@ class RTSPserver:
             print ouch
             return
         
-        pipeline=source + " ! audioconvert ! audio/x-raw-int/channels="+channels+" ! "+depayelement+" name=pay0"
+        pipeline=source + " ! audioconvert ! audio/x-raw-int/channels="+str(channels)+" ! "+depayelement+" name=pay0"
         self.mountpoint='/'+profile
 
         self.server = gst.rtspserver.Server()
