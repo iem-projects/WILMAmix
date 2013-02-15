@@ -29,22 +29,6 @@
 
 /* an idle function that gets called periodically */
 #include <sys/time.h>
-static gboolean
-myidler(gpointer user_data) {
-  double delta=0;
-  //GstRTSPServer * server=(GstRTSPServer*)user_data;
-  guint serverID = *(uint*)user_data;
-  static guint counter = 0;
-  printf("idling %d since %d\n", serverID, counter);
-  counter++;
-  if(counter > 1000) {
-    gboolean ok = g_source_remove(serverID);
-    if(TRUE==ok)
-      printf("successfully removed serverID %d\n", serverID);
-    return FALSE;
-  }
-  return TRUE;
-}
 
 /* this timeout is periodically run to clean up the expired sessions from the
  * pool. This needs to be run explicitly currently but might be done
@@ -73,10 +57,25 @@ main (int argc, char *argv[])
   GstRTSPAuth *auth;
   gchar *basic;
 #endif
-  const char*mountpoint="/test";
-  guint serverID;
+  const char*mountpoint="/MINT";
+  guint serverID=0;
+  guint port=8554;
+  const char*pipeline =
+    "audiotestsrc ! "
+    "audioconvert ! "
+    "audio/x-raw-int,channels=4 ! "
+    "rtpL16pay name=pay0"
+    ;
 
   gst_init (&argc, &argv);
+
+  if(argc>1) {
+    pipeline=argv[1];
+  }
+  if(argc>2) {
+    mountpoint=argv[2];
+  }
+
  
   loop = g_main_loop_new (NULL, FALSE);
  
@@ -104,12 +103,9 @@ main (int argc, char *argv[])
    * element with pay%d names will be a stream */
   factory = gst_rtsp_media_factory_new ();
 
-  gst_rtsp_media_factory_set_launch (factory, "( "
-          "audiotestsrc ! "
-          "audioconvert ! "
-          "audio/x-raw-int,channels=4 ! "
-          "rtpL16pay name=pay0"
-          " )");
+  gst_rtsp_media_factory_set_launch (factory,
+				     pipeline
+				     );
  
   /* attach the test factory to the /test url */
   gst_rtsp_media_mapping_add_factory (mapping, mountpoint, factory);
@@ -118,15 +114,22 @@ main (int argc, char *argv[])
   g_object_unref (mapping);
  
   /* attach the server to the default maincontext */
-  serverID=gst_rtsp_server_attach (server, NULL);
-  if (serverID == 0)
-    goto failed;
+  while(!serverID) {
+    char portS[6];
+    portS[5]=0;
+    snprintf(portS, 6, "%d", port);
+    printf("port: %d == %s\n", port, portS);
+    gst_rtsp_server_set_service(server, portS);
+    serverID=gst_rtsp_server_attach (server, NULL);
+    if(port>=65530)
+      goto failed;
+    port++;
+  }
  
   /* add a timeout for the session cleanup */
   g_timeout_add_seconds (2, (GSourceFunc) timeout, server);
-  g_timeout_add_seconds (1, (GSourceFunc) myidler, &serverID);
 
-printf("rtsp://hostname:8554%s\n", mountpoint);
+  printf("rtsp://@HOSTNAME@:%s%s\n", gst_rtsp_server_get_service(server), mountpoint);
  
   /* start serving, this never stops */
   g_main_loop_run (loop);
@@ -136,7 +139,7 @@ printf("rtsp://hostname:8554%s\n", mountpoint);
   /* ERRORS */
 failed:
   {
-    g_print ("failed to attach the server\n");
+    g_error ("failed to attach the server\n");
     return -1;
   }
 }
