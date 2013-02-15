@@ -129,7 +129,9 @@ main (int argc, char *argv[])
   g_timeout_add_seconds (2, (GSourceFunc) timeout, server);
 
   printf("rtsp://@HOSTNAME@:%s%s\n", gst_rtsp_server_get_service(server), mountpoint);
-  fflush(stdout);
+
+  g_warning ("rtsp://@HOSTNAME@:%s%s\n", gst_rtsp_server_get_service(server), mountpoint);
+  fflush(stdout);fflush(stderr);
 
   /* start serving, this never stops */
   g_main_loop_run (loop);
