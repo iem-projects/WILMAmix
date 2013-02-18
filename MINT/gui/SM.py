@@ -49,14 +49,19 @@ class SM(QtGui.QGroupBox):
         self.connection.add(self.levelCb, '/level')
         self.connection.add(self.streamURI, '/stream/uri')
 
+        layout = QVBoxLayout()
+        layout.setContentsMargins(2,2,2,2)
+
         # Create widgets
         self.stream = QtGui.QCheckBox(self.tr("streaming"), self)
         self.stream.stateChanged.connect(self.streamSet)
+        layout.addWidget(self.stream)
 
         mixframe=QtGui.QFrame(self)
         sublayout=QHBoxLayout()
         sublayout.setContentsMargins(0,0,0,0)
         mixframe.setLayout(sublayout)
+        layout.addWidget(mixframe)
 
         self.fader = QSlider()
         self.fader.setEnabled(False)
@@ -64,22 +69,20 @@ class SM(QtGui.QGroupBox):
         sublayout.addWidget(self.fader)
         self.meter = qsynthMeter(self, 4, [-1], maxwidth=self.maxWidth) # maxwidth should be dynamic and ack the fader width
         sublayout.addWidget(self.meter)
-        
+
         self.iface = QtGui.QComboBox()
         if confs != None:
             for conf in sorted(confs.keys()):
                 self.iface.addItem(conf)
+        layout.addWidget(self.iface)
 
         getinfo = QtGui.QPushButton("Dump")
         getinfo.clicked.connect(self.dumpInfo)
+        layout.addWidget(getinfo)
 
         layout = QVBoxLayout()
         layout.setContentsMargins(2,2,2,2)
 
-        layout.addWidget(self.stream)
-        layout.addWidget(mixframe)
-        layout.addWidget(self.iface)
-        layout.addWidget(getinfo)
    
         self.setLayout(layout)
         self.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
