@@ -24,6 +24,7 @@ from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
 
 import MINT, MINT.utils, MINT.osc
+import GUILauncher
 
 class SM(QtGui.QGroupBox):
     class Setting:
@@ -36,6 +37,7 @@ class SM(QtGui.QGroupBox):
         self.setting = SM.Setting()
         self.name = name
         self.maxWidth=maxwidth
+        self.launcher = GUILauncher.GUILauncher('ls', doneCb=self.launchDone)
 
         self.setTitle(name)
         #if confs is not None:
@@ -80,10 +82,12 @@ class SM(QtGui.QGroupBox):
         getinfo.clicked.connect(self.dumpInfo)
         layout.addWidget(getinfo)
 
-        layout = QVBoxLayout()
-        layout.setContentsMargins(2,2,2,2)
 
-   
+        launcher = QtGui.QPushButton("Launch")
+        launcher.clicked.connect(self.launch)
+        layout.addWidget(launcher)
+
+
         self.setLayout(layout)
         self.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
 
@@ -129,3 +133,9 @@ class SM(QtGui.QGroupBox):
 
     def dumpInfo(self):
         self.connection.sendMsg('/dump')
+
+    def launch(self):
+        self.launcher.start()
+
+    def launchDone(self):
+        print "launch completed", self.launcher.out
