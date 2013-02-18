@@ -1,3 +1,15 @@
+sync:
+	Q: write modules for file synch
+
+sfwrite:
+	Q: write module that dumps audio to file
+
+process:
+	Q: write module that runs Pd
+
+
+
+
 OSC:
 	Q: pattern matching
 
