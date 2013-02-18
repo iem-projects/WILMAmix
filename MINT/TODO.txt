@@ -1,7 +1,12 @@
 OSC:
-	pattern matching
-	allow catchall callback
-
+	Q: pattern matching
 
 RTSPserver:
-	if the server shuts down and a client is still listening, the server segfaults once the client quits
+	Q: if the server shuts down and a client is still listening, the server segfaults once the client quits
+	A: --> run server in external program that gets shut down, once streaming is done
+
+RTSPserverX:
+	Q: reading from stdout pipe doesn't always work (needed for actual RTSP-URI)
+	A: make pipe work
+	A: write to tmpfile
+	A: OSC-callback (bloats server app)
