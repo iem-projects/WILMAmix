@@ -28,7 +28,7 @@ import time
 class Launcher(Thread):
     """ Launches an external program in a thread """
 
-    def __init__(self, prog, args=[], cwd=None):
+    def __init__(self, prog, args=[], cwd=None, doneCb=None):
         Thread.__init__(self)
         self.prog=[prog]+args
         self.cwd=cwd
@@ -36,6 +36,7 @@ class Launcher(Thread):
         self._starting=False
         self.out = None
         self.err = None
+        self.doneCb = doneCb
 
     def run(self):
         self.process = subprocess.Popen(self.prog, cwd=self.cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -46,6 +47,9 @@ class Launcher(Thread):
             self.out, self.err = self.process.communicate()
         else:
             self.process.wait()
+        self.process=None
+        if self.doneCb is not None:
+            self.doneCb()        
 
     def launch(self):
         if self.process is not None:
@@ -68,6 +72,10 @@ class Launcher(Thread):
                 #pid=self.process.pid
                 #os.kill(self.process.pid, signal.SIGKILL)
         self.process = None
+
+    def wait(self, timeout=None):
+        if self.is_alive():
+            self.join(timeout)
 
     def isRunning(self):
         if self.process is None:
