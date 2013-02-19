@@ -112,8 +112,11 @@ def createBinaryMsg(oscAddress, dataArray):
     m = OSC.OSCMessage()
     m.address = oscAddress
 
-    for x in dataArray:  ## append each item of the array to the message
-        m.append(x)
+    try:
+        for x in dataArray:  ## append each item of the array to the message
+            m.append(x)
+    except TypeError:
+        m.append(dataArray)
 
     return m.getBinary() # get the actual OSC to send
 
