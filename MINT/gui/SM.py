@@ -144,7 +144,6 @@ class SM(QtGui.QGroupBox):
         self.launchButton.setEnabled(False)
         self.launcher.start()
     def launchDone(self):
-        print "launch completed", self.launcher.out
         self._createLauncher()
         self.launchButton.setEnabled(True)
     def _createLauncher(self):
@@ -154,5 +153,4 @@ class SM(QtGui.QGroupBox):
         self.launchRemote.setEnabled(False)
         self.connection.sendMsg('/launch', 'xclock')
     def rlaunchState(self, msg, src):
-        print "remote launch completed", msg
-        self.launchRemote.setEnabled(True)
+        self.launchRemote.setEnabled(not msg[2])
