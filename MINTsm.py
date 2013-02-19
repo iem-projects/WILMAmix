@@ -103,6 +103,7 @@ class MINTsm:
         bundle = Bundle()
         bundle.append(('/gain', self.state.gains))
         bundle.append(('/level', self.state.levels))
+        bundle.append(('/launch/state', [self.launcher is not None]))
         self.server.sendBundle(bundle)
 
     def dumpInfo(self, msg, src):
@@ -113,12 +114,14 @@ class MINTsm:
 
     def launchCmd(self, msg, src):
         print "launching: ", msg
+        if self.launcher is not None:
+            return
         self.launcher = Launcher(msg[2], cwd='/tmp', doneCb=self.launchCb)
         self.launcher.start()
         self.server.sendMsg('/launch/state', [True])
     def launchCb(self):
+        print "launch callback", self.server
         self.launcher = None
-        self.server.sendMsg('/launch/state', [False])
 
 if __name__ == '__main__':
     print "SM..."
