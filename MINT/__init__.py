@@ -29,6 +29,13 @@ except ImportError:
 
 
 try:
+  from SMi import SMi
+  __all__+=["SMi"]
+except ImportError:
+  print "Unable to import SMi"
+
+
+try:
   from Launcher import Launcher
   __all__+=["Launcher"]
 except ImportError:
