@@ -18,10 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-from MINT import NetServer
-from MINT.osc import Bundle
+from MINT import NetServer, Launcher
 import MINT.constants
 
+from MINT.osc import Bundle
 from MINT.streaming import Server as StreamingServer
 from MINT.audio import AudioMeter, AudioMixer
 
@@ -59,6 +59,8 @@ class MINTsm:
         self.server.add(self.controlStreamProfile, '/stream/settings/profile')
         self.server.add(self.controlStreamChannels, '/stream/settings/channels')
         self.server.add(self.dumpInfo, '/dump') ## debugging
+        self.launcher=None
+        self.server.add(self.launchCmd, '/launch') ## debugging
         self.mixer = self.state.mixer
         self.streamer = None
 
@@ -109,8 +111,14 @@ class MINTsm:
         if self.streamer is not None:
             self.streamer.dumpInfo()
 
-
-
+    def launchCmd(self, msg, src):
+        print "launching: ", msg
+        self.launcher = Launcher(msg[2], cwd='/tmp', doneCb=self.launchCb)
+        self.launcher.start()
+        self.server.sendMsg('/launch/state', [True])
+    def launchCb(self):
+        self.launcher = None
+        self.server.sendMsg('/launch/state', [False])
 
 if __name__ == '__main__':
     print "SM..."
