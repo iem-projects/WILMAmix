@@ -27,7 +27,7 @@ import gstutils
 
 class RTSPserverX:
     def __init__(self, profile='L16', channels=2, source='audiotestsrc'):
-        binary= os.path.dirname(os.path.abspath(__file__))+os.sep+'RTSPserverX'
+        binary= os.path.join(os.path.dirname(os.path.abspath(__file__)),'RTSPserverX')
 
         profile = profile.replace(' ', '')
         depayelement='rtp'+profile+'pay'

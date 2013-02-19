@@ -23,7 +23,7 @@ import ConfigParser, os
 _config = ConfigParser.ConfigParser()
 ## if a value is in multiple files, the last file gets it
 print "read config from",_config.read(['MINTmix.conf',
-                                       os.path.dirname(os.path.abspath(__file__))+os.sep+'MINTmix.conf',
+                                       os.path.join(os.path.dirname(os.path.abspath(__file__)), 'MINTmix.conf'),
                                        os.path.expanduser('~/.config/iem.at/MINTmix.conf'),
                                        ])
 
