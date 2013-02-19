@@ -37,7 +37,7 @@ import math
 import sys
 import string
 import pprint
-
+import re
 
 def hexDump(bytes):
     """Useful utility; prints the string in hexadecimal"""
@@ -314,7 +314,11 @@ class CallbackManager:
             if type(message[0]) == str :
                 # got a single message
                 address = message[0]
-                self.callbacks[address](message, source)
+                if self.isWildcard(address):
+                    for a in self.matchWildcards(address, self.callbacks.keys()):
+                        self.callbacks[a](message, source)
+                else:
+                    self.callbacks[address](message, source)
 
             elif type(message[0]) == list :
                 # smells like nested messages
@@ -337,9 +341,11 @@ class CallbackManager:
         return
 
     def add(self, callback, name):
-        """Adds a callback to our set of callbacks,
-        or removes the callback with name if callback
-        is None."""
+        """
+        Adds a callback to our set of callbacks,
+        or removes the callback with name if callback is None.
+        wildcard patterns are NOT supported.
+        """
         if (name is None) or (type(name) is str):
             if callback == None:
                 del self.callbacks[name]
@@ -360,6 +366,44 @@ class CallbackManager:
         for message in messages[2:]:
             self.dispatch(message)
 
+## pattern matching code
+# Copyright © 2009 Alexandre Quessy, Arjan Scherpenisse
+# Copyright © 2013, IOhannes m zmölnig, IEM
+
+    @staticmethod
+    def isWildcard(name):
+        """
+        Given a name, returns whether it contains wildcard characters.
+        """
+        wildcardChars = set("*?[]{}")
+        return len(set(name).intersection(wildcardChars)) > 0
+
+    @staticmethod
+    def matchWildcards(pattern, keys):
+        """
+        returns a list of keys that match the given pattern.
+        code mainly taken from from python-txosc
+        """
+        if pattern == "*":
+            return keys
+        # OSC-patterns -> regular expressions
+        rpattern = ('^' +
+                    (pattern
+                    .replace("*", ".*")
+                    .replace("?", ".?")
+                    .replace("[!", "[^")
+                    .replace("(", "\(")
+                    .replace(")", "\)")
+                    .replace("|", "\|")
+                    .replace("{", "(")
+                    .replace("}", ")")
+                    .replace(",", "|")
+                    )+'$')
+        try:
+            r = re.compile(rpattern)
+            return filter(r.match, keys)
+        except:
+            raise OSCException("invalid character in pattern '"+pattern+"' -> "+rpattern)
 
 
 
