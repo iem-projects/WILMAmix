@@ -37,7 +37,8 @@ class SM(QtGui.QGroupBox):
         self.setting = SM.Setting()
         self.name = name
         self.maxWidth=maxwidth
-        self.launcher = GUILauncher.GUILauncher('ls', doneCb=self.launchDone)
+        self.launcher = None
+        self._createLauncher()
 
         self.setTitle(name)
         #if confs is not None:
@@ -83,9 +84,9 @@ class SM(QtGui.QGroupBox):
         layout.addWidget(getinfo)
 
 
-        launcher = QtGui.QPushButton("Launch")
-        launcher.clicked.connect(self.launch)
-        layout.addWidget(launcher)
+        self.launchButton = QtGui.QPushButton("Launch")
+        self.launchButton.clicked.connect(self.launch)
+        layout.addWidget(self.launchButton)
 
 
         self.setLayout(layout)
@@ -135,7 +136,13 @@ class SM(QtGui.QGroupBox):
         self.connection.sendMsg('/dump')
 
     def launch(self):
+        self.launchButton.setEnabled(False)
         self.launcher.start()
 
     def launchDone(self):
         print "launch completed", self.launcher.out
+        self.launchButton.setEnabled(True)
+        self._createLauncher()
+
+    def _createLauncher(self):
+        self.launcher = GUILauncher.GUILauncher('ls', doneCb=self.launchDone)
