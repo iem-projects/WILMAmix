@@ -348,6 +348,10 @@ class CallbackManager:
         else:
             raise Exception("name needs to be a string: "+str(name))
 
+    def remove(self, name):
+        """Removes a callback from our callback set"""
+        self.add(None, name)
+
     def unbundler(self, messages):
         """Dispatch the messages in a decoded bundle."""
         # first two elements are #bundle and the time tag, rest are messages.
