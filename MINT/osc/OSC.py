@@ -49,6 +49,8 @@ def hexDump(bytes):
     if(len(bytes) % 8 != 0):
         print string.rjust("", 11), repr(bytes[i-len(bytes)%8:i+1])
 
+class OSCException(Exception):
+    pass
 
 class OSCMessage:
     """Builds typetagged OSC messages."""
@@ -344,9 +346,9 @@ class CallbackManager:
             elif callable(callback):
                 self.callbacks[name] = callback
             else:
-                raise Exception("callback needs to be callable: "+str(callback))
+                raise OSCException("callback needs to be callable: "+str(callback))
         else:
-            raise Exception("name needs to be a string: "+str(name))
+            raise OSCException("name needs to be a string: "+str(name))
 
     def remove(self, name):
         """Removes a callback from our callback set"""
