@@ -30,6 +30,8 @@ class Bundle:
         b.append(0)
         self.b=b
         self.prefix=oscprefix
+        if self.prefix is None:
+            self.prefix=''
     def append(self, message):
         m = OSCMessage()
         address=self.prefix+message[0]
