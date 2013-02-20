@@ -41,6 +41,7 @@
 
 import pyalsa.alsahcontrol
 import MINT.constants
+import MINT.utils
 
 class AudioMixer:
     ControlID = MINT.constants.MIXER_CONTROLNUM
@@ -64,7 +65,7 @@ class AudioMixer:
         gains = self.value.get_array(self.info.type, self.info.count)
         try:
             gainsi = [MINT.utils.SCALE(i, self.info.min, self.info.max, 0., 1., True) for i in gains]
-        except:
+        except None: ## never try to catch _all_ errors
             print "OUCH: ", gains
             print "mixer: ", self.info.name
             gainsi=[0]
