@@ -67,7 +67,10 @@ class Launcher(Thread):
             #print "shutting down process", self.process.pid
             self.join(timeout)
             if self.is_alive():
-                self.process.terminate()
+                try:
+                    self.process.terminate()
+                except OSError:
+                    print "failed to terminate"
                 self.join()
                 #pid=self.process.pid
                 #os.kill(self.process.pid, signal.SIGKILL)
