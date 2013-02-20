@@ -23,7 +23,8 @@ from PySide import QtCore, QtGui
 from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
 
-import MINT, MINT.utils, MINT.osc
+import MINT, MINT.utils
+import MINT.net.osc as osc
 import GUILauncher
 
 class SM(QtGui.QGroupBox):
@@ -126,7 +127,7 @@ class SM(QtGui.QGroupBox):
             self.startStream()
 
     def startStream(self):
-        b=MINT.osc.Bundle(oscprefix='/'+self.name)
+        b=osc.Bundle(oscprefix='/'+self.name)
         b+=('/stream/settings/type', [self.setting.streamtype])
         b+=('/stream/settings/profile', [self.setting.streamprofile])
         b+=('/stream/settings/channels', [4])

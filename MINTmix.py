@@ -21,9 +21,9 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 import sys
-from MINT import Discoverer, Metro
+from MINT import Metro
 from MINT.gui import SMmixer, Translator
-
+from MINT.net import Discoverer
 class Form(QDialog):
    
     def __init__(self, parent=None):

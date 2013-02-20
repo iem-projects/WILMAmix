@@ -18,11 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-from NetServer import NetServer
+from net import Server as NetServer
+from net.osc import Bundle
+
 from Launcher import Launcher
 import constants
 
-from osc import Bundle
 from streaming import Server as StreamingServer
 from audio import AudioMeter, AudioMixer
 
