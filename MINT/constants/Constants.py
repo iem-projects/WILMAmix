@@ -51,6 +51,9 @@ MIXER_CONTROLNUM = 4
 
 SM_PORT=7777 # LATER change to 0
 
+PROTOCOL='udp'
+SERVICE ='_mint-sm'
+
 # override values via config files
 _configGetString(_config, 'General', 'ID', 'HOSTNAME')
 _configGetInt(_config, 'SMi', 'gain control', 'MIXER_CONTROLNUM')
