@@ -20,19 +20,9 @@
 
 from OSC import OSCMessage
 import socket
-try:
-    import MINT.utils
-except ImportError:
-    print "MINT.utils not available, no automatic prefix"
-
 
 class Bundle:
     def __init__(self, oscprefix=None, timestamp=None):
-        if oscprefix is None:
-            try:
-                oscprefix= '/'+MINT.constants.HOSTNAME
-            except NameError:
-                oscprefix=''
         b = OSCMessage()
         b.address = ""
         b.append("#bundle")
