@@ -99,10 +99,6 @@ class Publisher:
         self.domain      = "" # Domain to publish on, default to .local
         self.host        = "" # Host to publish records for, default to localhost
 
-        if name is None:
-            import constants
-            name = constants.HOSTNAME
-
         if type(name) is not str:
             name = str(name)
 

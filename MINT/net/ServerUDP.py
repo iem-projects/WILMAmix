@@ -21,7 +21,6 @@
 import osc
 import socket, gobject
 from Discovery import Publisher
-import constants
 
 class ServerUDP:
     """ OSC-server running on SMi.
@@ -38,8 +37,6 @@ class ServerUDP:
         self.socket.bind((host, port))
         self.keepListening=True
         self.oscPrefix=oscprefix
-        if self.oscPrefix is None:
-            self.oscPrefix='/'+constants.HOSTNAME
         
         gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
         
