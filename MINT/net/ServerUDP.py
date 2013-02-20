@@ -45,7 +45,12 @@ class ServerUDP:
         ip, port = self.socket.getsockname()
 
         self.addressManager = osc.CallbackManager(verbose=verbose)
-        self.publisher = Publisher(port=port)
+        publishname=oscprefix
+        if publishname is not None:
+            while publishname.startswith('/'):
+                publishname=publishname[1:]
+        publishname=oscprefix
+        self.publisher = Publisher(port=port, name=publishname)
 
     def __del__(self):
         self.shutdown()

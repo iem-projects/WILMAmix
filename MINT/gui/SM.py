@@ -47,7 +47,11 @@ class SM(QtGui.QGroupBox):
         defaultconf = sorted(confs.keys())[0]
         config = confs[defaultconf]
 
-        self.connection = MINT.NetClient(config['address'], config['port'], oscprefix='/'+name)
+        oscprefix=name
+        while oscprefix.startswith('/'):
+            oscprefix=oscprefix[1:]
+
+        self.connection = MINT.net.Client(config['address'], config['port'], oscprefix='/'+oscprefix)
         self.connection.add(self.faderCb, '/gain')
         self.connection.add(self.levelCb, '/level')
         self.connection.add(self.streamURI, '/stream/uri')
