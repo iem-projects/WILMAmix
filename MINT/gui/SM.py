@@ -52,7 +52,7 @@ class SM(QtGui.QGroupBox):
         while oscprefix.startswith('/'):
             oscprefix=oscprefix[1:]
 
-        self.connection = MINT.net.Client(config['address'], config['port'], oscprefix='/'+oscprefix)
+        self.connection = MINT.net.Client(config['address'], config['port'], oscprefix='/'+oscprefix, type=MINT.constants.PROTOCOL)
         self.connection.add(self.faderCb, '/gain')
         self.connection.add(self.levelCb, '/level')
         self.connection.add(self.streamURI, '/stream/uri')

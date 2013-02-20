@@ -52,7 +52,7 @@ class SMi:
         self.state=State()
         self.setting=Setting()
         self.oscprefix='/'+constants.HOSTNAME
-        self.server = NetServer(port=constants.SM_PORT, oscprefix=self.oscprefix)
+        self.server = NetServer(port=constants.SM_PORT, oscprefix=self.oscprefix, type=constants.PROTOCOL, service=constants.SERVICE)
         self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
         self.server.add(self.controlStream, '/stream')
