@@ -51,7 +51,8 @@ class SMi:
     def __init__(self):
         self.state=State()
         self.setting=Setting()
-        self.server = NetServer(port=constants.SM_PORT, oscprefix='/'+constants.HOSTNAME)
+        self.oscprefix='/'+constants.HOSTNAME
+        self.server = NetServer(port=constants.SM_PORT, oscprefix=self.oscprefix)
         self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
         self.server.add(self.controlStream, '/stream')
@@ -100,7 +101,7 @@ class SMi:
 
     def ping(self, msg, src):
         self.state.update()
-        bundle = Bundle()
+        bundle = Bundle(oscprefix=self.oscprefix)
         bundle.append(('/gain', self.state.gains))
         bundle.append(('/level', self.state.levels))
         bundle.append(('/launch/state', [self.launcher is not None]))
