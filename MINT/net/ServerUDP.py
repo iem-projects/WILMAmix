@@ -23,7 +23,7 @@ import socket, gobject
 from Discovery import Publisher
 import constants
 
-class NetServer:
+class ServerUDP:
     """ OSC-server running on SMi.
     publishes connection information (via zeroconf),
     receives OSC-messages (and emits signals with the data),
@@ -117,7 +117,7 @@ def _callback(message, source):
 
 class _TestServer:
     def __init__(self, port=0):
-        self.serv = NetServer(port=port)
+        self.serv = ServerUDP(port=port)
         self.serv.add(self.callback, '/test')
 
     def __del__(self):
