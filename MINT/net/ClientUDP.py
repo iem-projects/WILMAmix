@@ -30,14 +30,15 @@ class ClientUDP:
 
     def __init__(self, host, port, oscprefix='', verbose=False):
         self.addressManager = osc.CallbackManager(verbose=verbose)
-        self.socket = QUdpSocket()
-        self.socket.readyRead.connect(self._callback)
-        self.socket.connectToHost(host, port);
-
-        self.remote = (host, port) ## FIXXME: 'host' is not canonicalized
         self.keepListening=True
         self.oscPrefix=oscprefix
         self.verbose=verbose
+        self.remote =None
+
+        self.socket = QUdpSocket()
+        self.socket.readyRead.connect(self._callback)
+        self.socket.connectToHost(host, port);
+        self.remote = (host, port) ## FIXXME: 'host' is not canonicalized
 
 
     def __del__(self):
@@ -70,7 +71,6 @@ class ClientUDP:
 
     def _send(self, data):
         from PySide.QtNetwork import QHostAddress
-
         if self.socket is not None and self.remote is not None:
             if self.verbose:
                 print "sending '", data, "' to ", self.remote

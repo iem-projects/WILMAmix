@@ -46,8 +46,6 @@ class ServerTCP:
         if publishname is not None:
             while publishname.startswith('/'):
                 publishname=publishname[1:]
-        publishname=oscprefix
-
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)

@@ -32,24 +32,21 @@ class ServerUDP:
     def __init__(self, host='', port=0, oscprefix=None, verbose=False):
         """creates a listener on any (or specified) port"""
         self.verbose=verbose
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.socket.bind((host, port))
         self.keepListening=True
         self.oscPrefix=oscprefix
-        
-        gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
-        
+
         self.remote = None
-
-        ip, port = self.socket.getsockname()
-
         self.addressManager = osc.CallbackManager(verbose=verbose)
         publishname=oscprefix
         if publishname is not None:
             while publishname.startswith('/'):
                 publishname=publishname[1:]
-        publishname=oscprefix
+
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.bind((host, port))
+        ip, port = self.socket.getsockname()
+        gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
         self.publisher = Publisher(port=port, name=publishname)
 
     def __del__(self):
