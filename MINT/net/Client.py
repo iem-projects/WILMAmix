@@ -23,6 +23,10 @@ def Client(host='', port=0, oscprefix=None, verbose=False, type='udp'):
     if 'udp' == type:
         import ClientUDP
         return ClientUDP.ClientUDP(host=host, port=port, oscprefix=oscprefix, verbose=verbose)
+    elif 'tcp' == type:
+        import ClientTCP
+        return ClientTCP.ClientTCP(host=host, port=port, oscprefix=oscprefix, verbose=verbose)
+
 
     raise Exception("invalid stream type: "+type)
 
