@@ -56,6 +56,7 @@ SERVICE ='_mint-sm'
 
 # override values via config files
 _configGetString(_config, 'General', 'ID', 'HOSTNAME')
+_configGetString(_config, 'General', 'proto', 'PROTOCOL')
 _configGetInt(_config, 'SMi', 'gain control', 'MIXER_CONTROLNUM')
 _configGetInt(_config, 'SMi', 'port', 'SM_PORT')
 
