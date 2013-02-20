@@ -93,7 +93,7 @@ class ServerTCP:
     def _accept(self, sock, *args):
         '''Asynchronous connection listener. Starts a handler for each connection.'''
         conn, addr = sock.accept()
-        print "Connected", sock
+#        print "Connected", sock
         self.remotes[conn]=SLIP()
         gobject.io_add_watch(conn, gobject.IO_IN, self._callback)
         return True
@@ -102,6 +102,9 @@ class ServerTCP:
         '''Asynchronous connection listener. Handles incoming data.'''
         # sock == self.socket
         data, address = sock.recvfrom(8192)
+##        print "DATA", data
+##        for d in data:
+##            print "data: ",ord(d)
         try:
             slip=self.remotes[sock]
         except KeyError:
@@ -147,28 +150,28 @@ class ServerTCP:
 
 ######################################################################
 
-def _callback(message, source):
-    print "callback (no class): ", message
-
-class _TestServer:
-    def __init__(self, port=0):
-        self.serv = ServerTCP(port=port)
-        self.serv.add(self.callback, '/test')
-
-    def __del__(self):
-        if self.serv is not None:
-            self.serv.shutdown()
-            del self.serv
-            self.serv = None
-
-    def callback(self, message, source):
-        print "callback: ",message
-        self.serv.sendMsg(message[0], message[2:])
-
-    def shutdown(self):
-        self.serv.shutdown()
-
 if __name__ == '__main__':
+    def _callback(message, source):
+        print "callback (no class): ", message
+
+    class _TestServer:
+        def __init__(self, port=0):
+            self.serv = ServerTCP(port=port)
+            self.serv.add(self.callback, '/test')
+
+        def __del__(self):
+            if self.serv is not None:
+                self.serv.shutdown()
+                del self.serv
+                self.serv = None
+
+        def callback(self, message, source):
+            print "callback: ",message
+            self.serv.sendMsg(message[0], message[2:])
+
+        def shutdown(self):
+            self.serv.shutdown()
+
     n = _TestServer(port=7777)
 
     try:
