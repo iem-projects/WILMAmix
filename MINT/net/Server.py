@@ -22,7 +22,7 @@
 def Server(host='', port=0, oscprefix=None, verbose=False, type='udp'):
     if 'udp' == type:
         import ServerUDP
-        return ServerUDP.ServerUDP(host=host, port=port, oscprefix=oscprefix, verbose=verbose):
+        return ServerUDP.ServerUDP(host=host, port=port, oscprefix=oscprefix, verbose=verbose)
 
     raise Exception("invalid stream type: "+type)
 
