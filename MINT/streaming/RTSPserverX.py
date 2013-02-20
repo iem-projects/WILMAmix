@@ -50,7 +50,8 @@ class RTSPserverX:
         while self.server.isRunning() and stdout is None:
             stdout = self.server.process.stdout.readline();
         ip=socket.gethostbyname(socket.gethostname())
-        self.uri=stdout.replace('@HOSTNAME@', ip)
+        if stdout is not None:
+            self.uri=stdout.replace('@HOSTNAME@', ip)
 
     def stop(self):
         #print "stop", self
