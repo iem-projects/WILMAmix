@@ -29,7 +29,7 @@ class ServerUDP:
     sends back OSC-messages
     """
 
-    def __init__(self, host='', port=0, oscprefix=None, verbose=False):
+    def __init__(self, host='', port=0, oscprefix=None, service=None, verbose=False):
         """creates a listener on any (or specified) port"""
         self.verbose=verbose
         self.keepListening=True
@@ -47,7 +47,8 @@ class ServerUDP:
         self.socket.bind((host, port))
         ip, port = self.socket.getsockname()
         gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
-        self.publisher = Publisher(port=port, name=publishname)
+        if service is not None:
+            self.publisher = Publisher(port=port, name=publishname, service=service+'._udp')
 
     def __del__(self):
         self.shutdown()

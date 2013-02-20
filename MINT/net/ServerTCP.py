@@ -30,7 +30,7 @@ class ServerTCP:
     sends back OSC-messages
     """
 
-    def __init__(self, host='', port=0, oscprefix=None, verbose=False):
+    def __init__(self, host='', port=0, oscprefix=None, service=None, verbose=False):
         """creates a listener on any (or specified) port"""
         self.verbose=verbose
         self.remotes = dict()
@@ -51,11 +51,11 @@ class ServerTCP:
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((host, port))
         ip, port = self.socket.getsockname()
-
-        self.publisher = Publisher(port=port, name=publishname)
-
         gobject.io_add_watch(self.socket, gobject.IO_IN, self._accept)
         self.socket.listen(1)
+
+        if service is not None:
+            self.publisher = Publisher(port=port, name=publishname, service=service+'._tcp')
 
     def __del__(self):
         self.shutdown()
