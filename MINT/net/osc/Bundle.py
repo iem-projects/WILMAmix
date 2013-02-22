@@ -37,8 +37,11 @@ class Bundle:
         address=self.prefix+message[0]
         data=message[1]
         m.address = address
-        for x in data:
-            m.append(x)        
+        try:
+            for x in data:
+                m.append(x)
+        except TypeError:
+            m.append(data)
         self.b.append(m.getBinary(), 'b')
         return self
     def __iadd__(self, message):
