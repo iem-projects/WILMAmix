@@ -56,6 +56,12 @@ class SM(QtGui.QGroupBox):
         self.connection.add(self.faderCb, '/gain')
         self.connection.add(self.levelCb, '/level')
         self.connection.add(self.streamURI, '/stream/uri')
+        self.connection.add(self.cpuCb, '/state/cpu')
+        self.connection.add(self.memCb, '/state/mem')
+        self.connection.add(self.diskCb, '/state/disk')
+
+
+
 
         layout = QVBoxLayout()
         layout.setContentsMargins(2,2,2,2)
@@ -116,6 +122,16 @@ class SM(QtGui.QGroupBox):
     def levelCb(self, msg, src):
         levels_dB=msg[2:]
         self.meter.setValues(levels_dB)
+
+    def memCb(self, msg, src):
+        value=msg[2:]
+        #print "MEM: ", value
+    def cpuCb(self, msg, src):
+        value=msg[2:]
+        #print "CPU: ", value
+    def diskCb(self, msg, src):
+        value=msg[2:]
+        #print "DISK: ", value
 
     def ping(self):
         self.connection.sendMsg('/ping')
