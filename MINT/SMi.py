@@ -26,6 +26,9 @@ import constants
 
 from streaming import Server as StreamingServer
 from audio import AudioMeter, AudioMixer
+import SystemHealth
+
+import os
 
 class State:
     def __init__(self):
@@ -35,17 +38,26 @@ class State:
         self.mixer = AudioMixer()
         self.meter = AudioMeter()
         self.meter.start()
+        self.health = SystemHealth.SystemHealth()
+        self.cpu = 1.
+        self.mem = 1.
+        self.disk = 1.
 
     def update(self):
         self.gains=self.mixer.gain()
         self.levels=self.meter.getLevels()
+##        statvfs.frsize * statvfs.f_blocks     # Size of filesystem in bytes
+##        statvfs.frsize * statvfs.f_bfree      # Actual number of free bytes
+        self.health.update()
+        self.cpu = self.health.cpu
+        self.mem = self.health.mem
+        self.disk = self.health.disk
 
 class Setting:
     def __init__(self):
         self.streamtype='rtsp'
         self.streamprofile='L16'
         self.streamchannels=4
-
 
 class SMi:
     def __init__(self):
@@ -104,6 +116,9 @@ class SMi:
         bundle = Bundle(oscprefix=self.oscprefix)
         bundle.append(('/gain', self.state.gains))
         bundle.append(('/level', self.state.levels))
+        bundle.append(('/state/cpu', self.state.health.cpu))
+        bundle.append(('/state/mem', self.state.health.mem))
+        bundle.append(('/state/disk', self.state.health.disk))
         bundle.append(('/launch/state', [self.launcher is not None]))
         self.server.sendBundle(bundle)
 
