@@ -33,19 +33,25 @@ class SystemHealth:
         self.cpu = 1.
         self.mem = 1.
         self.disk= 1.
+        self.have_psutil=True
         self.update()
 
     def update(self):
-        try:
-            import psutil
-            self.cpu=psutil.cpu_percent()/100.
-            self.mem=psutil.phymem_usage().percent/100.
-        except ImportError:
-            if not hasattr(self, 'importfailed_psutil'):
-                print "failed to import 'psutil'. do you have 'python-psutil' installed?"
-            self.importfailed_psutil=True
         s=os.statvfs(self.path)
         self.disk=(s.f_blocks-s.f_bfree)*1./s.f_blocks
+
+        if self.have_psutil:
+            try:
+                import psutil
+                self.cpu=psutil.cpu_percent()/100.
+                used=psutil.used_phymem()
+                avail=psutil.avail_phymem()
+                #self.mem=psutil.phymem_usage().percent/100.
+                self.mem=(1.0*used)/(used+avail)
+            except ImportError:
+                if self.have_psutil:
+                    print "failed to import 'psutil'. do you have 'python-psutil' installed?"
+                self.have_psutil=False
 
         
 
