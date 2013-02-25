@@ -22,7 +22,7 @@ import os
 import time
 
 class SystemHealth:
-    def __init__(self, path=None):
+    def __init__(self, interval=1.0, path=None):
         try:
             if path is None:
                 path='.'
@@ -35,12 +35,13 @@ class SystemHealth:
         self.disk= 1.
         self.have_psutil=True
         self.last=0
+        self.interval=interval
 
         self.update()
 
     def update(self):
         now=time.time()
-        if(now - self.last < 2):
+        if(now - self.last < self.interval):
             return
         self.last=now
         
@@ -50,7 +51,7 @@ class SystemHealth:
         if self.have_psutil:
             try:
                 import psutil
-                self.cpu=psutil.cpu_percent(interval=0.0)/100.
+                self.cpu=psutil.cpu_percent(interval=self.interval)/100.
                 used=psutil.used_phymem()
                 avail=psutil.avail_phymem()
                 #self.mem=psutil.phymem_usage().percent/100.
