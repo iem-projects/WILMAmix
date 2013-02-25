@@ -84,7 +84,7 @@ class SM(QtGui.QGroupBox):
         self.meter = qsynthMeter(self, 4, [-1], maxwidth=self.maxWidth) # maxwidth should be dynamic and ack the fader width
         sublayout.addWidget(self.meter)
 
-        self.statemeter = statemeter.statemeter(self, ['CPU', 'memory', 'disk'])
+        self.statemeter = statemeter.statemeter(self, ['CPU', 'memory', 'disk'], maxheight=16)
         layout.addWidget(self.statemeter)
 
         self.iface = QtGui.QComboBox()
@@ -126,15 +126,15 @@ class SM(QtGui.QGroupBox):
         levels_dB=msg[2:]
         self.meter.setValues(levels_dB)
 
-    def memCb(self, msg, src):
-        value=msg[2:]
-        #print "MEM: ", value
     def cpuCb(self, msg, src):
-        value=msg[2:]
-        #print "CPU: ", value
+        value=msg[2]
+        self.statemeter.setValue(0, value)
+    def memCb(self, msg, src):
+        value=msg[2]
+        self.statemeter.setValue(1, value)
     def diskCb(self, msg, src):
-        value=msg[2:]
-        #print "DISK: ", value
+        value=msg[2]
+        self.statemeter.setValue(2, value)
 
     def ping(self):
         self.connection.sendMsg('/ping')
