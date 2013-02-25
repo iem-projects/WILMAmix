@@ -26,11 +26,12 @@ class statemeterValue(QtGui.QFrame):
     def __init__(self, pMeter, label=None, height=4):
         QtGui.QFrame.__init__(self, pMeter)
         # Local instance variables.
+        print "statemeter for :", label
         self.paint_time = 0.
         self.m_pMeter      = pMeter
         self.m_fValue      = 0.0
-        self.setMinimumHeight(1)
-        self.setMaximumHeight(4)
+        self.setMinimumHeight(height)
+        self.setMaximumHeight(height)
         if label is not None:
             self.label         = label+": "
             self.setToolTip(label)
@@ -130,12 +131,19 @@ class statemeter(QtGui.QFrame):
             if w:
                 w.deleteLater()
 
+        minheight=0
+        maxheight=0
         self.m_values = []
         for p in self.ports:
             value=statemeterValue(self, label=p)
             self.m_values += [value]
             self.m_layout.addWidget(value)
+            minheight+=value.minimumHeight()
+            maxheight+=value.maximumHeight()
         #self.setMinimumSize(100,100)
+        print "heights %d/%d" % (minheight, maxheight)
+        self.setMinimumHeight(minheight)
+        self.setMaximumHeight(maxheight)
 
     def color ( self, iIndex ):
         return self.m_colors[iIndex]
