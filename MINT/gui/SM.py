@@ -25,7 +25,7 @@ from PySide.QtGui import *
 
 import MINT, MINT.utils
 import MINT.net.osc as osc
-import GUILauncher
+import GUILauncher, statemeter
 
 class SM(QtGui.QGroupBox):
     class Setting:
@@ -83,6 +83,9 @@ class SM(QtGui.QGroupBox):
         sublayout.addWidget(self.fader)
         self.meter = qsynthMeter(self, 4, [-1], maxwidth=self.maxWidth) # maxwidth should be dynamic and ack the fader width
         sublayout.addWidget(self.meter)
+
+        self.statemeter = statemeter.statemeter(self, ['CPU', 'memory', 'disk'])
+        layout.addWidget(self.statemeter)
 
         self.iface = QtGui.QComboBox()
         if confs != None:
