@@ -25,8 +25,8 @@ from PySide import QtCore, QtGui
 class statemeterValue(QtGui.QFrame):
     def __init__(self, pMeter, label=None, height=4):
         QtGui.QFrame.__init__(self, pMeter)
+        #print "statemeter for :", label
         # Local instance variables.
-        print "statemeter for :", label
         self.paint_time = 0.
         self.m_pMeter      = pMeter
         self.m_fValue      = 0.0
@@ -93,9 +93,20 @@ class statemeterValue(QtGui.QFrame):
 
 class statemeter(QtGui.QFrame):
     # Constructor.
-    def __init__(self, pParent=None, ports=['foo'], maxwidth=None):
+    def __init__(self, pParent=None, ports=['foo'], maxheight=None):
         QtGui.QFrame.__init__(self, pParent)
         self.ports = ports
+        self.meterheight=4
+        meterspacing=1
+        if maxheight is not None:
+            numports=len(self.ports)
+            height=maxheight/numports
+            if(height<1):
+                height=1
+            self.meterheight=height
+            meterspacing=(maxheight-(height*numports))/(numports-1)
+            if(meterspacing>1):
+                meterspacing=1
         colorcount=0
         self.ColorLow    = colorcount; colorcount+=1
         self.ColorMid    = colorcount; colorcount+=1
@@ -114,7 +125,7 @@ class statemeter(QtGui.QFrame):
         self.m_colors[self.ColorOver] = QtGui.QColor(240,  0, 20)
 
         self.m_layout = QtGui.QVBoxLayout()
-        self.m_layout.setSpacing(0)
+        self.m_layout.setSpacing(1)
         self.m_layout.setContentsMargins(0,0,0,0)
         self.setLayout(self.m_layout)
 
@@ -138,10 +149,9 @@ class statemeter(QtGui.QFrame):
             value=statemeterValue(self, label=p)
             self.m_values += [value]
             self.m_layout.addWidget(value)
-            minheight+=value.minimumHeight()
-            maxheight+=value.maximumHeight()
+            minheight+=value.minimumHeight()+1
+            maxheight+=value.maximumHeight()+1
         #self.setMinimumSize(100,100)
-        print "heights %d/%d" % (minheight, maxheight)
         self.setMinimumHeight(minheight)
         self.setMaximumHeight(maxheight)
 
