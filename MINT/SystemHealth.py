@@ -19,6 +19,7 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import time
 
 class SystemHealth:
     def __init__(self, path=None):
@@ -29,21 +30,27 @@ class SystemHealth:
             self.path=path
         except:
             self.path=os.path.expanduser('~')
-
         self.cpu = 1.
         self.mem = 1.
         self.disk= 1.
         self.have_psutil=True
+        self.last=0
+
         self.update()
 
     def update(self):
+        now=time.time()
+        if(now - self.last < 2):
+            return
+        self.last=now
+        
         s=os.statvfs(self.path)
         self.disk=(s.f_blocks-s.f_bfree)*1./s.f_blocks
 
         if self.have_psutil:
             try:
                 import psutil
-                self.cpu=psutil.cpu_percent()/100.
+                self.cpu=psutil.cpu_percent(interval=0.0)/100.
                 used=psutil.used_phymem()
                 avail=psutil.avail_phymem()
                 #self.mem=psutil.phymem_usage().percent/100.
