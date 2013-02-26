@@ -33,9 +33,12 @@ import os
 class State:
     def __init__(self):
         self.mixer=None
-        self.gains=[]
+        self.gains =[]
         self.levels=[]
-        self.mixer = AudioMixer()
+        try:
+          self.mixer = AudioMixer()
+        except IOError as e:
+          print "failed to open audio mixer:",e
         self.meter = AudioMeter()
         self.meter.start()
         self.health = SystemHealth.SystemHealth()
@@ -44,7 +47,8 @@ class State:
         self.disk = 1.
 
     def update(self):
-        self.gains=self.mixer.gain()
+        if self.mixer is not None:
+          self.gains=self.mixer.gain()
         self.levels=self.meter.getLevels()
 ##        statvfs.frsize * statvfs.f_blocks     # Size of filesystem in bytes
 ##        statvfs.frsize * statvfs.f_bfree      # Actual number of free bytes
