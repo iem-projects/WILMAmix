@@ -74,14 +74,15 @@ main (int argc, char *argv[])
 
   gst_init (&argc, &argv);
 
-  if(argc>1) {
-    pipeline=argv[1];
+  argc--; argv++;
+  if(argc-->0) { char*arg=*argv++; if(strlen(arg)>0)
+      pipeline=arg;
   }
-  if(argc>2) {
-    mountpoint=argv[2];
+  if(argc-->0) { char*arg=*argv++; if(strlen(arg)>0)
+      mountpoint=arg;
   }
-  if(argc>3) {
-    outfile=argv[3];
+  if(argc-->0) { char*arg=*argv++; if(strlen(arg)>0)
+      outfile=arg;
   }
 
  
