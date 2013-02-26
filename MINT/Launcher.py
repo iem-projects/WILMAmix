@@ -58,12 +58,11 @@ class Launcher(Thread):
         self.start()
         while self._starting and self.is_alive():
             pass
-        
 
     def shutdown(self, timeout=0):
         if self.process is None:
             return
-        if self.process.poll():
+        if True or self.process.poll():
             #print "shutting down process", self.process.pid
             self.join(timeout)
             if self.is_alive():
