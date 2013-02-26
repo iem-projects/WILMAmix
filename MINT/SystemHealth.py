@@ -33,6 +33,7 @@ class SystemHealth:
 
         def __init__(self, interval=1.0, path=None):
             Thread.__init__(self)
+            self.setDaemon(True)
             try:
                 if path is None:
                     path='.'
