@@ -20,58 +20,101 @@
 
 import os
 import time
+from threading import Thread
 
 class SystemHealth:
-    def __init__(self, interval=1.0, path=None):
+    class SystemHealthThread(Thread):
         try:
-            if path is None:
-                path='.'
-            os.statvfs(path)
-            self.path=path
-        except:
-            self.path=os.path.expanduser('~')
+            import psutil
+            have_psutil = True
+        except ImportError:
+            have_psutil = False
+            print "failed to import 'psutil'. do you have 'python-psutil' installed?"
+
+        def __init__(self, interval=1.0, path=None):
+            Thread.__init__(self)
+            try:
+                if path is None:
+                    path='.'
+                os.statvfs(path)
+                self.path=path
+            except None:
+                self.path=os.path.expanduser('~')
+            self.interval=interval
+            self.cpu = 1.
+            self.mem = 1.
+            self.disk= 1.
+            self.last=0
+
+            self.keepRunning=True
+            self.isRunning=False
+
+        def run(self):
+            if SystemHealth.SystemHealthThread.have_psutil:
+                psutil=SystemHealth.SystemHealthThread.psutil
+            else:
+                psutil=None
+            while self.keepRunning:
+                self.isRunning=True
+                now=time.time()
+
+                s=os.statvfs(self.path)
+                self.disk=(s.f_blocks-s.f_bfree)*1./s.f_blocks
+
+                if psutil is not None:
+                    used=psutil.used_phymem()
+                    avail=psutil.avail_phymem()
+                    #self.mem=psutil.phymem_usage().percent/100.
+                    self.mem=(1.0*used)/(used+avail)
+
+                    self.cpu=psutil.cpu_percent(interval=self.interval)/100.
+
+                deltime = self.interval = (time.time()-now)
+                if deltime > 0.:
+                    time.sleep(deltime)
+            self.isRunning=False
+
+    def __init__(self, interval=1.0, path=None):
+        self.thread = SystemHealth.SystemHealthThread(interval, path)
         self.cpu = 1.
         self.mem = 1.
         self.disk= 1.
-        self.have_psutil=True
-        self.last=0
-        self.interval=interval
-
+        self.thread.start()
+        while not (self.thread.keepRunning and self.thread.isRunning):
+            time.sleep(0.1)
         self.update()
-
+    def __del__(self):
+        self.stop()
+    def stop(self):
+        if self.thread is not None:
+            self.thread.keepRunning = False
+            self.thread.join()
+            self.thread=None
     def update(self):
-        now=time.time()
-        if(now - self.last < self.interval):
-            return
-        self.last=now
-        
-        s=os.statvfs(self.path)
-        self.disk=(s.f_blocks-s.f_bfree)*1./s.f_blocks
+        if self.thread is not None:
+            self.cpu  = self.thread.cpu
+            self.mem  = self.thread.mem
+            self.disk = self.thread.disk
+        else:
+            self.cpu = 1.
+            self.mem = 1.
+            self.disk= 1.
 
-        if self.have_psutil:
-            try:
-                import psutil
-                self.cpu=psutil.cpu_percent(interval=self.interval)/100.
-                used=psutil.used_phymem()
-                avail=psutil.avail_phymem()
-                #self.mem=psutil.phymem_usage().percent/100.
-                self.mem=(1.0*used)/(used+avail)
-            except ImportError:
-                if self.have_psutil:
-                    print "failed to import 'psutil'. do you have 'python-psutil' installed?"
-                self.have_psutil=False
-
-        
 
 ######################################################################
 
 if __name__ == '__main__':
     print "SystemHealth..."
     s=SystemHealth()
-    print "CPU: ", s.cpu
-    print "MEM: ", s.mem
-    print "DISK: ", s.disk
-    
-    
-
-
+    try:
+        print "CPU: ", s.cpu
+        print "MEM: ", s.mem
+        print "DISK: ", s.disk
+        time.sleep(5)
+        s.update()
+        print "CPU: ", s.cpu
+        print "MEM: ", s.mem
+        print "DISK: ", s.disk
+    except KeyboardInterrupt:
+        print "shutting down"
+    s.stop()
