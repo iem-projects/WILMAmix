@@ -39,7 +39,7 @@ class _FileSyncer(Thread):
 
         self.expects = [
             "Enter passphrase for key '.*':",                          # ssh-key (try all passphrases)
-            "password:",                                               # ordinary password (try all passphrases)
+            "[Pp]assword:",                                            # ordinary password (try all passphrases)
             "Are you sure you want to continue connecting (yes/no)\?", # unknown host
             pexpect.EOF                                                # shutdown
             ]
@@ -64,6 +64,7 @@ class _FileSyncer(Thread):
         self.p=pexpect.spawn(self.prog, self.progargs)
         while self.p.isalive():
             i=self.p.expect(self.expects)
+            print "expectation met:",i
             if i is 3: # EOF
                 break
             elif i is 2: # yes/no
