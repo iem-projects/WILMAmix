@@ -23,6 +23,7 @@
  
 #include <gst/rtsp-server/rtsp-server.h>
 
+#include <string.h>
 #define URILEN 1024
  
 /* define this if you want the resource to only be available when using
