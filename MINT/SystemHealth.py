@@ -69,7 +69,7 @@ class SystemHealth:
 
                     self.cpu=psutil.cpu_percent(interval=self.interval)/100.
 
-                deltime = self.interval = (time.time()-now)
+                deltime = self.interval - (time.time()-now)
                 if deltime > 0.:
                     time.sleep(deltime)
             self.isRunning=False
