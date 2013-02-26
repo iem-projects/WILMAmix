@@ -1,5 +1,5 @@
 sync:
-	Q: write modules for file synch
+	Q: write modules for file sync
 
 sfwrite:
 	Q: write module that dumps audio to file
@@ -19,5 +19,5 @@ RTSPserver:
 RTSPserverX:
 	Q: reading from stdout pipe doesn't always work (needed for actual RTSP-URI)
 	A: make pipe work
-	A: write to tmpfile
+	A: write to tmpfile (FIXED)
 	A: OSC-callback (bloats server app)
