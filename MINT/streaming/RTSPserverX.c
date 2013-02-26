@@ -75,17 +75,17 @@ main (int argc, char *argv[])
   gst_init (&argc, &argv);
 
   argc--; argv++;
-  if(argc-->0) { char*arg=*argv++; if(strlen(arg)>0)
-      pipeline=arg;
-  }
-  if(argc-->0) { char*arg=*argv++; if(strlen(arg)>0)
-      mountpoint=arg;
-  }
-  if(argc-->0) { char*arg=*argv++; if(strlen(arg)>0)
-      outfile=arg;
-  }
+#define NONEMPTY_ARG(x)   \
+    do {                  \
+      if(argc-->0) {      \
+        char*arg=*argv++; \
+        if(strlen(arg)>0) \
+          x=arg;          \
+    } } while(0)
+  NONEMPTY_ARG(pipeline);
+  NONEMPTY_ARG(mountpoint);
+  NONEMPTY_ARG(outfile);
 
- 
   loop = g_main_loop_new (NULL, FALSE);
  
   /* create a server instance */
