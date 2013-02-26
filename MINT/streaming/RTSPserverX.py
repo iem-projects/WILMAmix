@@ -18,12 +18,13 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-from .. import Launcher
 import os
 import socket
-
+import tempfile
+import time
+import gobject
 import gstutils
-
+from .. import Launcher
 
 class RTSPserverX:
     def __init__(self, profile='L16', channels=2, source='audiotestsrc',
@@ -31,15 +32,37 @@ class RTSPserverX:
         self.startCb=startCallback
         binary= os.path.join(os.path.dirname(os.path.abspath(__file__)),'RTSPserverX')
         profile = profile.replace(' ', '')
-        depayelement='rtp'+profile+'pay'
-        if not ( gstutils.checkElement(source) and gstutils.checkElement(depayelement) ):
-            print ouch
-            return
+        payelement='rtp'+profile+'pay'
+        if not gstutils.checkElement(source):
+            raise Exception("invalid source: '"+source+"'")
+        if not gstutils.checkElement(payelement):
+            raise Exception("invalid payloader: '"+payelement+"'")
 
-        pipeline=source + " ! audioconvert ! audio/x-raw-int/channels="+str(channels)+" ! "+depayelement+" name=pay0"
+        pipeline=source + " ! audioconvert ! audio/x-raw-int/channels="+str(channels)+" ! "+payelement+" name=pay0"
         mountpoint='/'+profile
-        self.server = Launcher(binary, [pipeline, mountpoint])
+        self.urifile=tempfile.NamedTemporaryFile()
+        self.server = Launcher(binary, [pipeline, mountpoint, self.urifile.name])
         self.uri = None
+        gobject.io_add_watch(self.urifile.file, gobject.IO_IN, self._callback)
+
+    def _callback(self, f, bar):
+        #print "callback0", self
+        #print "callback1", f
+        #print "callback2", bar
+        #print "something happened to ", self.urifile.name
+
+        if f is self.urifile.file:
+            data=self.urifile.read()
+            if len(data)>0:
+                ip=socket.gethostbyname(socket.gethostname())
+                self.uri=data.replace('@HOSTNAME@', ip)
+
+                if self.startCb is not None:
+                    self.startCb(self.uri)
+                print "URI: ", self.uri
+                return False
+
+        return True
 
     def getURI(self):
         return self.uri
@@ -47,12 +70,8 @@ class RTSPserverX:
     def start(self):
         print "start", self
         self.server.launch()
-        stdout=None
-        while self.server.isRunning() and stdout is None:
-            stdout = self.server.process.stdout.readline();
-        ip=socket.gethostbyname(socket.gethostname())
-        if stdout is not None:
-            self.uri=stdout.replace('@HOSTNAME@', ip)
+        #while(self.server.isRunning() and self.uri is None):
+        #    time.sleep(0.1)
 
     def stop(self):
         #print "stop", self
@@ -60,6 +79,7 @@ class RTSPserverX:
         print "server stopping"
         self.server.shutdown()
         self.uri=None
+        self.urifile=None
 
     def dumpInfo(self):
         print "server: ", self.server
@@ -70,7 +90,6 @@ class RTSPserverX:
 ######################################################################
 
 if __name__ == '__main__':
-    import time, gobject
     s=RTSPserverX()
     s.start()
     print "URI: ", s.getURI()
