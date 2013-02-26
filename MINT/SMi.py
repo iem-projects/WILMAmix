@@ -99,12 +99,16 @@ class SMi:
         else:
             self.stopStream()
 
+    def streamStarted(self, uri):
+        self.server.sendMsg('/stream/uri', uri)
+
+
     def startStream(self):
         if self.streamer is not None:
             self.stopStream()
-        self.streamer = StreamingServer(type=self.setting.streamtype, profile=self.setting.streamprofile, channels=self.setting.streamchannels)
+        self.streamer = StreamingServer(type=self.setting.streamtype, profile=self.setting.streamprofile, channels=self.setting.streamchannels,
+                                        startCallback=self.streamStarted)
         self.streamer.start()
-        self.server.sendMsg('/stream/uri', [self.streamer.getURI()])
 
     def stopStream(self):
         if self.streamer is not None:
