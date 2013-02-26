@@ -20,16 +20,14 @@
 
 import subprocess
 import os, signal
-
-from threading import Thread
-
+import threading
 import time
 
-class Launcher(Thread):
+class Launcher(threading.Thread):
     """ Launches an external program in a thread """
 
     def __init__(self, prog, args=[], cwd=None, doneCb=None):
-        Thread.__init__(self)
+        threading.Thread.__init__(self)
         self.prog=[prog]+args
         self.cwd=cwd
         self.process=None
