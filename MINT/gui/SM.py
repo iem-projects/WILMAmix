@@ -34,6 +34,9 @@ class SM(QtGui.QGroupBox):
         def __init__(self):
             self.streamtype='rtsp'
             self.streamprofile='L16'
+            self.user='iem'
+            self.inpath=None
+            self.outpath=None
     
     def __init__(self, parent=None, name="SMi", confs=None, maxwidth=None):
         super(SM, self).__init__(parent)
@@ -61,6 +64,10 @@ class SM(QtGui.QGroupBox):
         self.connection.add(self.cpuCb, '/state/cpu')
         self.connection.add(self.memCb, '/state/mem')
         self.connection.add(self.diskCb, '/state/disk')
+
+        self.connection.add(self.userCb   , '/user')
+        self.connection.add(self.outpathCb, '/path/out')
+        self.connection.add(self.inpathCb , '/path/in')
 
 
         layout = QVBoxLayout()
@@ -118,29 +125,6 @@ class SM(QtGui.QGroupBox):
         gain=MINT.utils.SCALE(value, self.fader.minimum(), self.fader.maximum(), 0., 1., True)
         self.connection.sendMsg('/gain', [gain,]) #FIXME get max.value from slider
 
-    def faderCb(self, msg, src):
-        if len(msg)<3: ## that's only 'address' and 'typetags', no data
-            return
-        gainF=msg[2]
-        gain=MINT.utils.SCALE(gainF, 0., 1., self.fader.minimum(), self.fader.maximum(), True)
-        self.fader.blockSignals(True)
-        self.fader.setValue(gain)
-        self.fader.blockSignals(False)
-
-    def levelCb(self, msg, src):
-        levels_dB=msg[2:]
-        self.meter.setValues(levels_dB)
-
-    def cpuCb(self, msg, src):
-        value=msg[2]
-        self.statemeter.setValue(0, value)
-    def memCb(self, msg, src):
-        value=msg[2]
-        self.statemeter.setValue(1, value)
-    def diskCb(self, msg, src):
-        value=msg[2]
-        self.statemeter.setValue(2, value)
-
     def ping(self):
         self.connection.sendMsg('/ping')
 
@@ -186,9 +170,42 @@ class SM(QtGui.QGroupBox):
         self.launchRemote.setEnabled(not msg[2])
 
     def doneSync(self, success):
+        print "synched:",success
         self.syncher.setEnabled(True)
     def doSync(self):
         cb=ThreadedInvoke.Invoker(self.doneSync)
-        self.syncher.setEnabled(False)
-        host,port=self.connection.getRemote()
-        f=FileSync.FileSync('/tmp/tex', 'iem@'+host+':/tmp/foo', passphrases=['iem'], doneCallback=cb)
+        if self.setting.inpath is not None:
+            print "synching to",self.setting.inpath
+            self.syncher.setEnabled(False)
+            host,port=self.connection.getRemote()
+            f=FileSync.FileSync('/tmp/tex', self.setting.user+'@'+host+':'+self.setting.inpath, passphrases=['iem'], doneCallback=cb)
+        else:
+            print "don't no where to sync data to..."
+
+
+    def faderCb(self, msg, src):
+        if len(msg)<3: ## that's only 'address' and 'typetags', no data
+            return
+        gainF=msg[2]
+        gain=MINT.utils.SCALE(gainF, 0., 1., self.fader.minimum(), self.fader.maximum(), True)
+        self.fader.blockSignals(True)
+        self.fader.setValue(gain)
+        self.fader.blockSignals(False)
+    def levelCb(self, msg, src):
+        levels_dB=msg[2:]
+        self.meter.setValues(levels_dB)
+    def cpuCb(self, msg, src):
+        value=msg[2]
+        self.statemeter.setValue(0, value)
+    def memCb(self, msg, src):
+        value=msg[2]
+        self.statemeter.setValue(1, value)
+    def diskCb(self, msg, src):
+        value=msg[2]
+        self.statemeter.setValue(2, value)
+    def userCb(self, msg, src):
+        self.setting.user=msg[2]
+    def outpathCb(self, msg, src):
+        self.setting.outpath=msg[2]
+    def inpathCb(self, msg, src):
+        self.setting.inpath=msg[2]
