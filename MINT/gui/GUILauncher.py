@@ -28,10 +28,10 @@ class GUILauncher(Launcher):
     """ launches an external program, and provide callbacks for run, exit, stdout,..."""
     def __init__(self, prog, args=[], cwd=None, doneCb=None):
         super(GUILauncher, self).__init__(prog=prog, args=args, cwd=cwd, doneCb=self._callback)
-        self.doneCb=doneCb
+        self.__doneCb=doneCb
     def _callback(self):
-        if self.doneCb is not None:
-            ThreadedInvoke.callback(self.doneCb)
+        if self.__doneCb is not None:
+            ThreadedInvoke.callback(self.__doneCb)
 
 if __name__ == '__main__':
     def foo():
