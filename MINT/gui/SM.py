@@ -25,7 +25,9 @@ from PySide.QtGui import *
 
 import MINT, MINT.utils
 import MINT.net.osc as osc
-import GUILauncher, statemeter
+import GUILauncher, statemeter, ThreadedInvoke
+
+from .. import FileSync
 
 class SM(QtGui.QGroupBox):
     class Setting:
@@ -59,8 +61,6 @@ class SM(QtGui.QGroupBox):
         self.connection.add(self.cpuCb, '/state/cpu')
         self.connection.add(self.memCb, '/state/mem')
         self.connection.add(self.diskCb, '/state/disk')
-
-
 
 
         layout = QVBoxLayout()
@@ -107,6 +107,9 @@ class SM(QtGui.QGroupBox):
         layout.addWidget(self.launchRemote)
         self.connection.add(self.rlaunchState, '/launch/state')
 
+        self.syncher = QtGui.QPushButton("Sync")
+        self.syncher.clicked.connect(self.doSync)
+        layout.addWidget(self.syncher)
 
         self.setLayout(layout)
         self.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
@@ -170,6 +173,7 @@ class SM(QtGui.QGroupBox):
         self.launchButton.setEnabled(False)
         self.launcher.start()
     def launchDone(self):
+        print "launchDone"
         self._createLauncher()
         self.launchButton.setEnabled(True)
     def _createLauncher(self):
@@ -180,3 +184,11 @@ class SM(QtGui.QGroupBox):
         self.connection.sendMsg('/launch', 'xclock')
     def rlaunchState(self, msg, src):
         self.launchRemote.setEnabled(not msg[2])
+
+    def doneSync(self, success):
+        print "synching "+str(self)+" success? "+ str(success)
+        self.syncher.setEnabled(True)
+    def doSync(self):
+        cb=ThreadedInvoke.Invoker(self.doneSync)
+        self.syncher.setEnabled(False)
+        f=FileSync.FileSync('/tmp/tex', 'iem@beaglebone:/tmp/foo', passphrases=['iem'], doneCallback=cb)
