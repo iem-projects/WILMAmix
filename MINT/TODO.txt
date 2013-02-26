@@ -8,10 +8,9 @@ process:
 	Q: write module that runs Pd
 
 
-
-
 OSC:
 	Q: pattern matching
+	A: implemented (adapted from python-txosc)
 
 RTSPserver:
 	Q: if the server shuts down and a client is still listening, the server segfaults once the client quits
