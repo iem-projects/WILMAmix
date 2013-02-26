@@ -34,7 +34,7 @@ class Launcher(threading.Thread):
         self._starting=False
         self.out = None
         self.err = None
-        self.doneCb = doneCb
+        self.__doneCb = doneCb
 
     def run(self):
         out=None
@@ -48,8 +48,8 @@ class Launcher(threading.Thread):
         else:
             self.process.wait()
         self.process=None
-        if self.doneCb is not None:
-            self.doneCb()
+        if self.__doneCb is not None:
+            self.__doneCb()
 
     def launch(self):
         if self.process is not None:
