@@ -57,11 +57,29 @@ class State:
         self.mem = self.health.mem
         self.disk = self.health.disk
 
+    def addToBundle(self, bundle):
+        bundle.append(('/gain', self.gains))
+        bundle.append(('/level', self.levels))
+        bundle.append(('/state/cpu', self.health.cpu))
+        bundle.append(('/state/mem', self.health.mem))
+        bundle.append(('/state/disk', self.health.disk))
+
 class Setting:
     def __init__(self):
         self.streamtype='rtsp'
         self.streamprofile='L16'
         self.streamchannels=4
+        try:
+            import getpass
+            self.user=getpass.getuser()
+        except ImportError:
+            self.user='unknown'
+        self.outpath='/tmp/MINT/out'
+        self.inpath='/tmp/MINT/in'
+    def addToBundle(self, bundle):
+        bundle.append(('/user', [self.user]))
+        bundle.append(('/path/out', [self.outpath]))
+        bundle.append(('/path/in', [self.inpath]))
 
 class SMi:
     def __init__(self):
@@ -122,11 +140,8 @@ class SMi:
     def ping(self, msg, src):
         self.state.update()
         bundle = Bundle(oscprefix=self.oscprefix)
-        bundle.append(('/gain', self.state.gains))
-        bundle.append(('/level', self.state.levels))
-        bundle.append(('/state/cpu', self.state.health.cpu))
-        bundle.append(('/state/mem', self.state.health.mem))
-        bundle.append(('/state/disk', self.state.health.disk))
+        self.state.addToBundle(bundle)
+        self.setting.addToBundle(bundle)
         bundle.append(('/launch/state', [self.launcher is not None]))
         self.server.sendBundle(bundle)
 
