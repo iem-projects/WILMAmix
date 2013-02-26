@@ -39,9 +39,11 @@ class Launcher(Thread):
         self.doneCb = doneCb
 
     def run(self):
-        self.process = subprocess.Popen(self.prog, cwd=self.cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out=None
+        #out=subprocess.PIPE
+        self.process = subprocess.Popen(self.prog, cwd=self.cwd, stdout=out, stderr=out)
         self._starting = False
-        if True:
+        if out is subprocess.PIPE:
             ## attaching to the stdout/stderr will make the process defunct
             ## between it's natural death and a shutdown()
             self.out, self.err = self.process.communicate()
@@ -49,7 +51,7 @@ class Launcher(Thread):
             self.process.wait()
         self.process=None
         if self.doneCb is not None:
-            self.doneCb()        
+            self.doneCb()
 
     def launch(self):
         if self.process is not None:
@@ -111,6 +113,5 @@ if __name__ == '__main__':
         time.sleep(1)
         print ">ERR: ",p.err
         print ">OUT: ",p.out
-
 
     print "\nbye"
