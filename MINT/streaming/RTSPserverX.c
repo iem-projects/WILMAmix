@@ -22,6 +22,8 @@
 #include <gst/gst.h>
  
 #include <gst/rtsp-server/rtsp-server.h>
+
+#define URILEN 1024
  
 /* define this if you want the resource to only be available when using
  * user/admin as the password */
@@ -66,6 +68,8 @@ main (int argc, char *argv[])
     "audio/x-raw-int,channels=4 ! "
     "rtpL16pay name=pay0"
     ;
+  const char*outfile=NULL;
+  char URI[URILEN];
 
   gst_init (&argc, &argv);
 
@@ -74,6 +78,9 @@ main (int argc, char *argv[])
   }
   if(argc>2) {
     mountpoint=argv[2];
+  }
+  if(argc>3) {
+    outfile=argv[3];
   }
 
  
@@ -128,10 +135,20 @@ main (int argc, char *argv[])
   /* add a timeout for the session cleanup */
   g_timeout_add_seconds (2, (GSourceFunc) timeout, server);
 
-  printf("rtsp://@HOSTNAME@:%s%s\n", gst_rtsp_server_get_service(server), mountpoint);
+  snprintf(URI, URILEN, "rtsp://@HOSTNAME@:%s%s", gst_rtsp_server_get_service(server), mountpoint);
+  if(outfile) {
+    FILE*f=fopen(outfile, "w");
+    if(f) {
+      fprintf(f, "%s\n", URI);
+      fflush(f);
+      fclose(f);
+    }
+  } else {
+    printf("%s\n", URI);
+    fflush(stdout);fflush(stderr);
+  }
 
-  g_warning ("rtsp://@HOSTNAME@:%s%s\n", gst_rtsp_server_get_service(server), mountpoint);
-  fflush(stdout);fflush(stderr);
+  g_warning ("%s\n", URI);
 
   /* start serving, this never stops */
   g_main_loop_run (loop);
