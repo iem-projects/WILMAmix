@@ -19,15 +19,18 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def Server(type, profile='L16', channels=1, source='jackaudiosrc'):
+def Server(type, profile='L16', channels=1, source='jackaudiosrc',
+           startCallback=None):
     if 'rtsp' == type:
         try:
             import RTSPserverX
-            return RTSPserverX.RTSPserverX(profile, source)
+            return RTSPserverX.RTSPserverX(profile=profile, channels=channels, source=source,
+                                           startCallback=startCallback
+                                           )
         except ImportError:
             pass
 
-    raise Exception("invalid streame type: "+type)
+    raise Exception("invalid stream type: "+type)
 
 
 

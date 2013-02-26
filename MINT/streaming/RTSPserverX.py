@@ -26,9 +26,10 @@ import gstutils
 
 
 class RTSPserverX:
-    def __init__(self, profile='L16', channels=2, source='audiotestsrc'):
+    def __init__(self, profile='L16', channels=2, source='audiotestsrc',
+                 startCallback=None):
+        self.startCb=startCallback
         binary= os.path.join(os.path.dirname(os.path.abspath(__file__)),'RTSPserverX')
-
         profile = profile.replace(' ', '')
         depayelement='rtp'+profile+'pay'
         if not ( gstutils.checkElement(source) and gstutils.checkElement(depayelement) ):

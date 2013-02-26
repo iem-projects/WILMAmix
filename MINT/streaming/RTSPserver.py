@@ -24,7 +24,9 @@ import glib, gobject
 import socket
 
 class RTSPserver:
-    def __init__(self, profile='L16', channels=2, source='audiotestsrc'):
+    def __init__(self, profile='L16', channels=2, source='audiotestsrc',
+                 startCallback=None
+                 ):
         profile = profile.replace(' ', '')
         depayelement='rtp'+profile+'pay'
         if not ( gstutils.checkElement(source) and gstutils.checkElement(depayelement) ):
