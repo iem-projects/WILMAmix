@@ -173,12 +173,14 @@ class SM(QtGui.QGroupBox):
         print "synched:",success
         self.syncher.setEnabled(True)
     def doSync(self):
-        cb=ThreadedInvoke.Invoker(self.doneSync)
         if self.setting.inpath is not None:
             print "synching to",self.setting.inpath
             self.syncher.setEnabled(False)
             host,port=self.connection.getRemote()
-            f=FileSync.FileSync('/tmp/tex', self.setting.user+'@'+host+':'+self.setting.inpath, passphrases=['iem'], doneCallback=cb)
+            f=FileSync.FileSync('/tmp/tex', self.setting.user+'@'+host+':'+self.setting.inpath,
+                                passphrases=['iem'],
+                                deleteTarget=True,
+                                doneCallback=ThreadedInvoke.Invoker(self.doneSync))
         else:
             print "don't no where to sync data to..."
 
