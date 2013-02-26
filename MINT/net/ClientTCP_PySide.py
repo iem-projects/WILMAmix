@@ -20,7 +20,6 @@
 
 import osc
 from SLIP import SLIP
-import socket, gobject
 from PySide.QtNetwork import QTcpSocket
 
 class ClientTCP:
@@ -42,7 +41,6 @@ class ClientTCP:
         self.socket.readyRead.connect(self._callback)
         self.socket.connectToHost(host, port);
         self.sender=(host, port)
-
 
     def __del__(self):
         self.shutdown()
@@ -90,14 +88,15 @@ class ClientTCP:
     def sendMsg(self, oscAddress, dataArray=[]):
         """send an OSC-message to the server"""
         self._send( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray) )
-
-
     def sendBundle(self, bundle):
         """send an OSC-bundle to the server"""
         if isinstance(bundle, osc.Bundle):
             self._send(bundle.data())
         else:
             self._send(bundle.message)
+
+    def getRemote(self):
+        return self.remote
 
 
 
@@ -119,6 +118,7 @@ if __name__ == '__main__':
     _test_client()
 
     try:
+        import gobject
         gobject.MainLoop().run()
     except KeyboardInterrupt:
         pass

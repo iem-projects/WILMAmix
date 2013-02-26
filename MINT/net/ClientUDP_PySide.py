@@ -19,7 +19,6 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 import osc
-import socket, gobject
 from PySide.QtNetwork import QUdpSocket
 
 class ClientUDP:
@@ -80,14 +79,15 @@ class ClientUDP:
     def sendMsg(self, oscAddress, dataArray=[]):
         """send an OSC-message to the server"""
         self._send( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray) )
-
-
     def sendBundle(self, bundle):
         """send an OSC-bundle to the server"""
         if isinstance(bundle, osc.Bundle):
             self._send(bundle.data())
         else:
             self._send(bundle.message)
+
+    def getRemote(self):
+        return self.remote
 
 
 
@@ -109,6 +109,7 @@ if __name__ == '__main__':
     _test_client()
 
     try:
+        import gobject
         gobject.MainLoop().run()
     except KeyboardInterrupt:
         pass
