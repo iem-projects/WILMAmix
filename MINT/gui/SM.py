@@ -186,9 +186,9 @@ class SM(QtGui.QGroupBox):
         self.launchRemote.setEnabled(not msg[2])
 
     def doneSync(self, success):
-        print "synching "+str(self)+" success? "+ str(success)
         self.syncher.setEnabled(True)
     def doSync(self):
         cb=ThreadedInvoke.Invoker(self.doneSync)
         self.syncher.setEnabled(False)
-        f=FileSync.FileSync('/tmp/tex', 'iem@beaglebone:/tmp/foo', passphrases=['iem'], doneCallback=cb)
+        host,port=self.connection.getRemote()
+        f=FileSync.FileSync('/tmp/tex', 'iem@'+host+':/tmp/foo', passphrases=['iem'], doneCallback=cb)
