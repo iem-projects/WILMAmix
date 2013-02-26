@@ -95,10 +95,10 @@ class FileSync:
         prog=['rsync' ]
         prog+=['--archive']
         prog+=['--compress']
-        if deleteSource:
-            prog+='--delete'
         if deleteTarget:
-            prog+='--remove-source-files'
+            prog+=['--delete']
+        if deleteSource:
+            prog+=['--remove-source-files']
         prog+=[source, target]
         self.syncer=_FileSyncer(prog,
                                 passphrases,
