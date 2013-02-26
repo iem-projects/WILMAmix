@@ -40,11 +40,20 @@ _invoker = _Invoker()
 
 
 def callback(fn, *args, **kwargs):
+    """
+    call a function in the main (GUI) thread.
+    this will return immediately, the function will be executed later
+    """
     QtCore.QCoreApplication.postEvent(_invoker,
                                       _InvokeEvent(fn, *args, **kwargs))
 
+class Invoker:
+    def __init__(self, fn):
+        self.fn=fn
+    def __call__(self, *args, **kwargs):
+        callback(self.fn, *args, **kwargs)
 
 if __name__ == '__main__':
     def foo(name):
         print name
-    invoke_in_main_thread(foo, "hello")
+    callback(foo, "hello")
