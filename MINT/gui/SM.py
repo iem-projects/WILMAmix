@@ -116,6 +116,8 @@ class SM(QtGui.QGroupBox):
         self.connection.sendMsg('/gain', [gain,]) #FIXME get max.value from slider
 
     def faderCb(self, msg, src):
+        if len(msg)<3: ## that's only 'address' and 'typetags', no data
+            return
         gainF=msg[2]
         gain=MINT.utils.SCALE(gainF, 0., 1., self.fader.minimum(), self.fader.maximum(), True)
         self.fader.blockSignals(True)
