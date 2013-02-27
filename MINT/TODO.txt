@@ -9,15 +9,12 @@ process:
 
 
 OSC:
-	Q: pattern matching
-	A: implemented (adapted from python-txosc)
+	Q: sub-tree patterns (e.g. '/foo/' matches '/foo/bar/baz')
 
 RTSPserver:
-	Q: if the server shuts down and a client is still listening, the server segfaults once the client quits
+	Q: if the server shuts down and a client is still listening, the server
+		segfaults once the client quits.
 	A: --> run server in external program that gets shut down, once streaming is done
 
-RTSPserverX:
-	Q: reading from stdout pipe doesn't always work (needed for actual RTSP-URI)
-	A: make pipe work
-	A: write to tmpfile (FIXED)
-	A: OSC-callback (bloats server app)
+import:
+	Q: MINTmix.py requires 'python-psutil'?
