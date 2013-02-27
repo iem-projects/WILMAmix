@@ -100,6 +100,7 @@ class FileSync:
         if deleteSource:
             prog+=['--remove-source-files']
         prog+=[source, target]
+        print "FileSync:", prog
         self.syncer=_FileSyncer(prog,
                                 passphrases,
                                 doneCallback=self._callback)
