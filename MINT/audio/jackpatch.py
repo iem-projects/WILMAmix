@@ -29,41 +29,27 @@ _counter=0.1
 def _defer(fun):
     gobject.timeout_add(0, fun)
 
-### pattern substitution
-##>>> a
-##'SuperCollider:out_(.*)'
-##>>> r=re.compile(a)
-##>>> b
-##'system:playback_\\1'
-##>>> re.sub(r, b, "SuperCollider:out_abc")
-##'system:playback_abc'
-
-
-
 class patcher:
-    def __init__(self, deferFunction=None):
+    def __init__(self, deferFunction=None, timeout=1):
         self.running=False
         self.rules=[]
+        if deferFunction is None:
+            self.defer=_defer
+        else:
+            self.defer=deferFunction
+
         global _counter
         ID="jackpatch["+str(os.getpid())+"]_"+str(_counter)
         _counter+=1
         self.jack = jack.Client(ID, processing=False)
         self.jack.set_port_connect_callback(self._connection)
         self.jack.activate()
-        if deferFunction is None:
-            self.defer=_defer
-        else:
-            self.defer=deferFunction
-        self.already = False
 
     def _connection(self, a, b, state):
         print "callback: ",self.running
         if not self.running:
             return
-        print "callbackAgain: ",self.already
-        if not self.already:
-            self.already=False
-            self.defer(self._applyRules)
+        self.defer(self._applyRules)
         if True:
             if state:
                 print "connection "+str(a)+"->"+str(b)
@@ -78,8 +64,7 @@ class patcher:
 
 
     def _applyRules(self):
-        print "applying:", self.already
-        self.already=False
+        print "applying:"
         for r in self.rules:
             r[0](*r[1])
         return False
@@ -88,14 +73,26 @@ class patcher:
         print "Connect: "+source+"->"+target
         r=re.compile(source)
         for s in self.jack.get_ports(source,'',jack.IsOutput):
-            for t in self.jack.get_ports(re.sub(r, target, s), '', jack.IsInput): ## all matching targetports
-                self.jack.connect(s,t)
+            targets=self.jack.get_ports(re.sub(r, target, s), '', jack.IsInput) ## all matching targetports
+            ## LATER: intersect targets with actual connected targets
+            for t in targets:
+                print "connecting: "+s+" & "+t
+                try:
+                    self.jack.connect(s,t)
+                except jack.Error, e:
+                    print "failed connecting:",e
     def _dodisconnect(self, source, target):
         print "Disconnect: "+source+"->"+target
         r=re.compile(source)
         for s in self.jack.get_ports(source,'',jack.IsOutput):
-            for t in self.jack.get_ports(re.sub(r, target, s), '', jack.IsInput): ## all matching targetports
-                self.jack.disconnect(s,t)
+            targets = self.jack.get_ports(re.sub(r, target, s), '', jack.IsInput) ## all matching targetports
+            ## LATER: intersect targets with actual connected targets
+            for t in targets:
+                print "disconnecting: "+s+" & "+t
+                try:
+                    self.jack.disconnect(s,t)
+                except jack.Error, e:
+                    print "failed disconnecting:",e
     def _doduplicate(self, reference, target):
         print "Duplicate: "+reference+"->"+target
         r=re.compile(reference)
@@ -134,15 +131,19 @@ class patcher:
 ######################################################################
 
 if __name__ == '__main__':
+    import gobject
+    def foo():
+        print "called foo"
     p = patcher()
     p.connect(r"pure_data_0:output(.*)", r"pure_data_.*:input\1")
-    p.disconnect(r"pure_data_0:output0", r"pure_data_.*:input0")
+    p.disconnect(r"pure_data_.*:output.*", r"system:playback_.*")
+    #p.disconnect(r"pure_data_0:output0", r"pure_data_.*:input0")
     #p.duplicate("pure_data_0:input0", "system:playback_1")
     p.start()
     #po=patcher()
 
     try:
-        import gobject
+
         loop=gobject.MainLoop()
         gobject.threads_init()
         loop.run()
