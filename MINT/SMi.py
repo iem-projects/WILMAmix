@@ -45,6 +45,8 @@ class State:
         self.cpu = 1.
         self.mem = 1.
         self.disk = 1.
+        self.battery = 1.
+        self.runtime = 0
 
     def update(self):
         if self.mixer is not None:
@@ -56,6 +58,8 @@ class State:
         self.cpu = self.health.cpu
         self.mem = self.health.mem
         self.disk = self.health.disk
+        self.battery = self.health.battery
+        self.runtime = self.health.runtime
 
     def addToBundle(self, bundle):
         bundle.append(('/gain', self.gains))
@@ -63,6 +67,8 @@ class State:
         bundle.append(('/state/cpu', self.health.cpu))
         bundle.append(('/state/mem', self.health.mem))
         bundle.append(('/state/disk', self.health.disk))
+        bundle.append(('/state/battery', self.health.battery))
+        bundle.append(('/state/runtime', self.health.runtime))
 
 class Setting:
     def __init__(self):
