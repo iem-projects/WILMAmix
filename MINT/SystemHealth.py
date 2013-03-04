@@ -31,6 +31,12 @@ class SystemHealth:
             have_psutil = False
             print "failed to import 'psutil'. do you have 'python-psutil' installed?"
 
+        SMBUS_gaugeAddr                = 0x0b
+        SMBUS_cmdRelativeStateOfCharge = 0x0d
+        SMBUS_cmdRunTimeToEmpty        = 0x11
+        SMBUS_cmdAverageTimeToEmpty    = 0x13
+        SMBUS_cmdBatteryStatus         = 0x16
+
         def __init__(self, interval=1.0, path=None):
             Thread.__init__(self)
             self.setDaemon(True)
@@ -41,10 +47,25 @@ class SystemHealth:
                 self.path=path
             except None:
                 self.path=os.path.expanduser('~')
+
+            try:
+                from smbus import SMBus
+                self.smbus = SMBus(3)
+            except ImportError as e:
+                self.smbus = None
+                print "failed to import 'smbus'. do you have 'python-smbus' installed?"
+                print e
+            except IOError as e:
+                self.smbus = None
+                print "failed to connect to SMBus. is the user member of the 'i2c' group?"
+                print e
+
             self.interval=interval
             self.cpu = 1.
             self.mem = 1.
             self.disk= 1.
+            self.battery = 1.
+            self.runtime = 0
             self.last=0
 
             self.keepRunning=True
@@ -62,6 +83,7 @@ class SystemHealth:
                 s=os.statvfs(self.path)
                 self.disk=(s.f_blocks-s.f_bfree)*1./s.f_blocks
 
+                ## CPU,...
                 if psutil is not None:
                     used=psutil.used_phymem()
                     avail=psutil.avail_phymem()
@@ -70,9 +92,20 @@ class SystemHealth:
 
                     self.cpu=psutil.cpu_percent(interval=self.interval)/100.
 
+                ### battery
+                if self.smbus is not None:
+                    charge  = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdRelativeStateOfCharge)
+                    runtime = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdRunTimeToEmpty)
+                    state   = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
+
+                    self.battery = (100.-charge)/100.
+                    self.runtime = runtime
+
                 deltime = self.interval - (time.time()-now)
                 if deltime > 0.:
                     time.sleep(deltime)
+
+            ## loop finished
             self.isRunning=False
 
     def __init__(self, interval=1.0, path=None):
@@ -80,6 +113,8 @@ class SystemHealth:
         self.cpu = 1.
         self.mem = 1.
         self.disk= 1.
+        self.battery = 1.
+        self.runtime = 0
         self.thread.start()
         while not (self.thread.keepRunning and self.thread.isRunning):
             time.sleep(0.1)
@@ -96,11 +131,14 @@ class SystemHealth:
             self.cpu  = self.thread.cpu
             self.mem  = self.thread.mem
             self.disk = self.thread.disk
+            self.battery = self.thread.battery
+            self.runtime = self.thread.runtime
         else:
             self.cpu = 1.
             self.mem = 1.
             self.disk= 1.
-
+            self.battery = 1.
+            self.runtime = 0
 
 ######################################################################
 
@@ -111,11 +149,15 @@ if __name__ == '__main__':
         print "CPU: ", s.cpu
         print "MEM: ", s.mem
         print "DISK: ", s.disk
+        print "BAT: ", s.battery
+        print "runtime: ",s.runtime
         time.sleep(5)
         s.update()
         print "CPU: ", s.cpu
         print "MEM: ", s.mem
         print "DISK: ", s.disk
+        print "BAT: ", s.battery
+        print "runtime: ",s.runtime
     except KeyboardInterrupt:
         print "shutting down"
     s.stop()
