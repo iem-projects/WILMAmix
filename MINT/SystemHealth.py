@@ -98,7 +98,7 @@ class SystemHealth:
                     runtime = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdRunTimeToEmpty)
                     state   = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
 
-                    self.battery = (100.-charge)/100.
+                    self.battery = charge/100.
                     self.runtime = runtime
 
                 deltime = self.interval - (time.time()-now)
