@@ -64,6 +64,8 @@ class SM(QtGui.QGroupBox):
         self.connection.add(self.cpuCb, '/state/cpu')
         self.connection.add(self.memCb, '/state/mem')
         self.connection.add(self.diskCb, '/state/disk')
+        self.connection.add(self.battCb, '/state/battery')
+        self.connection.add(self.runtimeCb, '/state/runtime')
 
         self.connection.add(self.userCb   , '/user')
         self.connection.add(self.outpathCb, '/path/out')
@@ -91,7 +93,12 @@ class SM(QtGui.QGroupBox):
         self.meter = qsynthMeter(self, 4, [-1], maxwidth=self.maxWidth) # maxwidth should be dynamic and ack the fader width
         sublayout.addWidget(self.meter)
 
-        self.statemeter = statemeter.statemeter(self, ['CPU', 'memory', 'disk'], maxheight=16)
+        self.statemeter = statemeter.statemeter(self,
+                                                ['CPU', 'memory', 'disk', "battery", "runtime"],
+                                                scale  =[None , None , None , None, " minutes"],
+                                                inverse=[False, False, False, True, True],
+                                                maxheight=16,
+                                                )
         layout.addWidget(self.statemeter)
 
         self.iface = QtGui.QComboBox()
@@ -196,6 +203,7 @@ class SM(QtGui.QGroupBox):
     def levelCb(self, msg, src):
         levels_dB=msg[2:]
         self.meter.setValues(levels_dB)
+
     def cpuCb(self, msg, src):
         value=msg[2]
         self.statemeter.setValue(0, value)
@@ -205,6 +213,13 @@ class SM(QtGui.QGroupBox):
     def diskCb(self, msg, src):
         value=msg[2]
         self.statemeter.setValue(2, value)
+    def battCb(self, msg, src):
+        value=msg[2]
+        self.statemeter.setValue(3, value)
+    def runtimeCb(self, msg, src):
+        value=msg[2]
+        self.statemeter.setValue(4, value)
+
     def userCb(self, msg, src):
         self.setting.user=msg[2]
     def outpathCb(self, msg, src):
