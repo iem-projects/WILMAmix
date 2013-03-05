@@ -30,7 +30,12 @@ def _defer(fun):
     gobject.timeout_add(0, fun)
 
 class patcher:
-    def __init__(self, deferFunction=None, timeout=1):
+    def __init__(self, rules=[], deferFunction=None, timeout=1):
+        """a new jack-patchbay.
+        for thread synchronisation provice a 'deferFunction' that takes a function as an argument.
+        for initial rules provide an array with rules of the form '<keyword> <source> <target>',
+        where <keyword> can be one of 'connect', 'disconnect' and 'duplicate'.
+        """
         self.running=False
         self.rules=[]
         if deferFunction is None:
@@ -42,6 +47,11 @@ class patcher:
         ID="jackpatch["+str(os.getpid())+"]_"+str(_counter)
         _counter+=1
         self.jack = jack.Client(ID, processing=False)
+
+
+        for r in rules:
+            self.add(r[0], r[1], r[2])
+
         self.jack.set_port_connect_callback(self._connection)
         self.jack.activate()
 
@@ -125,6 +135,18 @@ class patcher:
     def clear(self):
         """clear all rules"""
         self.rules=[]
+
+    def add(self, ruletype, a, b):
+        print "adding rule '"+ruletype+"': " + a + "->"+b
+        if ruletype is "connect":
+            self.rules+=[[self._doconnect   , [a, b]]]
+        elif ruletype is "disconnect":
+            self.rules+=[[self._dodisconnect, [a, b]]]
+        elif ruletype is "duplicate":
+            self.rules+=[[self._doduplicate , [a, b]]]
+        else:
+            raise Exception("unknown rules type '"+ruletype+"'")
+
 
 
 
