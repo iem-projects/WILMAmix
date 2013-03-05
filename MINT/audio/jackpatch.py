@@ -156,13 +156,14 @@ if __name__ == '__main__':
     import gobject
     def foo():
         print "called foo"
-    p = patcher()
-    p.connect(r"pure_data_0:output(.*)", r"pure_data_.*:input\1")
-    p.disconnect(r"pure_data_.*:output.*", r"system:playback_.*")
+    p = patcher(rules=[['connect'   , r"pure_data_0:output(.*)", r"pure_data_.*:input\1"],
+                       ['disconnect', r"pure_data_.*:output.*" , r"system:playback_.*"  ]
+                       ])
+    # p.connect(r"pure_data_0:output(.*)", r"pure_data_.*:input\1")
+    # p.disconnect(r"pure_data_.*:output.*", r"system:playback_.*")
     #p.disconnect(r"pure_data_0:output0", r"pure_data_.*:input0")
     #p.duplicate("pure_data_0:input0", "system:playback_1")
     p.start()
-    #po=patcher()
 
     try:
 
