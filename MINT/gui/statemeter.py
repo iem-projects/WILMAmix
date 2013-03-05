@@ -23,30 +23,48 @@ from PySide import QtCore, QtGui
 
 
 class statemeterValue(QtGui.QFrame):
-    def __init__(self, pMeter, label=None, height=4):
+    def __init__(self, pMeter, label=None, scale=None, height=4, inverse=False):
         QtGui.QFrame.__init__(self, pMeter)
         #print "statemeter for :", label
         # Local instance variables.
         self.paint_time = 0.
         self.m_pMeter      = pMeter
         self.m_fValue      = 0.0
+        self.m_maxValue    = 1.0
+        self.inverse       = inverse
         self.setMinimumHeight(height)
         self.setMaximumHeight(height)
         if label is not None:
             self.label         = label+": "
             self.setToolTip(label)
+        if scale is None:
+            self.suffix = '%'
+            self.dynamic = False
+        else:
+            self.suffix=scale
+            self.dynamic = True
         self.setBackgroundRole(QtGui.QPalette.NoRole)
         self.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum))
     # Frame value one-way accessors.
     def setValue(self, fValue):
-        if fValue < 0.:
-            fValue=0.
-        elif fValue > 1.:
-            fValue = 1.
-        self.m_fValue = fValue
+        val = fValue
+        if self.dynamic:
+            if val > self.m_maxValue:
+                self.m_maxValue = 1.0*val
+            val = val/self.m_maxValue
+        if val < 0.:
+            val=0.
+        elif val > 1.:
+            val = 1.
+        self.m_fValue = val
         self.refresh()
         if self.label is not None:
-            self.setToolTip(self.label+str(fValue*100)+"%")
+            if self.dynamic:
+                self.setToolTip(self.label+str(fValue)+self.suffix)
+            else:
+                percentage=str(int((fValue*100)*100)/100.)
+                self.setToolTip(self.label+percentage+"%")
+
     def refresh(self):
         self.update()
     # Resize event handler.
@@ -71,11 +89,14 @@ class statemeterValue(QtGui.QFrame):
             painter.fillRect(0, 0, w, h, self.palette().dark().color())
 
         # foreground(?)
-        if self.m_fValue >= 0.95:
+        val = self.m_fValue
+        if self.inverse:
+            val = 1-val
+        if val >= 0.95:
             color=self.m_pMeter.ColorOver
-        elif self.m_fValue > .90:
+        elif val > .90:
             color=self.m_pMeter.ColorHigh
-        elif self.m_fValue > .60:
+        elif val > .60:
             color=self.m_pMeter.ColorHigh#self.m_pMeter.ColorMid
         else:
             color=self.m_pMeter.ColorLow
@@ -93,10 +114,23 @@ class statemeterValue(QtGui.QFrame):
 
 class statemeter(QtGui.QFrame):
     # Constructor.
-    def __init__(self, pParent=None, ports=['foo'], maxheight=None):
+    def __init__(self, pParent=None, ports=['foo'], scale=[], inverse=[], maxheight=None):
         QtGui.QFrame.__init__(self, pParent)
         self.ports = ports
         self.meterheight=4
+        self.inverse = [False]*len(ports)
+        self.scale =   [None ]*len(ports)
+        for i in range(len(ports)):
+            try:
+                self.inverse[i]=inverse[i]
+            except IndexError:
+                self.inverse=False
+            try:
+                self.scale[i]=scale[i]
+            except IndexError:
+                self.scale=None
+
+
         meterspacing=1
         if maxheight is not None:
             numports=len(self.ports)
@@ -145,8 +179,8 @@ class statemeter(QtGui.QFrame):
         minheight=0
         maxheight=0
         self.m_values = []
-        for p in self.ports:
-            value=statemeterValue(self, label=p)
+        for i,p in enumerate(self.ports):
+            value=statemeterValue(self, label=p, inverse=self.inverse[i], scale=self.scale[i])
             self.m_values += [value]
             self.m_layout.addWidget(value)
             minheight+=value.minimumHeight()+1
@@ -178,7 +212,7 @@ if __name__ == '__main__':
             self.value.valueChanged.connect(self.setValue)
         def setValue(self, value):
             self.meter.setValue(0, value*0.01)
-            
+
     app = QtGui.QApplication(sys.argv)
     form = Form()
     form.show()
