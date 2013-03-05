@@ -94,9 +94,12 @@ class SystemHealth:
 
                 ### battery
                 if self.smbus is not None:
-                    charge  = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdRelativeStateOfCharge)
-                    runtime = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdRunTimeToEmpty)
-                    state   = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
+                    try:
+                        charge  = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdRelativeStateOfCharge)
+                        runtime = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdRunTimeToEmpty)
+                        state   = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
+                    except IOError:
+                        pass # hopefully a temporary error...
 
                     self.battery = charge/100.
                     self.runtime = runtime
