@@ -21,7 +21,7 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 import sys
-from MINT import Metro
+from MINT import metro
 from MINT.gui import SMmixer, Translator
 import MINT.net
 import MINT.constants
@@ -31,7 +31,7 @@ class Form(QDialog):
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
         service=(MINT.constants.SERVICE+'._'+MINT.constants.PROTOCOL)
-        self.discover=MINT.net.Discoverer(service=service)
+        self.discover=MINT.net.discoverer(service=service)
         # Create widgets
         self.dict=self.discover.getDict()
         print self.dict
@@ -48,7 +48,7 @@ class Form(QDialog):
         # Add button signal to greetings slot
         self.bRefresh.clicked.connect(self.refreshIt)
         self.bPrint.clicked.connect(self.printIt)
-        self.metro = Metro(self.ping, 100)
+        self.metro = metro(self.ping, 100)
 
         self.refreshIt()
 
