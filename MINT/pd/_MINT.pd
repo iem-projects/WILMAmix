@@ -1,5 +1,5 @@
 #N canvas 446 292 844 588 10;
-#X obj 47 182 _loader;
+#X obj 47 182 _MINT/loader;
 #X obj 47 232 packOSC;
 #X obj 521 209 unpackOSC;
 #X obj 47 129 r \$0-OSCin;
@@ -50,10 +50,10 @@
 #N canvas 4 49 450 300 parseOSC 0;
 #X obj 93 118 routeOSC /load;
 #N canvas 312 79 692 502 /load 0;
-#X obj 93 122 list prepend 0 0 _STREAMER;
+#X obj 93 122 list prepend 0 0 _MINT/STREAMER;
 #X obj 93 75 inlet;
 #X obj 93 234 outlet;
-#X obj 281 122 list prepend 0 0 _RECORDER;
+#X obj 281 122 list prepend 0 0 _MINT/RECORDER;
 #X obj 93 100 routeOSC /stream /record /process;
 #X obj 93 144 t l b;
 #X obj 281 144 t l b;
