@@ -19,13 +19,14 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def Server(host='', port=0, oscprefix=None, service=None, verbose=False, type='udp'):
+def client(host='', port=0, oscprefix=None, verbose=False, type='udp'):
     if 'udp' == type:
-        import ServerUDP
-        return ServerUDP.ServerUDP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
-    if 'tcp' == type:
-        import ServerTCP
-        return ServerTCP.ServerTCP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
+        import clientUDP_PySide
+        return clientUDP_PySide.clientUDP(host=host, port=port, oscprefix=oscprefix, verbose=verbose)
+    elif 'tcp' == type:
+        import clientTCP_PySide
+        return clientTCP_PySide.clientTCP(host=host, port=port, oscprefix=oscprefix, verbose=verbose)
+
 
     raise Exception("invalid stream type: "+type)
 

@@ -21,7 +21,7 @@
 import osc
 from PySide.QtNetwork import QUdpSocket
 
-class ClientUDP:
+class clientUDP:
     """ OSC-client running on GOD.
     sends OSC-messages to SMi.
     receives OSC-messages from SMi (and emits signals with the data)
@@ -101,7 +101,7 @@ n = None
 def _test_client():
     import time
     global n
-    n = ClientUDP('localhost', 7777)
+    n = clientUDP('localhost', 7777)
     n.add(_callback, '/foo')
     n.sendMsg('/foo');
 

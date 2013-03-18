@@ -23,7 +23,7 @@ import os, signal
 import threading
 import time
 
-class Launcher(threading.Thread):
+class launcher(threading.Thread):
     """ Launches an external program in a thread """
 
     def __init__(self, prog, args=[], cwd=None, doneCb=None):
@@ -87,7 +87,7 @@ class Launcher(threading.Thread):
 ######################################################################
 
 if __name__ == '__main__':
-    p = Launcher('pd', [
+    p = launcher('pd', [
         '-nogui',
         '-open', 'pd/test.pd',
         '-send', '_config foo bar',

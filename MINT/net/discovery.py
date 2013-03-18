@@ -40,7 +40,7 @@ def if_indextoname(index):
         ifname="net:%02d" % (index)
     return ifname
 
-class Discoverer:
+class discoverer:
     def getKey(self, arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags):
         key = "["+str(arg_interface)+'/'+str(arg_protocol)+'/'+str(arg_name)+'/'+str(arg_stype)+'/'+str(arg_domain)+"]"
         return key
@@ -92,7 +92,7 @@ class Discoverer:
 
 ##############
 
-class Publisher:
+class publisher:
     def __init__(self,  service='_mint-sm._udp', port=7777, name=None):
         DBusGMainLoop( set_as_default=True )
         self.group       = None #our entry group
@@ -183,13 +183,13 @@ def test_doloop():
 
 
 def test_discover():
-    discover = Discoverer()
+    discover = discoverer()
     test_doloop()
 
 
 def test_publish():
-    tcp = Publisher('_mint-sm._tcp')
-    udp = Publisher('_mint-sm._udp')
+    tcp = publisher('_mint-sm._tcp')
+    udp = publisher('_mint-sm._udp')
     test_doloop()
 
 if __name__ == '__main__':

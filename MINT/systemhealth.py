@@ -22,7 +22,7 @@ import os
 import time
 from threading import Thread
 
-class SystemHealth:
+class systemhealth:
     class SystemHealthThread(Thread):
         try:
             import psutil
@@ -72,8 +72,8 @@ class SystemHealth:
             self.isRunning=False
 
         def run(self):
-            if SystemHealth.SystemHealthThread.have_psutil:
-                psutil=SystemHealth.SystemHealthThread.psutil
+            if systemhealth.SystemHealthThread.have_psutil:
+                psutil=systemhealth.SystemHealthThread.psutil
             else:
                 psutil=None
             while self.keepRunning:
@@ -95,9 +95,9 @@ class SystemHealth:
                 ### battery
                 if self.smbus is not None:
                     try:
-                        charge  = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdRelativeStateOfCharge)
-                        runtime = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdRunTimeToEmpty)
-                        state   = self.smbus.read_word_data(SystemHealth.SystemHealthThread.SMBUS_gaugeAddr, SystemHealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
+                        charge  = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr, systemhealth.SystemHealthThread.SMBUS_cmdRelativeStateOfCharge)
+                        runtime = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr, systemhealth.SystemHealthThread.SMBUS_cmdRunTimeToEmpty)
+                        state   = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr, systemhealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
                     except IOError:
                         charge=0.
                         runtime=0.
@@ -115,7 +115,7 @@ class SystemHealth:
             self.isRunning=False
 
     def __init__(self, interval=1.0, path=None):
-        self.thread = SystemHealth.SystemHealthThread(interval, path)
+        self.thread = systemhealth.SystemHealthThread(interval, path)
         self.cpu = 1.
         self.mem = 1.
         self.disk= 1.
@@ -149,8 +149,8 @@ class SystemHealth:
 ######################################################################
 
 if __name__ == '__main__':
-    print "SystemHealth..."
-    s=SystemHealth()
+    print "systemhealth..."
+    s=systemhealth()
     try:
         print "CPU: ", s.cpu
         print "MEM: ", s.mem

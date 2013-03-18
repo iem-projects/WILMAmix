@@ -21,10 +21,10 @@
 from PySide import QtCore
 from PySide.QtCore import QObject
 
-from MINT import Launcher
+from MINT import launcher
 import ThreadedInvoke
 
-class GUILauncher(Launcher):
+class GUILauncher(launcher):
     """ launches an external program, and provide callbacks for run, exit, stdout,..."""
     def __init__(self, prog, args=[], cwd=None, doneCb=None):
         super(GUILauncher, self).__init__(prog=prog, args=args, cwd=cwd, doneCb=self._callback)

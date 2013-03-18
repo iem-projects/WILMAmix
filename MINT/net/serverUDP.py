@@ -20,9 +20,9 @@
 
 import osc
 import socket, gobject
-from Discovery import Publisher
+from discovery import publisher
 
-class ServerUDP:
+class serverUDP:
     """ OSC-server running on SMi.
     publishes connection information (via zeroconf),
     receives OSC-messages (and emits signals with the data),
@@ -48,7 +48,7 @@ class ServerUDP:
         ip, port = self.socket.getsockname()
         gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
         if service is not None:
-            self.publisher = Publisher(port=port, name=publishname, service=service+'._udp')
+            self.publisher = publisher(port=port, name=publishname, service=service+'._udp')
 
     def __del__(self):
         self.shutdown()
@@ -117,7 +117,7 @@ def _callback(message, source):
 
 class _TestServer:
     def __init__(self, port=0):
-        self.serv = ServerUDP(port=port)
+        self.serv = serverUDP(port=port)
         self.serv.add(self.callback, '/test')
 
     def __del__(self):

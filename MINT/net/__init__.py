@@ -6,11 +6,11 @@ __author__ = "IOhannes m zmölnig, IEM"
 __license__ = "GNU General Public License"
 __all__ = []
 
-from Client import Client
+from client import client
 __all__+=["Client"]
 
-from Server import Server
-__all__+=["Server"]
+from server import server
+__all__+=["server"]
 
-from Discovery import Publisher, Discoverer
+from discovery import publisher, discoverer
 __all__+=["Discovery"]

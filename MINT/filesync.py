@@ -78,7 +78,7 @@ class _FileSyncer(Thread):
         if self.doneCb is not None:
                 self.doneCb(self.p.exitstatus is 0)
 
-class FileSync:
+class filesync:
     """
     syncs a local directory with a remote directory.
     LATER: think about moving to python-libssh2
@@ -115,5 +115,5 @@ class FileSync:
 if __name__ == '__main__':
     def foo(success):
         print "Finished with", success
-    f=FileSync('/tmp/tex', 'iem@beaglebone:/tmp/foo', passphrases=['mo', 'iem'], doneCallback=foo)
+    f=filesync('/tmp/tex', 'iem@beaglebone:/tmp/foo', passphrases=['mo', 'iem'], doneCallback=foo)
 

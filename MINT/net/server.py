@@ -18,21 +18,20 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-from PySide import QtCore
 
-class Metro:
-    def __init__(self, callback, interval=100):
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(callback)
-        self.timer.setSingleShot(False)
-        self.timer.start(interval)
+def server(host='', port=0, oscprefix=None, service=None, verbose=False, type='udp'):
+    if 'udp' == type:
+        import serverUDP
+        return serverUDP.serverUDP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
+    if 'tcp' == type:
+        import serverTCP
+        return serverTCP.serverTCP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
 
-    def stop(self):
-        self.timer.stop()
+    raise Exception("invalid stream type: "+type)
+
+
 
 ######################################################################
 
 if __name__ == '__main__':
-    print "Metro..."
-
-
+    print "no tests yet"

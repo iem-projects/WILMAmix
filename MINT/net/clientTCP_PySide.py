@@ -22,7 +22,7 @@ import osc
 from SLIP import SLIP
 from PySide.QtNetwork import QTcpSocket
 
-class ClientTCP:
+class clientTCP:
     """ OSC-client running on GOD.
     sends OSC-messages to SMi.
     receives OSC-messages from SMi (and emits signals with the data)
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     def _test_client():
         import time
         global n
-        n = ClientTCP('localhost', 7777)
+        n = clientTCP('localhost', 7777)
         n.add(_callback, '/foo')
         n.sendMsg('/foo');
 

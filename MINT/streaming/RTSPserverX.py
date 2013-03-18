@@ -24,7 +24,7 @@ import tempfile
 import time
 import gobject
 import gstutils
-from .. import Launcher
+from .. import launcher
 
 class RTSPserverX:
     def __init__(self, profile='L16', channels=2, source='audiotestsrc',
@@ -41,7 +41,7 @@ class RTSPserverX:
         pipeline=source + " ! audioconvert ! audio/x-raw-int/channels="+str(channels)+" ! "+payelement+" name=pay0"
         mountpoint='/'+profile
         self.urifile=tempfile.NamedTemporaryFile()
-        self.server = Launcher(binary, [pipeline, mountpoint, self.urifile.name])
+        self.server = launcher(binary, [pipeline, mountpoint, self.urifile.name])
         self.uri = None
         gobject.io_add_watch(self.urifile.file, gobject.IO_IN, self._callback)
 

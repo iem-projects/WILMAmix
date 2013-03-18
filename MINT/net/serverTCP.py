@@ -20,10 +20,10 @@
 
 import osc
 import socket, gobject
-from Discovery import Publisher
+from discovery import publisher
 from SLIP import SLIP
 
-class ServerTCP:
+class serverTCP:
     """ OSC-server running on SMi.
     publishes connection information (via zeroconf),
     receives OSC-messages (and emits signals with the data),
@@ -55,7 +55,7 @@ class ServerTCP:
         self.socket.listen(1)
 
         if service is not None:
-            self.publisher = Publisher(port=port, name=publishname, service=service+'._tcp')
+            self.publisher = publisher(port=port, name=publishname, service=service+'._tcp')
 
     def __del__(self):
         self.shutdown()
@@ -154,7 +154,7 @@ if __name__ == '__main__':
 
     class _TestServer:
         def __init__(self, port=0):
-            self.serv = ServerTCP(port=port)
+            self.serv = serverTCP(port=port)
             self.serv.add(self.callback, '/test')
 
         def __del__(self):

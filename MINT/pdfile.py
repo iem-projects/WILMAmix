@@ -40,7 +40,7 @@
 
 import re
 
-class PdFile:
+class pdfile:
     def __init__(self, filename):
         file = open(filename, 'r')
         content = file.read()
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     import sys
     for arg in sys.argv[1:]:
         try:
-            pd = PdFile(arg)
+            pd = pdfile(arg)
             inlets=pd.getInlets()
             outlets=pd.getOutlets()
             print "FILE     :", arg

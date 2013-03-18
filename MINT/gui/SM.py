@@ -27,7 +27,7 @@ import MINT, MINT.utils
 import MINT.net.osc as osc
 import GUILauncher, statemeter, ThreadedInvoke
 
-from .. import FileSync
+from .. import filesync
 
 class SM(QtGui.QGroupBox):
     class Setting:
@@ -57,7 +57,7 @@ class SM(QtGui.QGroupBox):
         while oscprefix.startswith('/'):
             oscprefix=oscprefix[1:]
 
-        self.connection = MINT.net.Client(config['address'], config['port'], oscprefix='/'+oscprefix, type=MINT.constants.PROTOCOL)
+        self.connection = MINT.net.client(config['address'], config['port'], oscprefix='/'+oscprefix, type=MINT.constants.PROTOCOL)
         self.connection.add(self.faderCb, '/gain')
         self.connection.add(self.levelCb, '/level')
         self.connection.add(self.streamURI, '/stream/uri')
@@ -184,7 +184,7 @@ class SM(QtGui.QGroupBox):
             print "synching to",self.setting.inpath
             self.syncher.setEnabled(False)
             host,port=self.connection.getRemote()
-            f=FileSync.FileSync('/tmp/tex', self.setting.user+'@'+host+':'+self.setting.inpath,
+            f=filesync.filesync('/tmp/tex', self.setting.user+'@'+host+':'+self.setting.inpath,
                                 passphrases=['iem'],
                                 deleteTarget=True,
                                 doneCallback=ThreadedInvoke.Invoker(self.doneSync))

@@ -7,10 +7,10 @@ __license__ = "GNU General Public License"
 __all__ = []
 
 try:
-  from Metro import Metro
-  __all__+=["Metro"]
+  from metro import metro
+  __all__+=["metro"]
 except ImportError:
-  print "Unable to import Metro"
+  print "Unable to import metro"
 
 
 try:
@@ -21,7 +21,7 @@ except ImportError:
 
 
 try:
-  from Launcher import Launcher
-  __all__+=["Launcher"]
+  from launcher import launcher
+  __all__+=["launcher"]
 except ImportError:
-  print "Unable to import Launcher"
+  print "Unable to import launcher"

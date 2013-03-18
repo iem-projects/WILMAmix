@@ -18,15 +18,15 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-from net import Server as NetServer
+from net import server as NetServer
 from net.osc import Bundle
 
-from Launcher import Launcher
+from launcher import launcher
 import constants
 
 from streaming import Server as StreamingServer
 from audio import AudioMeter, AudioMixer
-import SystemHealth
+import systemhealth
 
 import os
 
@@ -41,7 +41,7 @@ class State:
           print "failed to open audio mixer:",e
         self.meter = AudioMeter()
         self.meter.start()
-        self.health = SystemHealth.SystemHealth()
+        self.health = systemhealth.systemhealth()
         self.cpu = 1.
         self.mem = 1.
         self.disk = 1.
@@ -161,7 +161,7 @@ class SMi:
         print "launching: ", msg
         if self.launcher is not None:
             return
-        self.launcher = Launcher(msg[2], cwd='/tmp', doneCb=self.launchCb)
+        self.launcher = launcher(msg[2], cwd='/tmp', doneCb=self.launchCb)
         self.launcher.start()
         self.server.sendMsg('/launch/state', [True])
     def launchCb(self):
