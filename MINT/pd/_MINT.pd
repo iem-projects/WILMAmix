@@ -1,9 +1,9 @@
-#N canvas 446 292 844 588 10;
+#N canvas 432 288 844 588 10;
 #X obj 47 182 _MINT/loader;
 #X obj 47 232 packOSC;
 #X obj 521 209 unpackOSC;
 #X obj 47 129 r \$0-OSCin;
-#N canvas 648 206 432 526 OSCinTEST 1;
+#N canvas 649 202 432 526 OSCinTEST 0;
 #X msg 41 55 /control/load/stream L24;
 #X msg 121 78 /stream/start localhost 7777;
 #X msg 54 154 /control/load/record;
@@ -25,7 +25,7 @@
 #X connect 9 0 8 0;
 #X connect 11 0 10 0;
 #X restore 219 28 pd OSCinTEST;
-#N canvas 457 106 614 300 sanitizeOSC 1;
+#N canvas 458 102 614 300 sanitizeOSC 0;
 #X obj 74 37 inlet;
 #X obj 74 209 route prefix;
 #X obj 155 237 outlet;
