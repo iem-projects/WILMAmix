@@ -11,7 +11,6 @@
 #X msg 95 120 disconnect;
 #X obj 105 298 t f f;
 #N canvas 272 315 450 300 \$0-payloader 0;
-#X obj 100 100 _MINT/STREAMERguts 1034 L16 128;
 #X restore 474 299 pd \$0-payloader;
 #X obj 73 211 r \$0-payload;
 #N canvas 500 331 581 513 creator 0;
@@ -23,7 +22,8 @@
 #X obj 38 161 pack s 128;
 #X obj 38 183 list prepend \$0;
 #X obj 38 117 list prepend L16 128;
-#X msg 38 223 obj 100 100 _MINT/STREAMERguts \$1 \$2 \$3 \, loadbang;
+#X msg 38 223 obj 100 100 _MINT/STREAMERguts \$1 \$2 \$3 \, loadbang
+;
 #X obj 38 57 route bang;
 #X obj 105 79 t b a;
 #X obj 322 43 inlet reset;
