@@ -32,18 +32,19 @@ import os
 import tempfile
 
 class _pdprocess:
-    def __init__(self, port, cwd=None):
-        if cwd is None:
+    def __init__(self, port, cwd=None, cpd=None):
+        if cwd is None: ## working directory
             cwd=tempfile.mkdtemp()
         self.cwd=cwd
+        if cpd is None: ## patch directory
+            cpd=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pd')
 
         self.args=[]
         self.args+=['-path', ".:/usr/lib/pd/extra/iemnet:/usr/lib/pd/extra/osc:~/src/cvs/MINT/pd/MINT/iemrtp"]
+        self.args+=['-path', cpd]
         ## NOTE: "sent" messages are executed _after_ loadbang
         self.args+=['-send', "_MINT_pwd "+cwd]
         self.args+=['-send', "_MINT_port "+str(port)]
-        self.args+=['-path', "/Net/iem/Benutzer/zmoelnig/src/cvs/MINT/MINTmix/MINT/pd"]
-        #self.args+=['-nogui']
         self.args+=['-open', "_MINT.pd"]
         self.shouldRun=False
         self.pd=None
@@ -69,9 +70,9 @@ class _pdprocess:
         self.pd.shutdown()
 
 class pdserver:
-    def __init__(self):
+    def __init__(self, workingdir=None, patchdir=None):
         self.server = NetServer(type='udp')
-        self.pd=_pdprocess(self.server.getPort())
+        self.pd=_pdprocess(self.server.getPort(), cwd=workingdir, cpd=patchdir)
     def __del__(self):
         self.pd.stop()
 
