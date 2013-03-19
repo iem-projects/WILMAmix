@@ -91,11 +91,20 @@ class pdserver:
             raise Exception("usage: send(addr, data) OR send(bundle)")
 
 if __name__ == '__main__':
+    class PingPong:
+        def __init__(self, pd):
+            self.pd=pd
+        def callback(self, message, source):
+            print "received: ",message
+            print "  source: ", source
+            self.pd.send("/pong")
     print "Pd-Server..."
     import gobject
     gobject.threads_init()
 
     pd = pdserver()
+    reply=PingPong(pd)
+    pd.add(reply.callback, "/meter")
     pd.start()
 
     try:
