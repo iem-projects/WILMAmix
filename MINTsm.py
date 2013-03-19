@@ -24,6 +24,7 @@ import gobject
 
 if __name__ == '__main__':
     print "SM..."
+    gobject.threads_init()
     sm = SMi()
     import time
 
