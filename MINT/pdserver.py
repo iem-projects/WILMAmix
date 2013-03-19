@@ -53,14 +53,15 @@ class _pdprocess:
         self.pd = launcher("pd",
                            self.args,
                            cwd=self.cwd,
-                           doneCb=self.doneCb)
+                           doneCb=self._doneCb)
         self.pd.launch()
         self.shouldRun=True
 
-    def doneCb(self):
+    def _doneCb(self):
         print "Pd exited", self.shouldRun
         if self.shouldRun: ## ouch: crashed, so restart
             self._launch()
+
     def start(self):
         if self.pd is None: ## not yet running
             self._launch()
