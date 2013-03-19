@@ -47,7 +47,6 @@ class _pdprocess:
         self.args+=['-open', "_MINT.pd"]
         self.shouldRun=False
         self.pd=None
-        self.start()
 
     def _launch(self):
         self.pd = launcher("pd",
@@ -84,6 +83,7 @@ if __name__ == '__main__':
     gobject.threads_init()
 
     pd = pdserver()
+    pd.start()
 
     try:
         gobject.MainLoop().run()
