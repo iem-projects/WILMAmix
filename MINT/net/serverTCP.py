@@ -133,7 +133,11 @@ class serverTCP:
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
         if self.addressManager is not None:
-            self.addressManager.add(callback, self.oscPrefix+oscAddress)
+            if oscAddress is None:
+                if self.oscPrefix is not '': oscAddress = self.oscPrefix+'/'
+            else:
+                oscAddress=self.oscPrefix+oscAddress
+            self.addressManager.add(callback, oscAddress)
 
     def sendMsg(self, oscAddress, dataArray=[]):
         """send an OSC-message to connected client(s)"""

@@ -90,7 +90,11 @@ class serverUDP:
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
         if self.addressManager is not None:
-            self.addressManager.add(callback, self.oscPrefix+oscAddress)
+            if oscAddress is None:
+                if self.oscPrefix is not '': oscAddress = self.oscPrefix+'/'
+            else:
+                oscAddress=self.oscPrefix+oscAddress
+            self.addressManager.add(callback, oscAddress)
 
     def _send(self, data):
         if self.socket is not None and self.remote is not None:
