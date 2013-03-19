@@ -112,7 +112,9 @@ def createBinaryMsg(oscAddress, dataArray):
     m = OSC.OSCMessage()
     m.address = oscAddress
 
-    if type(dataArray) is str:
+    if dataArray is None:
+        dataArray=[]
+    elif type(dataArray) is str:
         dataArray=[dataArray]
 
     try:
