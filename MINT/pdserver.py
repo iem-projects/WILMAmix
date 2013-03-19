@@ -74,8 +74,21 @@ class pdserver:
         self.pd=_pdprocess(self.server.getPort())
     def __del__(self):
         self.pd.stop()
+
+    def start(self):
+        self.pd.start()
     def stop(self):
         self.pd.stop()
+
+    def add(self, callback, oscAddress):
+        self.server.add(callback, oscAddress)
+    def send(self, addr, data=None):
+        if type(addr) is str: # it's an addr/data pair
+            self.server.sendMsg(addr, data)
+        elif data is None:    # it's a bundle
+            self.server.sendBundle(addr)
+        else:
+            raise Exception("usage: send(addr, data) OR send(bundle)")
 
 if __name__ == '__main__':
     print "Pd-Server..."
