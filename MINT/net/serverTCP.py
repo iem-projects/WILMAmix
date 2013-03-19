@@ -70,24 +70,6 @@ class serverTCP:
         if self.remotes.has_key(sock):
             del self.remotes[sock]
 
-    def shutdown(self, sock=None):
-        if sock is None:
-            self.keepListening=False
-            self._shutdown(self.socket)
-            if self.publisher is not None:
-                self.publisher.shutdown()
-                del self.publisher
-                self.publisher = None
-            if self.addressManager is not None:
-                del self.addressManager
-                self.addressManager = None
-            for s in self.remotes:
-                self._shutdown(s)
-            self.remotes = None
-            self.socket = None
-        else:
-            self._shutdown(sock)
-
     def _accept(self, sock, *args):
         '''Asynchronous connection listener. Starts a handler for each connection.'''
         conn, addr = sock.accept()
@@ -117,11 +99,6 @@ class serverTCP:
 
         return (len(data)>0) and self.remotes.has_key(sock)
 
-    def add(self, callback, oscAddress):
-        """add a callback for oscAddress"""
-        if self.addressManager is not None:
-            self.addressManager.add(callback, self.oscPrefix+oscAddress)
-
     def _send(self, data):
         if self.remotes is not None:
             for s in self.remotes:
@@ -130,6 +107,29 @@ class serverTCP:
                 slip = SLIP();
                 slip+=data;
                 s.sendall( slip.getData() )
+
+    def shutdown(self, sock=None):
+        if sock is None:
+            self.keepListening=False
+            self._shutdown(self.socket)
+            if self.publisher is not None:
+                self.publisher.shutdown()
+                del self.publisher
+                self.publisher = None
+            if self.addressManager is not None:
+                del self.addressManager
+                self.addressManager = None
+            for s in self.remotes:
+                self._shutdown(s)
+            self.remotes = None
+            self.socket = None
+        else:
+            self._shutdown(sock)
+
+    def add(self, callback, oscAddress):
+        """add a callback for oscAddress"""
+        if self.addressManager is not None:
+            self.addressManager.add(callback, self.oscPrefix+oscAddress)
 
     def sendMsg(self, oscAddress, dataArray=[]):
         """send an OSC-message to connected client(s)"""

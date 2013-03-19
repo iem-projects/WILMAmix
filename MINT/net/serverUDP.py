@@ -53,6 +53,17 @@ class serverUDP:
     def __del__(self):
         self.shutdown()
 
+    def _callback(self, socket, *args):
+        '''Asynchronous connection listener. Starts a handler for each connection.'''
+        # sock == self.socket
+        data, address = socket.recvfrom(8192)
+        if self.keepListening and (self.addressManager is not None):
+            #self.socket = socket
+            self.remote = address
+            self.addressManager.handle(data, address)
+
+        return self.keepListening
+
     def shutdown(self):
         self.keepListening=False
         if self.socket is not None:
@@ -71,17 +82,6 @@ class serverUDP:
         self.remote = None
         self.socket = None
 
-
-    def _callback(self, socket, *args):
-        '''Asynchronous connection listener. Starts a handler for each connection.'''
-        # sock == self.socket
-        data, address = socket.recvfrom(8192)
-        if self.keepListening and (self.addressManager is not None):
-            #self.socket = socket
-            self.remote = address
-            self.addressManager.handle(data, address)
-
-        return self.keepListening
 
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
