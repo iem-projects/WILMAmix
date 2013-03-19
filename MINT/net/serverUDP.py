@@ -33,7 +33,10 @@ class serverUDP:
         """creates a listener on any (or specified) port"""
         self.verbose=verbose
         self.keepListening=True
-        self.oscPrefix=oscprefix
+        if oscprefix is None:
+            self.oscPrefix=''
+        else:
+            self.oscPrefix=oscprefix
 
         self.remote = None
         self.addressManager = osc.CallbackManager(verbose=verbose)
