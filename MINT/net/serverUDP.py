@@ -47,6 +47,7 @@ class serverUDP:
         self.socket.bind((host, port))
         ip, port = self.socket.getsockname()
         gobject.io_add_watch(self.socket, gobject.IO_IN, self._callback)
+        self.port=port
         if service is not None:
             self.publisher = publisher(port=port, name=publishname, service=service+'._udp')
 
@@ -63,6 +64,9 @@ class serverUDP:
             self.addressManager.handle(data, address)
 
         return self.keepListening
+
+    def getPort(self):
+        return self.port
 
     def shutdown(self):
         self.keepListening=False

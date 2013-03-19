@@ -52,6 +52,7 @@ class serverTCP:
         self.socket.bind((host, port))
         ip, port = self.socket.getsockname()
         gobject.io_add_watch(self.socket, gobject.IO_IN, self._accept)
+        self.port=port
         self.socket.listen(1)
 
         if service is not None:
@@ -125,6 +126,9 @@ class serverTCP:
             self.socket = None
         else:
             self._shutdown(sock)
+
+    def getPort(self):
+        return self.port
 
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
