@@ -36,12 +36,12 @@ class _pdprocess:
         if cwd is None: ## working directory
             cwd=tempfile.mkdtemp()
         self.cwd=cwd
-        if cpd is None: ## patch directory
-            cpd=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pd')
-
         self.args=[]
         self.args+=['-path', ".:/usr/lib/pd/extra/iemnet:/usr/lib/pd/extra/osc:~/src/cvs/MINT/pd/MINT/iemrtp"]
-        self.args+=['-path', cpd]
+        if cpd is not None: ## patch directory
+            self.args+=['-path', cpd]
+        self.args+=['-path', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pd')]
+
         ## NOTE: "sent" messages are executed _after_ loadbang
         self.args+=['-send', "_MINT_pwd "+cwd]
         self.args+=['-send', "_MINT_port "+str(port)]
