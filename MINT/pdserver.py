@@ -36,7 +36,8 @@ def _createDirIfNeeded(directory):
         os.makedirs(directory)
 
 class _pdprocess:
-    def __init__(self, port, cwd=None, cpd=None):
+    def __init__(self, port, cwd=None, cpd=None, runningCb=None):
+        self.runningCb=runningCb
         if cwd is None: ## working directory
             cwd=tempfile.mkdtemp()
         self.cwd=cwd
@@ -60,10 +61,12 @@ class _pdprocess:
                            cwd=self.cwd,
                            doneCb=self._doneCb)
         self.pd.launch()
+        if self.runningCb is not None: self.runningCb(True)
         self.shouldRun=True
 
     def _doneCb(self):
         print "Pd exited", self.shouldRun
+        if self.runningCb is not None: self.runningCb(False)
         if self.shouldRun: ## ouch: crashed, so restart
             self._launch()
 
@@ -79,7 +82,8 @@ class _pdprocess:
 class pdserver:
     def __init__(self, workingdir=None, patchdir=None):
         self.server = NetServer(type='udp')
-        self.pd=_pdprocess(self.server.getPort(), cwd=workingdir, cpd=patchdir)
+        self.pd=_pdprocess(self.server.getPort(), cwd=workingdir, cpd=patchdir, runningCb=self._runningCb)
+        self.stateCb = None
     def __del__(self):
         self.pd.stop()
 
@@ -88,7 +92,20 @@ class pdserver:
     def stop(self):
         self.pd.stop()
 
+    def _runningCb(self, state):
+        if self.stateCb is not None:
+            msg=['/state']
+            if state:
+                msg+=[',T', True]
+            else:
+                msg+=[',F', False]
+            self.stateCb(msg, None)
+
     def add(self, callback, oscAddress):
+        if oscAddress is None:
+            self.stateCb=callback
+        elif oscAddress is '/state':
+            self.stateCb=callback
         self.server.add(callback, oscAddress)
     def send(self, addr, data=None):
         if type(addr) is str: # it's an addr/data pair
