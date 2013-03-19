@@ -31,6 +31,10 @@ from launcher import launcher
 import os
 import tempfile
 
+def _createDirIfNeeded(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
 class _pdprocess:
     def __init__(self, port, cwd=None, cpd=None):
         if cwd is None: ## working directory
@@ -50,6 +54,7 @@ class _pdprocess:
         self.pd=None
 
     def _launch(self):
+        _createDirIfNeeded(self.cwd)
         self.pd = launcher("pd",
                            self.args,
                            cwd=self.cwd,
