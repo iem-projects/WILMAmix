@@ -67,7 +67,9 @@ class _pdprocess:
             self._launch()
     def stop(self):
         self.shouldRun=False
-        self.pd.shutdown()
+        if self.pd is not None: ## not yet running
+            self.pd.shutdown()
+        self.pd=None
 
 class pdserver:
     def __init__(self, workingdir=None, patchdir=None):
