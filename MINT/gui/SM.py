@@ -146,6 +146,7 @@ class SM(QtGui.QGroupBox):
         b+=('/stream/settings/type', [self.setting.streamtype])
         b+=('/stream/settings/profile', [self.setting.streamprofile])
         b+=('/stream/settings/channels', [4])
+        b+=('/stream/settings/destination', ['localhost', 8888])
         b+=('/stream', [True])
         self.connection.sendBundle(b)
         pass
