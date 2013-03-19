@@ -25,8 +25,9 @@ from launcher import launcher
 import constants
 
 from streaming import Server as StreamingServer
-from audio import AudioMeter, AudioMixer
+from audio import AudioMixer
 import systemhealth
+import pdserver
 
 import os
 
@@ -39,8 +40,6 @@ class State:
           self.mixer = AudioMixer()
         except IOError as e:
           print "failed to open audio mixer:",e
-        self.meter = AudioMeter()
-        self.meter.start()
         self.health = systemhealth.systemhealth()
         self.cpu = 1.
         self.mem = 1.
@@ -51,7 +50,6 @@ class State:
     def update(self):
         if self.mixer is not None:
           self.gains=self.mixer.gain()
-        self.levels=self.meter.getLevels()
 ##        statvfs.frsize * statvfs.f_blocks     # Size of filesystem in bytes
 ##        statvfs.frsize * statvfs.f_bfree      # Actual number of free bytes
         self.health.update()
@@ -69,6 +67,23 @@ class State:
         bundle.append(('/state/disk', self.health.disk))
         bundle.append(('/state/battery', self.health.battery))
         bundle.append(('/state/runtime', self.health.runtime))
+
+class PdCommunicator:
+    def __init__(self, settings, state):
+        self.state=state
+        self.server=pdserver.pdserver(workingdir=settings.outpath, patchdir=settings.inpath)
+        self.server.add(self._catchall, None)
+        self.server.add(self._meter, "/meter")
+        self.server.start()
+
+    def _meter(self, msg, source):
+        self.state.levels=msg[2:]
+    def _catchall(self, message, source):
+        print "got message: ", message
+        print "       from: ", source
+
+    def stop(self):
+        self.server.stop()
 
 class Setting:
     def __init__(self):
@@ -91,6 +106,7 @@ class SMi:
     def __init__(self):
         self.state=State()
         self.setting=Setting()
+        self.pd = PdCommunicator(self.setting, self.state)
         self.oscprefix='/'+constants.HOSTNAME
         self.server = NetServer(port=constants.SM_PORT, oscprefix=self.oscprefix, type=constants.PROTOCOL, service=constants.SERVICE)
         self.server.add(self.ping, '/ping')
@@ -104,6 +120,11 @@ class SMi:
         self.server.add(self.launchCmd, '/launch') ## debugging
         self.mixer = self.state.mixer
         self.streamer = None
+
+    def cleanup(self):
+        self.pd.stop()
+    def __del__(self):
+        self.cleanup()
 
     def setGain(self, msg, src):
         if self.mixer is not None:
