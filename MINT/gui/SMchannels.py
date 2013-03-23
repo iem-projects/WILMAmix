@@ -23,9 +23,9 @@ from PySide import QtCore, QtGui
 from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
 
-class SMstrip(QtGui.QGroupBox):
+class SMchannels(QtGui.QGroupBox):
     def __init__(self, parent=None, name="SMi", maxwidth=None):
-        super(SMstrip, self).__init__(parent)
+        super(SMchannels, self).__init__(parent)
         self.name = name
         self.maxWidth=maxwidth
 
@@ -107,7 +107,7 @@ if __name__ == '__main__':
                 names+=['SM#'+str(i)]
             self.meter=[]
             for n in names:
-                m=SMstrip(self, n)
+                m=SMchannels(self, n)
                 self.meter+=[m]
                 layout.addWidget(m)
 
