@@ -68,32 +68,15 @@ class MIXctl(QtGui.QGroupBox):
 
         ## PUSH/PULL buttons
         fileslayout = QVBoxLayout()
-        
-        filelayout = QHBoxLayout()
-        filelayout.setContentsMargins(0,0,0,0)
+        fileslayout.setContentsMargins(0,0,0,0)
+
         self.pushButton = QtGui.QPushButton("PUSH")
         self.pushButton.clicked.connect(self.push)
-        filelayout.addWidget(self.pushButton)
-        filelayout.setContentsMargins(0,0,0,0)
-        self.pushDirButton = QtGui.QPushButton("...")
-        self.pushDirButton.clicked.connect(self.pushDir)
-        filelayout.addWidget(self.pushDirButton)
-        fileframe=QtGui.QFrame(self)
-        fileframe.setLayout(filelayout)
-        fileslayout.addWidget(fileframe)
+        fileslayout.addWidget(self.pushButton)
 
-        filelayout = QHBoxLayout()
-        filelayout.setContentsMargins(0,0,0,0)
         self.pullButton = QtGui.QPushButton("PULL")
         self.pullButton.clicked.connect(self.pull)
-        filelayout.addWidget(self.pullButton)
-        filelayout.setContentsMargins(0,0,0,0)
-        self.pullDirButton = QtGui.QPushButton("...")
-        self.pullDirButton.clicked.connect(self.pullDir)
-        filelayout.addWidget(self.pullDirButton)
-        fileframe=QtGui.QFrame(self)
-        fileframe.setLayout(filelayout)
-        fileslayout.addWidget(fileframe)
+        fileslayout.addWidget(self.pullButton)
 
         filesframe=QtGui.QGroupBox(self)
         filesframe.setTitle("Files...")
@@ -148,14 +131,17 @@ class MIXctl(QtGui.QGroupBox):
         pass
 
     def push(self):
-        pass
-    def pushDir(self):
+        ## open up directory selector (with last push-dir pre-selected)
+        ## then check whether the directory contains MAIN.pd
+        ## call the SMi's push methods with this directory
+        print "FIXME: push"
         pass
     def pull(self):
+        ## open up directory selector (with last pull-dir pre-selected)
+        ## (warn if directory exists)
+        ## call the SMi's pull methods with this directory
+        print "FIXME: pull"
         pass
-    def pullDir(self):
-        pass
-    
 
     def _launch(self, state): ## start launch
         """start/stop the engine on the remote SMi"""
