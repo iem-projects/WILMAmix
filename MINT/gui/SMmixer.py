@@ -52,14 +52,14 @@ class SMmixer(QtGui.QFrame):
         if True:
             for sm in sorted(SMs.keys()):
                 d=SMs[sm]
-                self.sm+=[SM(self, sm, d)]
+                self.sm+=[SM(parent=self, name=sm, confs=d)]
                 self.layout.addWidget(self.sm[count])
                 count+=1
         else:
             for count in range(16):
                 name="SM"+str(count)
                 print name
-                self.sm+=[SM(self, name)]
+                self.sm+=[SM(parent=self, name=name)]
                 self.layout.addWidget(self.sm[count])
                 print "SM: ",self.sm[count].sizeHint()
 
