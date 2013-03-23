@@ -20,7 +20,7 @@
 
 from PySide import QtCore, QtGui
 from PySide.QtGui import *
-from SM import SM
+from SMchannels import SMchannels as SM
 
 class SMmixer(QtGui.QFrame):
     
