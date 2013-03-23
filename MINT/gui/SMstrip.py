@@ -23,21 +23,22 @@ from PySide import QtCore, QtGui
 from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
 
-class SMsmall(QtGui.QGroupBox):
+class SMstrip(QtGui.QGroupBox):
     def __init__(self, parent=None, name="SMi", maxwidth=None):
-        super(SMsmall, self).__init__(parent)
+        super(SMstrip, self).__init__(parent)
         self.name = name
         self.maxWidth=maxwidth
 
         self.setTitle(self.name)
+        self.setCheckable(True)
 
         layout = QVBoxLayout()
         layout.setContentsMargins(2,2,2,2)
 
         # Create widgets
-        self.selector = QtGui.QCheckBox(self.name, self)
-        self.selector.stateChanged.connect(self.select)
-        layout.addWidget(self.selector)
+        #self.selector = QtGui.QCheckBox(self.name, self)
+        #self.selector.stateChanged.connect(self.select)
+        #layout.addWidget(self.selector)
 
         mixframe=QtGui.QFrame(self)
         sublayout=QHBoxLayout()
@@ -45,12 +46,15 @@ class SMsmall(QtGui.QGroupBox):
         mixframe.setLayout(sublayout)
         layout.addWidget(mixframe)
 
-        self.meter = qsynthMeter(self, 4, [-1], maxwidth=self.maxWidth) # maxwidth should be dynamic and ack the fader width
+        self.meter = qsynthMeter(self, 4, [], maxwidth=self.maxWidth) # maxwidth should be dynamic and ack the fader width
         sublayout.addWidget(self.meter)
 
-        self.launchButton = QtGui.QPushButton("Launch")
-        self.launchButton.clicked.connect(self.launch)
+        ## ideally the launchButton would also have
+        self.launchButton = QtGui.QPushButton("START") # should be "RECORD", "STREAM" or "PROCESS"
+        self.launchButton.setCheckable(True)           # so the button stays clicked (even when window is left)
+        self.launchButton.clicked.connect(self.launchB)
         layout.addWidget(self.launchButton)
+
 
         self.setLayout(layout)
         self.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
@@ -67,14 +71,26 @@ class SMsmall(QtGui.QGroupBox):
         print "FIXME: current selection state"
         pass
 
-    def launch(self):
-        #self.launchButton.setEnabled(False)
+    def _launch(self, state): ## start launch
+        """start/stop the engine on the remote SMi"""
+        self.setChecked(state)
+        self.launched(state) ## reflect new launch state
+    def launched(self, state):
+        """called from outside to set/get the current state.
+        MUST NOT call launch again (but should update GUI if needed)"""
+        if state is not None:
+            self.launchButton.setChecked(state)
+        return self.launchButton.isChecked()
+    def launchB(self): ## launchButton callback, toggles the launch state
+        self._launch(self.launchButton.isChecked())
         pass
     
     def setLevels(self, levels_dB=[-100.,-100.,-100.,-100.]):
         self.meter.setValues(levels_dB)
 
     def setState(self, level, msg):
+        ## FIXME: add a status widget
+        ## that gets green/red and displays the error as tooltip
         pass
 
 
@@ -86,21 +102,24 @@ if __name__ == '__main__':
         def __init__(self, parent=None):
             super(Form, self).__init__(parent)
             layout = QtGui.QHBoxLayout()
-            names=['foo', 'bar', 'paz']
+            names=[]
+            for i in range(10):
+                names+=['SM#'+str(i)]
             self.meter=[]
             for n in names:
-                m=SMsmall(self, n)
+                m=SMstrip(self, n)
                 self.meter+=[m]
                 layout.addWidget(m)
 
             self.value = QtGui.QDoubleSpinBox(self)
-            self.value.setMinimum(0)
-            self.value.setMaximum(100)
+            self.value.setMinimum(-10)
+            self.value.setMaximum(120)
             layout.addWidget(self.value)
             self.setLayout(layout)
             self.value.valueChanged.connect(self.setValue)
         def setValue(self, value):
-            self.meter.setValue(0, value*0.01)
+            for m in self.meter:
+                m.setLevels([value-100]*4)
 
     app = QtGui.QApplication(sys.argv)
     form = Form()
