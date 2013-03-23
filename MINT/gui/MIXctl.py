@@ -83,9 +83,6 @@ class MIXctl(QtGui.QGroupBox):
         filesframe.setLayout(fileslayout)
         layout.addWidget(filesframe)
 
-        #a button is missing here
-
-
         ## Launch Button
         self.launchButton = QtGui.QPushButton("START") # should be "RECORD", "STREAM" or "PROCESS"
         self.launchButton.setCheckable(True)           # so the button stays clicked (even when window is left)
