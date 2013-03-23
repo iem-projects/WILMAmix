@@ -24,10 +24,12 @@ from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
 
 class SMchannels(QtGui.QGroupBox):
-    def __init__(self, parent=None, name="SMi", maxwidth=None):
+    def __init__(self, parent=None, name="SMi", maxwidth=None, confs=None):
         super(SMchannels, self).__init__(parent)
         self.name = name
         self.maxWidth=maxwidth
+        if confs is not None:
+            print "FIXXME: confs not used in SMchannels"
 
         self.setTitle(self.name)
         self.setCheckable(True)
@@ -93,6 +95,11 @@ class SMchannels(QtGui.QGroupBox):
         ## that gets green/red and displays the error as tooltip
         pass
 
+
+
+    def ping(self):
+        ## FIXME: compat implementation for SM.px
+        pass
 
 
 ######################################################################
