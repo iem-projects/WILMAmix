@@ -202,7 +202,7 @@
      <enum>Qt::Vertical</enum>
     </property>
    </widget>
-   <widget class="QFrame" name="meters">
+   <widget class="qsynthMeter" name="meters" native="true">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -210,12 +210,6 @@
       <width>101</width>
       <height>291</height>
      </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
     </property>
    </widget>
   </widget>
@@ -231,7 +225,7 @@
    <property name="title">
     <string>System Health</string>
    </property>
-   <widget class="QFrame" name="statemeter">
+   <widget class="statemeter" name="statemeter" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -239,12 +233,6 @@
       <width>181</width>
       <height>101</height>
      </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
     </property>
    </widget>
   </widget>
@@ -441,6 +429,20 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>qsynthMeter</class>
+   <extends>QWidget</extends>
+   <header>qsynthMeter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>statemeter</class>
+   <extends>QWidget</extends>
+   <header>statemeter.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
