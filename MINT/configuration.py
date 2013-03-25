@@ -145,5 +145,6 @@ if __name__ == '__main__':
     m=getMIX()
     print "MIX: ", m
     print "SMi: ", getSM()
+    print "foo: ", getSM('foo')
 
     write('foo.config')
