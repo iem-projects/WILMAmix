@@ -45,21 +45,13 @@ import ast as _ast
 ##  SM ['/outdir']="/tmp/blu"
 ##  SM ['/indir' ]="/tmp/default"
 
-def _getDict(config, section, convertToNum=True):
+def _getDict(config, section):
     d=dict()
     if not config.has_section(section):
         config.add_section(section)
     for o in config.options(section):
         v=config.get(section, o)
-        if convertToNum:
-            if type(v) is str:
-                if not v.startswith('/'):
-                    try:
-                        v=_ast.literal_eval(v)
-                    except ValueError:
-                        pass
         d[o]=v
-    print "got Dict for " + section +":",d
     return d
 
 def _setDict(config, section, values):
@@ -93,7 +85,6 @@ _defaults['/stream/channels']='4' # const
 _defaults['/stream/profile' ]='L16' # const for now
 
 
-
 _config = ConfigParser.ConfigParser(_defaults)
 _config.read(['MINTmix.conf',
               os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', 'MINTmix.conf'),
@@ -101,7 +92,7 @@ _config.read(['MINTmix.conf',
               ])
 _mixConf=_getDict(_config, 'MIX')
 
-_smDefaults=_getDict(_config, 'SM', False)
+_smDefaults=_getDict(_config, 'SM')
 _config = ConfigParser.ConfigParser(_smDefaults)
 _config.read(['MINTmix.conf',
               os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', 'MINTmix.conf'),
