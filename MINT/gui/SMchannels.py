@@ -48,10 +48,10 @@ class SMchannels(QtGui.QGroupBox):
         mixframe.setLayout(sublayout)
         layout.addWidget(mixframe)
 
-        self.meter = qsynthMeter(self, 4, [], maxwidth=self.maxWidth) # maxwidth should be dynamic and ack the fader width
+        self.meter = qsynthMeter(self, 4, [], maxwidth=self.maxWidth) # maxwidth should be dynamic and ack other widgets in this subframe
         sublayout.addWidget(self.meter)
 
-        ## ideally the launchButton would also have
+        ## ideally the launchButton would also have some small icon indicating the current state
         self.launchButton = QtGui.QPushButton("START") # should be "RECORD", "STREAM" or "PROCESS"
         self.launchButton.setCheckable(True)           # so the button stays clicked (even when window is left)
         self.launchButton.clicked.connect(self.launchB)
