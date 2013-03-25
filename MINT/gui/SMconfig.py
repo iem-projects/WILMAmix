@@ -85,7 +85,10 @@ if __name__ == '__main__':
     class Form(QtGui.QDialog):
         def __init__(self, parent=None):
             super(Form, self).__init__(parent)
-            self.smconf=SMconfig(name="foo")
+            d=dict()
+            d['/path/in' ]='/tmp/MINT/in'
+            d['/path/out']='/tmp/MINT/out'
+            self.smconf=SMconfig(name="foo", settings=d)
             layout = QtGui.QHBoxLayout()
             self.openButton= QtGui.QPushButton("Config")
             self.openButton.clicked.connect(self.openB)
