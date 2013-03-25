@@ -48,11 +48,6 @@ class PullDirChooser:
         if callback is not None:
             callback(path)
 
-        if self.callback is not None:
-            callback=self.callback
-            self.callback=None
-            callback(path)
-
     def choose(self, callback):
         self.callback=callback
         self.dialog.show()
