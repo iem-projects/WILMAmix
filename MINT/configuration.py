@@ -52,11 +52,14 @@ def _getDict(config, section, convertToNum=True):
     for o in config.options(section):
         v=config.get(section, o)
         if convertToNum:
-            try:
-                v=_ast.literal_eval(v)
-            except ValueError:
-                pass
+            if type(v) is str:
+                if not v.startswith('/'):
+                    try:
+                        v=_ast.literal_eval(v)
+                    except ValueError:
+                        pass
         d[o]=v
+    print "got Dict for " + section +":",d
     return d
 
 def _setDict(config, section, values):
