@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Config:SMi</class>
- <widget class="QDialog" name="Config:SMi">
+ <class>SMconfig</class>
+ <widget class="QDialog" name="SMconfig">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Configuration of ...</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -446,7 +446,7 @@
   <connection>
    <sender>closeButtons</sender>
    <signal>accepted()</signal>
-   <receiver>Config:SMi</receiver>
+   <receiver>SMconfig</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -462,7 +462,7 @@
   <connection>
    <sender>closeButtons</sender>
    <signal>rejected()</signal>
-   <receiver>Config:SMi</receiver>
+   <receiver>SMconfig</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
