@@ -23,11 +23,17 @@ from PySide import QtCore, QtGui
 from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
 import SMconfig_ui
+import DirChooser
 
 class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def __init__(self, parent=None, name="SMi", settings={}, confs=None):
         super(SMconfig, self).__init__(parent)
+        self.settings=settings
         self.setupUi(self)
+
+        self.pullChooser=DirChooser.PullDirChooser(self, self.settings['/path/in'])
+        self.pushChooser=DirChooser.PushDirChooser(self, self.settings['/path/out'])
+
         self.meters.setPortCount(4)
         self.meters.setScales(None)
         self.statemeter.setPort(['CPU', 'memory', 'disk', "battery", "runtime"])
@@ -50,6 +56,9 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.streamChannels.valueChanged.connect(self.select_streamChannels)
         self.modeSelector.currentIndexChanged.connect(self.select_mode)
         self.networkInterface.currentIndexChanged.connect(self.select_networkInterface)
+
+        self.set_pullDir(self.settings['/path/in'])
+        self.set_pushDir(self.settings['/path/out'])
     def do_accept(self):
         print "ok"
         self.hide()
@@ -58,14 +67,15 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.hide()
     def do_copyConfig(self):
         print "FIXME: copyConfig"
+
     def do_pull(self):
         print "FIXME: pull"
     def do_pullDir(self):
-        print "FIXME: pullDir"
+        self.pullChooser.choose(self.set_pullDir)
     def do_push(self):
         print "FIXME: push"
     def do_pushDir(self):
-        print "FIXME: pushDir"
+        self.pushChooser.choose(self.set_pushDir)
 
     def select_streamProtocol(self, value):
         print "FIXME: select streamProtocol:", value
@@ -78,6 +88,17 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def select_mode(self, value):
         print "FIXME: select mode:", value
 
+
+    def set_pullDir(self, path):
+        print "setting pulldir", path
+        self.settings['/path/in']=path
+        self.pullDir.setText(path)
+        pass
+    def set_pushDir(self, path):
+        print "setting pushdir", path
+        self.settings['/path/out']=path
+        self.pushDir.setText(path)
+        pass
 
 ######################################################################
 if __name__ == '__main__':
