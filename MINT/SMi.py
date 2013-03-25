@@ -90,12 +90,10 @@ class PdCommunicator:
 
 class SMi:
     def __init__(self):
-        constants=configuration.getSM()
-        self.settings=None
-        self._initSettings()
-        self.state=State(constants)
-        self.oscprefix='/'+constants['/id']
-        self.server = NetServer(port=constants['/port'], oscprefix=self.oscprefix, type=constants['/protocol'], service=constants['/service'])
+        self.settings=configuration.getSM()
+        self.state=State(self.settings)
+        self.oscprefix='/'+self.settings['/id']
+        self.server = NetServer(port=self.settings['/port'], oscprefix=self.oscprefix, type=self.settings['/protocol'], service=self.settings['/service'])
         self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
 
@@ -112,24 +110,6 @@ class SMi:
         self.pd.stop()
     def __del__(self):
         self.cleanup()
-
-    def _initSettings(self):
-        d=dict()
-        try:
-            import getpass
-            d['/user']=getpass.getuser()
-        except ImportError:
-            d['/user']='unknown'
-
-        d['/stream/type'    ]='rtp' # const
-        d['/stream/channels']=4 # const
-        d['/stream/profile' ]='L16' # const for now
-
-        d['/path/in'        ]='/tmp/MINT/in'
-        d['/path/out'       ]='/tmp/MINT/out'
-
-        self.settings=d
-
 
     def setGain(self, msg, src):
         if self.mixer is not None:
