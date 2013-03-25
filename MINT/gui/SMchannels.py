@@ -31,6 +31,13 @@ class SMchannels(QtGui.QGroupBox):
         if confs is not None:
             print "FIXXME: confs not used in SMchannels"
 
+        self.icons=dict()
+        emptyicon=QtGui.QIcon()
+        self.icons['OK']=emptyicon
+        self.icons['Warning']=QtGui.QIcon("icons/warning.xpm")
+        self.icons['Error']=QtGui.QIcon("icons/error.xpm")
+        self.currentState="OK"
+
         self.setTitle(self.name)
         self.setCheckable(True)
 
@@ -54,6 +61,8 @@ class SMchannels(QtGui.QGroupBox):
         ## ideally the launchButton would also have some small icon indicating the current state
         self.launchButton = QtGui.QPushButton("START") # should be "RECORD", "STREAM" or "PROCESS"
         self.launchButton.setCheckable(True)           # so the button stays clicked (even when window is left)
+        self.launchButton.setIcon(self.icons["OK"])
+
         self.launchButton.clicked.connect(self.launchB)
         layout.addWidget(self.launchButton)
 
@@ -61,17 +70,6 @@ class SMchannels(QtGui.QGroupBox):
         ##
         self.configButton = QtGui.QPushButton("Config") # should be "RECORD", "STREAM" or "PROCESS"
         self.configButton.clicked.connect(self.configB)
-        self.stateButton = QtGui.QPushButton("State") # should be "RECORD", "STREAM" or "PROCESS"
-        self.stateButton.clicked.connect(self.stateB)
-        statelayout = QHBoxLayout()
-        statelayout.setContentsMargins(0,0,0,0)
-        statelayout.addWidget(self.configButton)
-        statelayout.addWidget(self.stateButton)
-        stateframe=QtGui.QFrame(self)
-        stateframe.setLayout(statelayout)
-        layout.addWidget(stateframe)
-
-
         layout.addWidget(self.configButton)
 
         self.setLayout(layout)
@@ -86,40 +84,39 @@ class SMchannels(QtGui.QGroupBox):
         else:             ## deselected
             pass
     def selected(self):
-        print "FIXME: current selection state"
-        pass
+        return self.isChecked()
 
-    def _launch(self, state): ## start launch
-        """start/stop the engine on the remote SMi"""
-        self.setChecked(state)
-        self.launched(state) ## reflect new launch state
-    def launched(self, state):
+    def setLaunched(self, state):
         """called from outside to set/get the current state.
         MUST NOT call launch again (but should update GUI if needed)"""
         if state is not None:
             self.launchButton.setChecked(state)
         return self.launchButton.isChecked()
-    def launchB(self): ## launchButton callback, toggles the launch state
-        self._launch(self.launchButton.isChecked())
-        pass
 
     def setLevels(self, levels_dB=[-100.,-100.,-100.,-100.]):
         self.meter.setValues(levels_dB)
 
-    def setState(self, level, msg):
-        ## FIXME: add a status widget
-        ## that gets green/red and displays the error as tooltip
-        pass
+    def setState(self, state):
+        # state: "OK", "Warning", "Error"
+        if state != self.currentState:
+            self.currentState=state
+            self.launchButton.setIcon(self.icons[state])
 
     def configB(self): ## configButton callback, open the ConfigDialog for this SMi
         print "FIXME: config dialog"
         pass
-    def stateB(self): ## stateButton callback, opens the common stateWindow
-        print "FIXME: state dialog"
+    def launchB(self): ## launchButton callback, toggles the launch state
+        self._launch(self.launchButton.isChecked())
         pass
 
+
+    def _launch(self, state): ## start launch
+        """start/stop the engine on the remote SMi"""
+        ## FIXME: launch!
+        self.setLaunched(state) ## reflect new launch state
+
     def ping(self):
-        ## FIXME: compat implementation for SM.px
+        ## FIXME: compat implementation for SM.py
         pass
 
 
