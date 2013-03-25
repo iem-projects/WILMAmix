@@ -104,6 +104,8 @@ _config.read(['MINTmix.conf',
 _smConf=_getDict(_config, _smDefaults['/id'])
 _smConf['/id']=_smDefaults['/id']
 
+_smConfs=dict()
+
 
 ###
 # public accessors
@@ -113,8 +115,12 @@ def getSM(id=None):
         print "default SMconf", id
         return _smConf
     else:
+        if _smConfs.has_key(id):
+            print "cached conf"
+            return _smConfs[id]
         d=_getDict(_config, id)
         d['/id']=id
+        _smConfs[id]=d
         return d
 
 def getMIX():
@@ -126,6 +132,8 @@ def write(name):
     _setDict(config, 'MIX', _mixConf)
     _setDict(config, 'SM' , _smDefaults)
     _setDict(config, _smDefaults['/id'], _smConf)
+    for id in _smConfs:
+        _setDict(config, id, _smConfs[id])
     with open(name, 'wb') as f:
         config.write(f)
         
