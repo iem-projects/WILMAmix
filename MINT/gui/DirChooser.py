@@ -43,8 +43,7 @@ class PullDirChooser:
                                             "Do you really want to pull data from the SMi into this directory?"),
                                            QtGui.QMessageBox.Ok | QtGui.QMessageBox.Discard,
                                            QtGui.QMessageBox.Ok)
-            if ret is not QtGui.QMessageBox.Ok:
-                self.choose(callback)
+            if ret is QtGui.QMessageBox.Discard:
                 return
         if callback is not None:
             callback(path)
@@ -79,7 +78,7 @@ class PushDirChooser:
                                             "Do you really want to push this directory to the SMi?"),
                                            QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel,
                                            QtGui.QMessageBox.Cancel)
-            if ret is not QtGui.QMessageBox.Ok:
+            if ret is QtGui.QMessageBox.Cancel:
                 return
         if callback is not None:
             callback(path)
