@@ -21,16 +21,16 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 import sys
-from MINT import metro
+from MINT import metro, configuration
 from MINT.gui import SMmixer, Translator
 import MINT.net
-import MINT.constants
 
 class Form(QDialog):
    
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
-        service=(MINT.constants.SERVICE+'._'+MINT.constants.PROTOCOL)
+        self.conf=configuration.getMIX()
+        service=(self.conf['/service']+'._'+self.conf['/protocol'])
         self.discover=MINT.net.discoverer(service=service)
         # Create widgets
         self.dict=self.discover.getDict()

@@ -40,16 +40,14 @@
 
 
 import pyalsa.alsahcontrol
-import MINT.constants
 import MINT.utils
 
 class AudioMixer:
-    ControlID = MINT.constants.MIXER_CONTROLNUM
-    def __init__(self):
-        if AudioMixer.ControlID<1:
+    def __init__(self, constants):
+        if constants['/gain_control']<1:
             raise Exception("alsa control number must be > 0")
         self.hctl =  pyalsa.alsahcontrol.HControl()
-        self.element = pyalsa.alsahcontrol.Element(self.hctl, AudioMixer.ControlID) 
+        self.element = pyalsa.alsahcontrol.Element(self.hctl, constants['/gain_control'])
         self.info = pyalsa.alsahcontrol.Info(self.element)
         self.value = pyalsa.alsahcontrol.Value(self.element)
 
@@ -81,7 +79,7 @@ if __name__ == '__main__':
     print "SM..."
     sm = MINTsm()
     import time
-    
+
     main_loop = gobject.MainLoop()
     print "start loop"
     try:

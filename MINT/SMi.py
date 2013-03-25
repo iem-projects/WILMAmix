@@ -21,22 +21,21 @@
 from net import server as NetServer
 from net.osc import Bundle
 
-import constants
-
 from streaming import Server as StreamingServer
 from audio import AudioMixer
 import systemhealth
 import pdserver
+import configuration
 
 import os
 
 class State:
-    def __init__(self):
+    def __init__(self, config):
         self.mixer=None
         self.gains =[]
         self.levels=[]
         try:
-          self.mixer = AudioMixer()
+          self.mixer = AudioMixer(config)
         except IOError as e:
           print "failed to open audio mixer:",e
         self.health = systemhealth.systemhealth()
@@ -91,11 +90,12 @@ class PdCommunicator:
 
 class SMi:
     def __init__(self):
+        constants=configuration.getSM()
         self.settings=None
         self._initSettings()
-        self.state=State()
-        self.oscprefix='/'+constants.HOSTNAME
-        self.server = NetServer(port=constants.SM_PORT, oscprefix=self.oscprefix, type=constants.PROTOCOL, service=constants.SERVICE)
+        self.state=State(constants)
+        self.oscprefix='/'+constants['/id']
+        self.server = NetServer(port=constants['/port'], oscprefix=self.oscprefix, type=constants['/protocol'], service=constants['/service'])
         self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
 

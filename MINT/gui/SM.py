@@ -38,7 +38,7 @@ class SM(QtGui.QGroupBox):
             self.inpath=None
             self.outpath=None
     
-    def __init__(self, parent=None, name="SMi", confs=None, maxwidth=None):
+    def __init__(self, parent=None, name="SMi", constants={}, confs=None, maxwidth=None):
         super(SM, self).__init__(parent)
         self.setting = SM.Setting()
         self.name = name
@@ -57,7 +57,7 @@ class SM(QtGui.QGroupBox):
         while oscprefix.startswith('/'):
             oscprefix=oscprefix[1:]
 
-        self.connection = MINT.net.client(config['address'], config['port'], oscprefix='/'+oscprefix, type=MINT.constants.PROTOCOL)
+        self.connection = MINT.net.client(config['address'], config['port'], oscprefix='/'+oscprefix, type=constants['/protocol'])
         self.connection.add(self.faderCb, '/gain')
         self.connection.add(self.levelCb, '/level')
         self.connection.add(self.streamURI, '/stream/uri')
