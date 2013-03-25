@@ -124,11 +124,11 @@ class statemeter(QtGui.QFrame):
             try:
                 self.inverse[i]=inverse[i]
             except IndexError:
-                self.inverse=False
+                self.inverse[i]=False
             try:
                 self.scale[i]=scale[i]
             except IndexError:
-                self.scale=None
+                self.scale[i]=None
 
 
         meterspacing=1
