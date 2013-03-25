@@ -104,9 +104,14 @@ _smConf['/id']=_smDefaults['/id']
 
 ###
 # public accessors
-def getSM():
+def getSM(id=None):
     """get config dict for MINTsm"""
-    return _smConf
+    if id is None:
+        return _smConf
+    else:
+        d=_getDict(_config, id)
+        d['/id']=id
+        return d
 
 def getMIX():
     """get config dict for MINTmix"""
