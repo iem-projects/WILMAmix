@@ -55,10 +55,13 @@ def _getDict(config, section):
     return d
 
 def _setDict(config, section, values):
+    id=values['/id']
     if not config.has_section(section):
-        config.add_section(section)    
+        config.add_section(section)
+    config.set(section, '/id', id)
     for o in values.keys():
-        config.set(section, o, values[o])
+        if o is not '/id':
+            config.set(section, o, values[o])
         
 ## DEFAULT values
 # use STRING type for everything (even for numbers)
