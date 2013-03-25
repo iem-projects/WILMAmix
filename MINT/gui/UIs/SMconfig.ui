@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>617</width>
+    <width>624</width>
     <height>374</height>
    </rect>
   </property>
@@ -16,7 +16,7 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
+  <widget class="QDialogButtonBox" name="closeButtons">
    <property name="geometry">
     <rect>
      <x>390</x>
@@ -35,10 +35,10 @@
   <widget class="QPushButton" name="copyConfigButton">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>340</y>
      <width>181</width>
-     <height>32</height>
+     <height>23</height>
     </rect>
    </property>
    <property name="text">
@@ -48,7 +48,7 @@
   <widget class="QGroupBox" name="frame_FileSync">
    <property name="geometry">
     <rect>
-     <x>360</x>
+     <x>370</x>
      <y>190</y>
      <width>251</width>
      <height>141</height>
@@ -180,7 +180,7 @@
   <widget class="QGroupBox" name="frame_Audio">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>10</y>
      <width>141</width>
      <height>321</height>
@@ -222,7 +222,7 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>160</x>
      <y>200</y>
      <width>201</width>
      <height>131</height>
@@ -251,7 +251,7 @@
   <widget class="QWidget" name="frame_Mode" native="true">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>150</x>
      <y>10</y>
      <width>211</width>
      <height>181</height>
@@ -399,7 +399,7 @@
     <rect>
      <x>360</x>
      <y>10</y>
-     <width>251</width>
+     <width>261</width>
      <height>51</height>
     </rect>
    </property>
@@ -409,7 +409,7 @@
    <widget class="QComboBox" name="networkInterface">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>150</x>
       <y>20</y>
       <width>101</width>
       <height>22</height>
@@ -444,7 +444,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>closeButtons</sender>
    <signal>accepted()</signal>
    <receiver>Config:SMi</receiver>
    <slot>accept()</slot>
@@ -460,7 +460,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>closeButtons</sender>
    <signal>rejected()</signal>
    <receiver>Config:SMi</receiver>
    <slot>reject()</slot>
