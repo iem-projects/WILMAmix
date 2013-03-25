@@ -130,17 +130,12 @@ class statemeter(QtGui.QFrame):
             except IndexError:
                 self.scale[i]=None
 
-
-        meterspacing=1
         if maxheight is not None:
             numports=len(self.ports)
             height=maxheight/numports
             if(height<1):
                 height=1
             self.meterheight=height
-            meterspacing=(maxheight-(height*numports))/(numports-1)
-            if(meterspacing>1):
-                meterspacing=1
         colorcount=0
         self.ColorLow    = colorcount; colorcount+=1
         self.ColorMid    = colorcount; colorcount+=1
