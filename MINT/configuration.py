@@ -68,13 +68,31 @@ def _setDict(config, section, values):
     for o in values.keys():
         config.set(section, o, values[o])
         
-    
+## DEFAULT values
+# use STRING type for everything (even for numbers)
+# they will be converted to numbers automatically in the _getDict() functions
 _defaults=dict()
 _defaults['/id'      ] = socket.gethostname()
+
+try:
+    import getpass
+    _defaults['/user']=getpass.getuser()
+except ImportError:
+    _defaults['/user']='unknown'
+
 _defaults['/protocol'] = 'udp'
 _defaults['/service' ] = '_mint-sm'
 _defaults['/port'    ] = '7777' # LATER change to 0
 _defaults['/gain_control'] = '4' ## alsa control for mic amp
+
+_defaults['/path/in' ] = '/tmp/MINT/in'
+_defaults['/path/out'] = '/tmp/MINT/out'
+
+_defaults['/stream/type'    ]='rtp' # const
+_defaults['/stream/channels']='4' # const
+_defaults['/stream/profile' ]='L16' # const for now
+
+
 
 _config = ConfigParser.ConfigParser(_defaults)
 _config.read(['MINTmix.conf',
