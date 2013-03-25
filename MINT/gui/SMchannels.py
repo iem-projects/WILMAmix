@@ -57,6 +57,22 @@ class SMchannels(QtGui.QGroupBox):
         self.launchButton.clicked.connect(self.launchB)
         layout.addWidget(self.launchButton)
 
+        ## config and state
+        ##
+        self.configButton = QtGui.QPushButton("Config") # should be "RECORD", "STREAM" or "PROCESS"
+        self.configButton.clicked.connect(self.configB)
+        self.stateButton = QtGui.QPushButton("State") # should be "RECORD", "STREAM" or "PROCESS"
+        self.stateButton.clicked.connect(self.stateB)
+        statelayout = QHBoxLayout()
+        statelayout.setContentsMargins(0,0,0,0)
+        statelayout.addWidget(self.configButton)
+        statelayout.addWidget(self.stateButton)
+        stateframe=QtGui.QFrame(self)
+        stateframe.setLayout(statelayout)
+        layout.addWidget(stateframe)
+
+
+        layout.addWidget(self.configButton)
 
         self.setLayout(layout)
         self.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
@@ -86,7 +102,7 @@ class SMchannels(QtGui.QGroupBox):
     def launchB(self): ## launchButton callback, toggles the launch state
         self._launch(self.launchButton.isChecked())
         pass
-    
+
     def setLevels(self, levels_dB=[-100.,-100.,-100.,-100.]):
         self.meter.setValues(levels_dB)
 
@@ -95,7 +111,12 @@ class SMchannels(QtGui.QGroupBox):
         ## that gets green/red and displays the error as tooltip
         pass
 
-
+    def configB(self): ## configButton callback, open the ConfigDialog for this SMi
+        print "FIXME: config dialog"
+        pass
+    def stateB(self): ## stateButton callback, opens the common stateWindow
+        print "FIXME: state dialog"
+        pass
 
     def ping(self):
         ## FIXME: compat implementation for SM.px
