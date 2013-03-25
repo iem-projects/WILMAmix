@@ -195,6 +195,26 @@ class statemeter(QtGui.QFrame):
     def setValue (self, iPort, fValue):
         self.m_values[iPort].setValue(fValue)
 
+
+    def setPort(self, port):
+        self.ports=port
+    def setScale(self, scale):
+        ports=len(self.ports)
+        self.scale = [None]*ports
+        for i in range(ports):
+            try:
+                self.scale[i]=scale[i]
+            except IndexError:
+                self.scale[i]=None
+    def setInverse(self, inverse):
+        ports=len(self.ports)
+        self.inverse = [False]*ports
+        for i in range(ports):
+            try:
+                self.inverse[i]=inverse[i]
+            except IndexError:
+                self.inverse[i]=False
+
 ######################################################################
 if __name__ == '__main__':
     import sys
