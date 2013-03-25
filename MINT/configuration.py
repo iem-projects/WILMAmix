@@ -106,7 +106,8 @@ _smConf['/id']=_smDefaults['/id']
 # public accessors
 def getSM(id=None):
     """get config dict for MINTsm"""
-    if id is None:
+    if (id is None) or (id == _smConf['/id']):
+        print "default SMconf", id
         return _smConf
     else:
         d=_getDict(_config, id)
