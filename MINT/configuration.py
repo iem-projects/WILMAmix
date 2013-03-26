@@ -68,6 +68,7 @@ def _setDict(config, section, values):
 # they will be converted to numbers automatically in the _getDict() functions
 _defaults=dict()
 _defaults['/id'      ] = socket.gethostname()
+_defaults['/host'    ] = socket.gethostname()
 
 try:
     import getpass
