@@ -36,6 +36,10 @@ def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
         targetdict[k]=sourcedict[k]
     return targetdict
 
+_streamProtocols=['RTP', 'RTSP']
+_streamProfiles =['L16', 'L24']
+_streamChannels =(4,5)
+_networkInterfaces = ['eth0', 'wlan0']
 class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def __init__(self, parent=None, name="SMi", settings={}, confs=None):
         super(SMconfig, self).__init__(parent)
@@ -57,6 +61,15 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 
         self.set_pullDir(self.settings['/path/in'])
         self.set_pushDir(self.settings['/path/out'])
+
+        self.streamProtocol.clear()
+        self.streamProtocol.addItems(_streamProtocols)
+        self.streamProfile.clear()
+        self.streamProfile.addItems(_streamProfiles)
+        self.streamChannels.setMinimum(_streamChannels[0])
+        self.streamChannels.setMaximum(_streamChannels[1])
+        self.networkInterface.clear()
+        self.networkInterface.addItems(_networkInterfaces)
 
         self._connect()
     def _connect(self):
