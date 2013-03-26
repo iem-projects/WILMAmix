@@ -40,6 +40,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def __init__(self, parent=None, name="SMi", settings={}, confs=None):
         super(SMconfig, self).__init__(parent)
         self.settings=settings
+        self.localsettings=_syncDicts(self.settings)
         self.setupUi(self)
 
         self.pullChooser=DirChooser.PullDirChooser(self, self.settings['/path/in'])
@@ -71,7 +72,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.set_pullDir(self.settings['/path/in'])
         self.set_pushDir(self.settings['/path/out'])
     def do_accept(self):
-        print "ok"
+        print "FIXME ok"
+        _syncDicts(self.localsettings, self.settings)
         self.hide()
     def do_reject(self):
         print "ko"
