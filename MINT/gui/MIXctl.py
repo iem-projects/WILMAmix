@@ -48,16 +48,19 @@ class MIXctl(QtGui.QGroupBox):
         selectlayout.setContentsMargins(0,0,0,0)
         
         self.selectNoneButton = QtGui.QCheckBox(self)
+        self.selectNoneButton.setToolTip("deselect all SMi's")
         self.selectNoneButton.setCheckState(QtCore.Qt.CheckState.Unchecked)
         self.selectNoneButton.clicked.connect(self.selectNone)
         selectlayout.addWidget(self.selectNoneButton)
         
         self.selectAllButton = QtGui.QCheckBox(self)
+        self.selectAllButton.setToolTip("select all SMi's")
         self.selectAllButton.setCheckState(QtCore.Qt.CheckState.Checked)
         self.selectAllButton.clicked.connect(self.selectAll)
         selectlayout.addWidget(self.selectAllButton)
         
         self.selectToggleButton = QtGui.QCheckBox(self)
+        self.selectToggleButton.setToolTip("toggle SMi selection")
         self.selectToggleButton.setTristate(True)
         self.selectToggleButton.setCheckState(QtCore.Qt.CheckState.PartiallyChecked)
         self.selectToggleButton.clicked.connect(self.selectToggle)
