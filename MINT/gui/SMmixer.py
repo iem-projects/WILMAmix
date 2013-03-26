@@ -74,6 +74,13 @@ class SMmixer(QtGui.QFrame):
                 smi=self.smifactory(parent=self, name=name)
                 self.sm+=[smi]
                 self.smilayout.addWidget(smi.widget())
+    def selected(self):
+        # FIXME: i'm sure this can be done very elegant with some lambda function
+        result=[]
+        for sm in self.sm:
+            if sm.selected():
+                result+=[sm]
+        return result
 
     def setSM(self, SMs=None):
         self.sms=SMs
