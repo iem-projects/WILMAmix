@@ -75,6 +75,7 @@ try:
     _defaults['/user']=getpass.getuser()
 except ImportError:
     _defaults['/user']='unknown'
+_defaults['/passphrase'] = '****'
 
 _defaults['/protocol'] = 'udp'
 _defaults['/service' ] = '_mint-sm'
