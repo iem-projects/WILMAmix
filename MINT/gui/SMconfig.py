@@ -151,10 +151,18 @@ if __name__ == '__main__':
     class Form(QtGui.QDialog):
         def __init__(self, parent=None):
             super(Form, self).__init__(parent)
-            d=dict()
-            d['/path/in' ]='/tmp/MINT/in'
-            d['/path/out']='/tmp/MINT/out'
-            self.smconf=SMconfig(name="foo", settings=d)
+            self.d=dict()
+            self.d['/network/interface']='eth0'
+            self.d['/path/in' ]='/tmp/MINT/in'
+            self.d['/path/out']='/tmp/MINT/out'
+            self.d['/mode'    ]='stream'
+            self.d['/stream/protocol']='RTP'
+            self.d['/stream/profile' ]='L16'
+            self.d['/stream/channels']=4
+            self.d['/proxy/receiver/port']=9998
+            self.d['/proxy/sender/host']='localhost'
+            self.d['/proxy/sender/port']=9999
+            self.smconf=SMconfig(name="foo", settings=self.d)
             layout = QtGui.QHBoxLayout()
             self.openButton= QtGui.QPushButton("Config")
             self.openButton.clicked.connect(self.openB)
@@ -165,6 +173,7 @@ if __name__ == '__main__':
 
             self.setLayout(layout)
         def openB(self):
+            self.smconf.applySettings(self.d)
             self.smconf.show()
         def quitB(self):
             sys.exit(0)
