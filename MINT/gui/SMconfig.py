@@ -26,15 +26,28 @@ from PySide.QtGui import *
 import SMconfig_ui
 import DirChooser
 
+_dictKeys=[
+    '/mode',
+    '/path/in',
+    '/path/out',
+    '/stream/protocol',
+    '/stream/profile',
+    '/stream/channels',
+    '/network/interface',
+    ]
 def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
+
     if sourcedict is targetdict:
         return targetdict
     if targetdict is None:
         targetdict=dict()
     if clearFirst:
         targetdict.clear()
-    for k in sourcedict:
-        targetdict[k]=sourcedict[k]
+    for k in _dictKeys:
+        try:
+            targetdict[k]=sourcedict[k]
+        except KeyError:
+            print "missing key '"+k+"' in source dictionary",sourcedict
     return targetdict
 
 _streamProtocols=['RTP', 'RTSP']
