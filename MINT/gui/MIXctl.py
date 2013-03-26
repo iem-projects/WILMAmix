@@ -129,20 +129,17 @@ class MIXctl(QtGui.QGroupBox):
             pass
     def selected(self):
         print "FIXME: current selection state"
-        pass
 
     def push(self):
         ## open up directory selector (with last push-dir pre-selected)
         ## then check whether the directory contains MAIN.pd
         ## call the SMi's push methods with this directory
         print "FIXME: push"
-        pass
     def pull(self):
         ## open up directory selector (with last pull-dir pre-selected)
         ## (warn if directory exists)
         ## call the SMi's pull methods with this directory
         print "FIXME: pull"
-        pass
 
     def _launch(self, state): ## start launch
         """start/stop the engine on the remote SMi"""
@@ -156,7 +153,6 @@ class MIXctl(QtGui.QGroupBox):
         return self.launchButton.isChecked()
     def _do_launch(self): ## launchButton callback, toggles the launch state
         self._launch(self.launchButton.isChecked())
-        pass
     def _quit(self):
         sys.exit(0)
     def _scan(self):
