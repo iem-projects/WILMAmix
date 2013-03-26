@@ -21,12 +21,12 @@
 ## that's the main instance for SMi's GUI
 
 from gui import SMconfig, SMchannels
+import configuration
 
 class SMgui:
-    def __init__(self, parent=None, settings={'/id':"SMi"}, confs=None, maxwidth=None):
-        name=settings['/id']
-        self.settings=settings
-        self.channels=SMchannels.SMchannels(self, guiparent=parent, settings=settings, maxwidth=maxwidth)
+    def __init__(self, parent=None, name="SMi", confs=None, maxwidth=None):
+        self.settings=configuration.getSM(name)
+        self.channels=SMchannels.SMchannels(self, guiparent=parent, settings=self.settings, maxwidth=maxwidth)
         self.config=SMconfig.SMconfig(self, guiparent=parent, settings=self.settings)
         self.name = name
         self.maxWidth=maxwidth
@@ -91,8 +91,7 @@ if __name__ == '__main__':
                 names+=['SM#'+str(i)]
             self.meter=[]
             for n in names:
-                self.d['/id']=n
-                m=SMgui(self, self.d)
+                m=SMgui(self, n)
                 self.meter+=[m]
                 layout.addWidget(m.getWidget())
 
