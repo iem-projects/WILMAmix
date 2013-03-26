@@ -75,6 +75,9 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.modeSelector.currentIndexChanged.connect(self.select_mode)
         self.networkInterface.currentIndexChanged.connect(self.select_networkInterface)
 
+        self.gainFader.valueChanged.connect(self.moved_gainFader)
+
+
     def do_accept(self):
         print "FIXME ok"
         _syncDicts(self.localsettings, self.settings)
@@ -108,6 +111,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def select_mode(self, value):
         print "FIXME: select mode:", value
 
+    def moved_gainFader(self, value):
+        print "FIXME: fader", value
 
     def set_pullDir(self, path):
         print "setting pulldir", path
