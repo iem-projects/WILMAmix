@@ -192,6 +192,7 @@ if __name__ == '__main__':
             layout.addWidget(self.value)
             self.setLayout(layout)
             self.value.valueChanged.connect(self.setValue)
+            self.meter[0]._smiFader()
         def setValue(self, value):
             for m in self.meter:
                 m.setLevels([value-100]*4)
