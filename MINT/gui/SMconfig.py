@@ -19,6 +19,7 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 from PySide import QtCore, QtGui
+import MINT.utils
 
 from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
@@ -114,7 +115,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.settings['/mode']=value
 
     def _moved_gainFader(self, value): ## this should immediately be sent to the SMi
-        gain=MINT.utils.SCALE(value, self.fader.minimum(), self.fader.maximum(), 0., 1., True)
+        gain=MINT.utils.SCALE(value, self.gainFader.minimum(), self.gainFader.maximum(), 0., 1., True)
         self.sm.send('/gain', [gain])
 
     def _set_pullDir(self, path):
@@ -161,7 +162,15 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
                 self.networkInterface.setCurrentIndex(i)
                 break
 
-
+    def setLevels(self, levels_dB=[-100.,-100.,-100.,-100.]):
+        self.meters.setValues(levels_dB)
+    def setFader(self, value):
+        gain=MINT.utils.SCALE(value, 0., 1., self.gainFader.minimum(), self.gainFader.maximum(), True)
+        self.gainFader.blockSignals(True)
+        self.gainFader.setValue(gain)
+        self.gainFader.blockSignals(False)
+    def setState(self, index, value):
+        self.statemeter.setValue(index, value)
 
 ######################################################################
 if __name__ == '__main__':
