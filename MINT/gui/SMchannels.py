@@ -67,7 +67,7 @@ class SMchannels(QtGui.QGroupBox):
         self.launchButton.setCheckable(True)           # so the button stays clicked (even when window is left)
         self.launchButton.setIcon(self.icons["OK"])
 
-        self.launchButton.clicked.connect(self.launchB)
+        self.launchButton.clicked.connect(self._do_launch)
         layout.addWidget(self.launchButton)
 
         ## config and state
@@ -109,7 +109,7 @@ class SMchannels(QtGui.QGroupBox):
     def _do_config(self): ## configButton callback, open the ConfigDialog for this SMi
         self.config.applySettings(self.settings)
         self.config.show()
-    def launchB(self): ## launchButton callback, toggles the launch state
+    def _do_launch(self): ## launchButton callback, toggles the launch state
         self._launch(self.launchButton.isChecked())
         pass
 
