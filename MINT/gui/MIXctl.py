@@ -23,6 +23,7 @@ from PySide import QtCore, QtGui
 from PySide.QtGui import *
 import sys
 import MIXctl_ui
+import DirChooser
 
 class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
     """
@@ -36,6 +37,9 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
     def __init__(self, smmix, guiparent=None):
         super(MIXctl, self).__init__(guiparent)
         self.smmix=smmix
+        self.pullChooser=DirChooser.PullDirChooser(self)
+        self.pushChooser=DirChooser.PushDirChooser(self)
+
         self.setupUi(self)
         self.selectNoneButton.setCheckState(QtCore.Qt.CheckState.Unchecked)
         self.selectAllButton.setCheckState(QtCore.Qt.CheckState.Checked)
@@ -46,8 +50,8 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
         self.selectNoneButton.clicked.connect(self._selectNone)
         self.selectAllButton.clicked.connect(self._selectAll)
         self.selectToggleButton.clicked.connect(self._selectToggle)
-        self.pushButton.clicked.connect(self.push)
-        self.pullButton.clicked.connect(self.pull)
+        self.pushButton.clicked.connect(self._do_push)
+        self.pullButton.clicked.connect(self._do_pull)
         self.launchButton.clicked.connect(self._do_launch)
         self.scanButton.clicked.connect(self._scan)
         self.quitButton.clicked.connect(self._quit)
@@ -72,17 +76,16 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
         else:             ## deselected
             pass
 
-    def push(self):
+    def _do_push(self):
         ## open up directory selector (with last push-dir pre-selected)
         ## then check whether the directory contains MAIN.pd
         ## call the SMi's push methods with this directory
-        print "FIXME: push"
-    def pull(self):
+        self.pushChooser.choose(self.smmix.push)
+    def _do_pull(self):
         ## open up directory selector (with last pull-dir pre-selected)
         ## (warn if directory exists)
         ## call the SMi's pull methods with this directory
-        print "FIXME: pull"
-
+        self.pullChooser.choose(self.smmix.pull)
     def _launch(self, state): ## start launch
         """start/stop the engine on the remote SMi"""
         self.setChecked(state)
