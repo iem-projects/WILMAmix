@@ -25,6 +25,15 @@ from PySide.QtGui import *
 import SMconfig_ui
 import DirChooser
 
+def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
+    if targetdict is None:
+        targetdict=dict()
+    if clearFirst:
+        targetdict.clear()
+    for k in sourcedict:
+        targetdict[k]=sourcedict[k]
+    return targetdict
+
 class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def __init__(self, parent=None, name="SMi", settings={}, confs=None):
         super(SMconfig, self).__init__(parent)
