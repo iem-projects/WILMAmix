@@ -96,7 +96,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         _syncDicts(self.localsettings, self.settings)
         self.hide()
     def do_reject(self):
-        print "ko"
+        print "FIXME ko"
         self.hide()
     def do_copyConfig(self):
         if self.parent is not None:
@@ -114,14 +114,15 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.pushChooser.choose(self.set_pushDir)
 
     def select_streamProtocol(self, value):
-        print "FIXME: select streamProtocol:", value
+        print "FIXME: select streamProtocol:", _streamProtocols[value]
     def select_streamProfile(self, value):
-        print "FIXME: select streamProfile:", value
+        print "FIXME: select streamProfile:", _streamProfiles[value]
     def select_streamChannels(self, value):
         print "FIXME: select streamChannels:", value
     def select_networkInterface(self, value):
-        print "FIXME: select networkInterface:", value
+        print "FIXME: select networkInterface:", _networkInterfaces[value]
     def select_mode(self, value):
+        # ['stream', 'record', 'process']
         print "FIXME: select mode:", value
 
     def moved_gainFader(self, value):
