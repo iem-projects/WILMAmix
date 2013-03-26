@@ -1,12 +1,25 @@
+GUI/SMiConfig
+  Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
+
+
+
+Proxy:
+  Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
+
+
+
+
 sync:
 	Q: write modules for file sync
+  A: rsync
 
 sfwrite:
 	Q: write module that dumps audio to file
+  A: via Pd
 
 process:
 	Q: write module that runs Pd
-
+  A: via Pd
 
 OSC:
 	Q: sub-tree patterns (e.g. '/foo/' matches '/foo/bar/baz')
@@ -15,6 +28,7 @@ RTSPserver:
 	Q: if the server shuts down and a client is still listening, the server
 		segfaults once the client quits.
 	A: --> run server in external program that gets shut down, once streaming is done
+  A: RTSP is deprecated in favour of RTP
 
 import:
-	Q: MINTmix.py requires 'python-psutil'?
+	Q: MINTsm.py requires 'python-psutil'?
