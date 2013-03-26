@@ -61,9 +61,6 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.statemeter.build()
         self.setWindowTitle(QtGui.QApplication.translate("SMconfig", "Configuration of", None, QtGui.QApplication.UnicodeUTF8)+" '"+name+"'")
 
-        self._set_pullDir(self.settings['/path/in'])
-        self._set_pushDir(self.settings['/path/out'])
-
         self.streamProtocol.clear()
         self.streamProtocol.addItems(_streamProtocols)
         self.streamProfile.clear()
@@ -73,6 +70,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.networkInterface.clear()
         self.networkInterface.addItems(_networkInterfaces)
 
+        self.applySettings(settings)
         self._connect()
     def _connect(self):
         self.closeButtons.accepted.connect(self._do_accept)
@@ -143,7 +141,42 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         pass
 
     def applySettings(self, settings):
+        """applies settings to the config-panel
+        this really only sets the values in the selection boxes to the proper values.
+        it doesn't do anything on the remote end"""
         _syncDicts(settings, self.settings)
+        self._set_pullDir(self.settings['/path/in'])
+        self._set_pushDir(self.settings['/path/out'])
+        # mode
+        mode=self.settings['/mode']
+        imode=0
+        if   'stream'  == mode: imode=0
+        elif 'record'  == mode: imode=1
+        elif 'process' == mode: imode=2
+        self.modeSelector.setCurrentIndex(imode)
+        # stream: protocol
+        mode=self.settings['/stream/protocol']
+        for i in range(self.streamProtocol.count()):
+            if self.streamProtocol.itemText(i) == mode:
+                self.streamProtocol.setCurrentIndex(i)
+                break
+        # stream: profile
+        mode=self.settings['/stream/profile']
+        for i in range(self.streamProfile.count()):
+            if self.streamProfile.itemText(i) == mode:
+                self.streamProfile.setCurrentIndex(i)
+                break
+        # stream: channels
+        i=int(self.settings['/stream/channels'])
+        self.streamChannels.setValue(i)
+        # network: interface
+        mode=self.settings['/network/interface']
+        for i in range(self.networkInterface.count()):
+            if self.networkInterface.itemText(i) == mode:
+                self.networkInterface.setCurrentIndex(i)
+                break
+
+
 
 ######################################################################
 if __name__ == '__main__':
