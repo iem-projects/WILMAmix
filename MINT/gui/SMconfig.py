@@ -39,6 +39,7 @@ def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
 class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def __init__(self, parent=None, name="SMi", settings={}, confs=None):
         super(SMconfig, self).__init__(parent)
+        self.parent=parent
         self.settings=settings
         self.localsettings=_syncDicts(self.settings)
         self.setupUi(self)
@@ -79,14 +80,17 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         print "ko"
         self.hide()
     def do_copyConfig(self):
-        print "FIXME: copyConfig"
+        if self.parent is not None:
+            self.parent.copyConfigToSelected()
 
     def do_pull(self):
-        print "FIXME: pull"
+        if self.parent is not None:
+            self.parent.pull()
     def do_pullDir(self):
         self.pullChooser.choose(self.set_pullDir)
     def do_push(self):
-        print "FIXME: push"
+        if self.parent is not None:
+            self.parent.push()
     def do_pushDir(self):
         self.pushChooser.choose(self.set_pushDir)
 
