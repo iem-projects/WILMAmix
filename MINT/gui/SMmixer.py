@@ -46,6 +46,9 @@ class SMmixer(QtGui.QFrame):
         self.layout.addWidget(self.mixctl)
         self.build()
 
+        self.pushing=dict()
+        self.pulling=dict()
+
     def build(self):
         self.sm=[]
 
@@ -91,3 +94,22 @@ class SMmixer(QtGui.QFrame):
     def ping(self):
         for sm in self.sm:
             sm.ping()
+    def pull(self, path):
+        self.pulling.clear()
+        for s in self.selected():
+            self.pulling[s]=True
+            s.pull(path, self._pulled)
+    def push(self, path):
+        self.pushing.clear()
+        for s in self.selected():
+            self.pushing[s]=True
+            s.push(path, self._pushed)
+
+    def _pulled(self, sm, ret):
+        self.pulling[sm]=False
+        if not True in self.pulling.values():
+            print "PULL done"
+    def _pushed(self, sm, ret):
+        self.pushing[sm]=False
+        if not True in self.pushing.values():
+            print "PUSH done"
