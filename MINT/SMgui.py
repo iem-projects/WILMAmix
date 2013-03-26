@@ -1,0 +1,114 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Copyright © 2013, IOhannes m zmölnig, IEM
+
+# This file is part of MINTmix
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
+
+## that's the main instance for SMi's GUI
+
+from gui import SMconfig, SMchannels
+
+class SMgui:
+    def __init__(self, parent=None, settings={'/id':"SMi"}, confs=None, maxwidth=None):
+        name=settings['/id']
+        self.settings=settings
+        self.channels=SMchannels.SMchannels(self, guiparent=parent, settings=settings, maxwidth=maxwidth)
+        self.config=SMconfig.SMconfig(self, guiparent=parent, settings=self.settings)
+        self.name = name
+        self.maxWidth=maxwidth
+        if confs is not None:
+            print "FIXXME: confs not used in SMchannels"
+        self.showConfig()
+
+    def getWidget(self):
+        return self.channels
+
+    def select(self, value=None):
+        """(de)selects this SMi, or toggles selection"""
+        if value is None: ## toggle
+            pass
+        elif value:       ## selected
+            pass
+        else:             ## deselected
+            pass
+    def selected(self):
+        return self.isChecked()
+
+    def ping(self):
+        ## FIXME: compat implementation for SM.py
+        pass
+
+    ## callbacks from childs (SMchannels/SMconfig)
+    def showConfig(self):
+        self.config.applySettings(self.settings)
+        self.config.show()
+
+    def applySettings(self, settings):
+        print "FIXME: applySettings"
+    def copySettings(self, settings):
+        print "FIXME: copySettings"
+    def pull(self, path):
+        print "FIXME: pull"
+    def push(self, path):
+        print "FIXME: push"
+    def send(self, msg, data=None):
+        print "FIXME: send"
+
+######################################################################
+if __name__ == '__main__':
+    import sys
+    from PySide import QtGui
+    class Form(QtGui.QDialog):
+        def __init__(self, parent=None):
+            super(Form, self).__init__(parent)
+            self.d=dict()
+            self.d['/network/interface']='eth0'
+            self.d['/path/in' ]='/tmp/MINT/in'
+            self.d['/path/out']='/tmp/MINT/out'
+            self.d['/mode'    ]='stream'
+            self.d['/stream/protocol']='RTP'
+            self.d['/stream/profile' ]='L16'
+            self.d['/stream/channels']=4
+            self.d['/proxy/receiver/port']=9998
+            self.d['/proxy/sender/host']='localhost'
+            self.d['/proxy/sender/port']=9999
+            layout = QtGui.QHBoxLayout()
+            names=[]
+            for i in range(10):
+                names+=['SM#'+str(i)]
+            self.meter=[]
+            for n in names:
+                self.d['/id']=n
+                m=SMgui(self, self.d)
+                self.meter+=[m]
+                layout.addWidget(m.getWidget())
+
+            self.value = QtGui.QDoubleSpinBox(self)
+            self.value.setMinimum(-10)
+            self.value.setMaximum(120)
+            layout.addWidget(self.value)
+            self.setLayout(layout)
+            self.value.valueChanged.connect(self.setValue)
+        def setValue(self, value):
+            for m in self.meter:
+                m.setLevels([value-100]*4)
+
+    app = QtGui.QApplication(sys.argv)
+    form = Form()
+    form.show()
+    # Run the main Qt loop
+    sys.exit(app.exec_())
