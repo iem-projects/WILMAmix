@@ -22,6 +22,7 @@ from PySide.QtCore import *
 from PySide.QtGui import *
 import sys
 from MINT import metro, configuration
+from MINT import SMgui as smifactory
 from MINT.gui import SMmixer, Translator
 import MINT.net
 
@@ -35,7 +36,7 @@ class Form(QDialog):
         # Create widgets
         self.dict=self.discover.getDict()
         print self.dict
-        self.mixer=SMmixer(configuration, self, self.dict)
+        self.mixer=SMmixer(smifactory.SMgui, self, self.dict)
         self.bRefresh = QPushButton("Refresh")
         self.bPrint   = QPushButton("Print")
         # Create layout and add widgets

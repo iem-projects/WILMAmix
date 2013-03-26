@@ -21,16 +21,14 @@
 from PySide import QtCore, QtGui
 from PySide.QtGui import *
 
-from SMchannels import SMchannels as SM
 from MIXctl import MIXctl
 
 class SMmixer(QtGui.QFrame):
-    
-    def __init__(self, configuration, parent=None, SMs=None):
+    def __init__(self, smifactory, parent=None, SMs=None):
         super(SMmixer, self).__init__(parent)
         self.sm=[]
         self.sms=SMs
-        self.configmanager=configuration
+        self.smifactory=smifactory
 
         self.layout = QHBoxLayout()
         self.layout.setSpacing(0)
@@ -66,18 +64,16 @@ class SMmixer(QtGui.QFrame):
         SMs=self.sms
         if True:
             for sm in sorted(SMs.keys()):
-                settings=self.configmanager.getSM(sm)
                 d=SMs[sm]
-                self.sm+=[SM(parent=self, settings=settings, confs=d)]
-                self.smilayout.addWidget(self.sm[count])
+                smi=self.smifactory(parent=self, name=sm, confs=d)
+                self.sm+=[smi]
+                self.smilayout.addWidget(smi.widget())
                 count+=1
         else:
             for count in range(16):
                 name="SM"+str(count)
-                print name
                 self.sm+=[SM(parent=self, name=name)]
                 self.smilayout.addWidget(self.sm[count])
-                print "SM: ",self.sm[count].sizeHint()
 
     def setSM(self, SMs=None):
         self.sms=SMs
