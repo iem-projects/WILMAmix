@@ -142,14 +142,19 @@ class serverTCP:
     def sendMsg(self, oscAddress, dataArray=[]):
         """send an OSC-message to connected client(s)"""
         self._send(osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray))
-
-
     def sendBundle(self, bundle):
         """send an OSC-bundle to connected client(s)"""
         if isinstance(bundle, osc.Bundle):
             self._send(bundle.data())
         else:
             self._send(bundle.message)
+    def send(self, addr, data=None):
+        if type(addr) is str: # it's an addr/data pair
+            self.sendMsg(addr, data)
+        elif data is None:    # it's a bundle
+            self.sendBundle(addr)
+        else:
+            raise Exception("usage: send(addr, data) OR send(bundle)")
 
 
 

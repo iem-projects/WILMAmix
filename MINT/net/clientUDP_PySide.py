@@ -85,6 +85,13 @@ class clientUDP:
             self._send(bundle.data())
         else:
             self._send(bundle.message)
+    def send(self, addr, data=None):
+        if type(addr) is str: # it's an addr/data pair
+            self.sendMsg(addr, data)
+        elif data is None:    # it's a bundle
+            self.sendBundle(addr)
+        else:
+            raise Exception("usage: send(addr, data) OR send(bundle)")
 
     def getRemote(self):
         return self.remote
