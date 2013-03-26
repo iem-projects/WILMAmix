@@ -44,8 +44,9 @@ _networkInterfaces = ['eth0', 'wlan0']
 
 
 class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
-    def __init__(self, parent=None, name="SMi", settings={}, confs=None):
+    def __init__(self, parent=None, settings={}, confs=None):
         super(SMconfig, self).__init__(parent)
+        name=settings['/id']
         self.parent=parent
         self.settings=_syncDicts(settings)
         self.setupUi(self)
