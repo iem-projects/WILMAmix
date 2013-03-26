@@ -129,7 +129,9 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.settings['/mode']=value
 
     def _moved_gainFader(self, value): ## this should immediately be sent to the SMi
-        print "FIXME: fader", value
+        gain=MINT.utils.SCALE(value, self.fader.minimum(), self.fader.maximum(), 0., 1., True)
+        if self.parent is not None:
+            self.parent.send('/gain', [gain])
 
     def _set_pullDir(self, path):
         self.settings['/path/in']=path
