@@ -39,12 +39,12 @@ def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
 _streamProtocols=['RTP', 'RTSP']
 _streamProfiles =['L16', 'L24']
 _streamChannels =(4,5)
-_networkInterfaces = ['eth0', 'wlan0']
 
 class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
-    def __init__(self, sm=None, guiparent=None, settings={}, confs=None):
+    def __init__(self, sm=None, guiparent=None, settings={}, interfaces=[]):
         super(SMconfig, self).__init__(guiparent)
         name=settings['/id']
+        self.interfaces=interfaces
         self.sm=sm
         self.settings=_syncDicts(settings)
         self.setupUi(self)
@@ -67,7 +67,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.streamChannels.setMinimum(_streamChannels[0])
         self.streamChannels.setMaximum(_streamChannels[1])
         self.networkInterface.clear()
-        self.networkInterface.addItems(_networkInterfaces)
+        self.networkInterface.addItems(self.interfaces)
 
         self.applySettings(settings)
         self._connect()
@@ -107,7 +107,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def _select_streamChannels(self, value):
         self.settings['/stream/channels']=value
     def _select_networkInterface(self, value):
-        self.settings['/network/interface']=_networkInterfaces[value]
+        self.settings['/network/interface']=self.interfaces[value]
     def _select_mode(self, value):
         # ['stream', 'record', 'process']
         print "FIXME: select mode:", value
