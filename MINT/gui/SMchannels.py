@@ -107,8 +107,8 @@ class SMchannels(QtGui.QGroupBox):
             self.launchButton.setIcon(self.icons[state])
 
     def _do_config(self): ## configButton callback, open the ConfigDialog for this SMi
-        print "FIXME: config dialog"
-        pass
+        self.config.applySettings(self.settings)
+        self.config.show()
     def launchB(self): ## launchButton callback, toggles the launch state
         self._launch(self.launchButton.isChecked())
         pass
