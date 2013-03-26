@@ -55,9 +55,11 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 
         self.meters.setPortCount(4)
         self.meters.setScales(None)
+
         self.statemeter.setPort(['CPU', 'memory', 'disk', "battery", "runtime"])
         self.statemeter.setScale([None, None, None, None, " minutes"])
         self.statemeter.setInverse([False, False, False, True, True])
+        self.statemeter.setMaxheight(50)
         self.statemeter.build()
         self.setWindowTitle(QtGui.QApplication.translate("SMconfig", "Configuration of", None, QtGui.QApplication.UnicodeUTF8)+" '"+name+"'")
 
