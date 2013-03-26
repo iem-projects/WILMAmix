@@ -91,25 +91,27 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.gainFader.valueChanged.connect(self._moved_gainFader)
 
     def _do_accept(self):
-        print "FIXME ok"
         self.hide()
         if self.parent is not None:
             self.parent.applySettings(self.settings)
+        else: print "FIXME: apply"
     def _do_reject(self):
-        print "FIXME ko"
         self.hide()
     def _do_copyConfig(self):
         if self.parent is not None:
             self.parent.copySettings(self.settings)
+        else: print "FIXME: copySettings"
 
     def _do_pull(self):
         if self.parent is not None:
             self.parent.pull()
+        else: print "FIXME: pull"
     def _do_pullDir(self):
         self.pullChooser.choose(self._set_pullDir)
     def _do_push(self):
         if self.parent is not None:
             self.parent.push()
+        else: print "FIXME: push"
     def _do_pushDir(self):
         self.pushChooser.choose(self._set_pushDir)
 
@@ -130,6 +132,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         gain=MINT.utils.SCALE(value, self.fader.minimum(), self.fader.maximum(), 0., 1., True)
         if self.parent is not None:
             self.parent.send('/gain', [gain])
+        else: print "FIXME: send"
 
     def _set_pullDir(self, path):
         self.settings['/path/in']=path
