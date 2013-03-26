@@ -39,7 +39,7 @@ class SMmixer(QtGui.QFrame):
         smiframe=QtGui.QFrame(self)
         smiframe.setLayout(self.smilayout)
 
-        self.mixctl = MIXctl()
+        self.mixctl = MIXctl(self)
 
         self.layout.addWidget(smiframe)
 

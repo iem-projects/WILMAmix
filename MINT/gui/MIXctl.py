@@ -32,8 +32,9 @@ class MIXctl(QtGui.QGroupBox):
     - pull files (from selected)
     - quit
     """
-    def __init__(self, parent=None):
-        super(MIXctl, self).__init__(parent)
+    def __init__(self, smmix, guiparent=None):
+        super(MIXctl, self).__init__(guiparent)
+        self.smmix=smmix
         self.name = "MINTmix"
 
         self.setTitle(self.tr(self.name))
