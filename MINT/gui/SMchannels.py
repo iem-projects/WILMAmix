@@ -19,13 +19,17 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 from PySide import QtCore, QtGui
-
-from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
 
+from qsynthMeter import qsynthMeter
+import SMconfig
+
 class SMchannels(QtGui.QGroupBox):
-    def __init__(self, parent=None, name="SMi", maxwidth=None, confs=None):
+    def __init__(self, parent=None, settings={'/id':"SMi"}, confs=None, maxwidth=None):
         super(SMchannels, self).__init__(parent)
+        name=settings['/id']
+        self.settings=settings
+        self.config=SMconfig.SMconfig(self, settings=self.settings)
         self.name = name
         self.maxWidth=maxwidth
         if confs is not None:

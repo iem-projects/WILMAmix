@@ -35,7 +35,7 @@ class Form(QDialog):
         # Create widgets
         self.dict=self.discover.getDict()
         print self.dict
-        self.mixer=SMmixer(self, self.dict)
+        self.mixer=SMmixer(configuration, self, self.dict)
         self.bRefresh = QPushButton("Refresh")
         self.bPrint   = QPushButton("Print")
         # Create layout and add widgets

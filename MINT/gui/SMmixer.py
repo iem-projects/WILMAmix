@@ -20,15 +20,17 @@
 
 from PySide import QtCore, QtGui
 from PySide.QtGui import *
+
 from SMchannels import SMchannels as SM
 from MIXctl import MIXctl
 
 class SMmixer(QtGui.QFrame):
     
-    def __init__(self, parent=None, SMs=None):
+    def __init__(self, configuration, parent=None, SMs=None):
         super(SMmixer, self).__init__(parent)
         self.sm=[]
         self.sms=SMs
+        self.configmanager=configuration
 
         self.layout = QHBoxLayout()
         self.layout.setSpacing(0)
@@ -64,8 +66,9 @@ class SMmixer(QtGui.QFrame):
         SMs=self.sms
         if True:
             for sm in sorted(SMs.keys()):
+                settings=self.configmanager.getSM(sm)
                 d=SMs[sm]
-                self.sm+=[SM(parent=self, name=sm, confs=d)]
+                self.sm+=[SM(parent=self, settings=settings, confs=d)]
                 self.smilayout.addWidget(self.sm[count])
                 count+=1
         else:
