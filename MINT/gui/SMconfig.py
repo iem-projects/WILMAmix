@@ -40,12 +40,14 @@ _streamProtocols=['RTP', 'RTSP']
 _streamProfiles =['L16', 'L24']
 _streamChannels =(4,5)
 _networkInterfaces = ['eth0', 'wlan0']
+
+
+
 class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def __init__(self, parent=None, name="SMi", settings={}, confs=None):
         super(SMconfig, self).__init__(parent)
         self.parent=parent
-        self.settings=settings
-        self.localsettings=_syncDicts(self.settings)
+        self.settings=_syncDicts(settings)
         self.setupUi(self)
 
         self.pullChooser=DirChooser.PullDirChooser(self, self.settings['/path/in'])
@@ -92,7 +94,6 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 
     def _do_accept(self):
         print "FIXME ok"
-        _syncDicts(self.localsettings, self.settings)
         self.hide()
     def _do_reject(self):
         print "FIXME ko"
@@ -113,16 +114,17 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.pushChooser.choose(self._set_pushDir)
 
     def _select_streamProtocol(self, value):
-        print "FIXME: select streamProtocol:", _streamProtocols[value]
+        self.settings['/stream/protocol']=_streamProtocols[value]
     def _select_streamProfile(self, value):
-        print "FIXME: select streamProfile:", _streamProfiles[value]
+        self.settings['/stream/profile']=_streamProfiles[value]
     def _select_streamChannels(self, value):
-        print "FIXME: select streamChannels:", value
+        self.settings['/stream/channels']=value
     def _select_networkInterface(self, value):
-        print "FIXME: select networkInterface:", _networkInterfaces[value]
+        self.settings['/network/interface']=_networkInterfaces[value]
     def _select_mode(self, value):
         # ['stream', 'record', 'process']
         print "FIXME: select mode:", value
+        self.settings['/mode']=value
 
     def _moved_gainFader(self, value): ## this should immediately be sent to the SMi
         print "FIXME: fader", value
@@ -135,6 +137,9 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.settings['/path/out']=path
         self.pushDir.setText(path)
         pass
+
+    def applySettings(self, settings):
+        _syncDicts(settings, self.settings)
 
 ######################################################################
 if __name__ == '__main__':
