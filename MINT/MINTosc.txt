@@ -36,6 +36,11 @@ SM->mix (every message prefixed with SMi-ID: '/<ID>')
 
 
 
-configuration only
-------------------
+configuration only (SM)
+-----------------------
 /passphrase             'foo'           (passphrase to use to log into the SMi (for file-transfer))
+configuration only (MIX)
+------------------------
+/proxy/sender/port      7890            (port to send proxied process data to)
+/proxy/sender/host      'localhost'     (host to send proxied process data to
+/proxy/receiver/port    7891            (prot we listen on to send data to the process)
