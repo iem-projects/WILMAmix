@@ -22,8 +22,9 @@ from PySide import QtCore, QtGui
 
 from PySide.QtGui import *
 import sys
+import MIXctl_ui
 
-class MIXctl(QtGui.QGroupBox):
+class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
     """
     this is the 'Master Control' for all SMi channels.
     - handle selections (all on, all off, toggle)
@@ -35,86 +36,29 @@ class MIXctl(QtGui.QGroupBox):
     def __init__(self, smmix, guiparent=None):
         super(MIXctl, self).__init__(guiparent)
         self.smmix=smmix
-        self.name = "MINTmix"
-
-        self.setTitle(self.tr(self.name))
-
-        layout = QVBoxLayout()
-        layout.setContentsMargins(2,2,2,2)
-
-        # Create widgets
-
-        ## select none/all/toggle
-        selectlayout = QHBoxLayout()
-        selectlayout.setContentsMargins(0,0,0,0)
-        
-        self.selectNoneButton = QtGui.QCheckBox(self)
-        self.selectNoneButton.setToolTip("deselect all SMi's")
+        self.setupUi(self)
         self.selectNoneButton.setCheckState(QtCore.Qt.CheckState.Unchecked)
-        self.selectNoneButton.clicked.connect(self.selectNone)
-        selectlayout.addWidget(self.selectNoneButton)
-        
-        self.selectAllButton = QtGui.QCheckBox(self)
-        self.selectAllButton.setToolTip("select all SMi's")
         self.selectAllButton.setCheckState(QtCore.Qt.CheckState.Checked)
-        self.selectAllButton.clicked.connect(self.selectAll)
-        selectlayout.addWidget(self.selectAllButton)
-        
-        self.selectToggleButton = QtGui.QCheckBox(self)
-        self.selectToggleButton.setToolTip("toggle SMi selection")
-        self.selectToggleButton.setTristate(True)
         self.selectToggleButton.setCheckState(QtCore.Qt.CheckState.PartiallyChecked)
-        self.selectToggleButton.clicked.connect(self.selectToggle)
-        selectlayout.addWidget(self.selectToggleButton)
-
-        selectframe=QtGui.QFrame(self)
-        selectframe.setLayout(selectlayout)
-        layout.addWidget(selectframe)
-
-        ## PUSH/PULL buttons
-        fileslayout = QVBoxLayout()
-        fileslayout.setContentsMargins(0,0,0,0)
-
-        self.pushButton = QtGui.QPushButton("PUSH")
-        self.pushButton.clicked.connect(self.push)
-        fileslayout.addWidget(self.pushButton)
-
-        self.pullButton = QtGui.QPushButton("PULL")
-        self.pullButton.clicked.connect(self.pull)
-        fileslayout.addWidget(self.pullButton)
-
-        filesframe=QtGui.QGroupBox(self)
-        filesframe.setTitle("Files...")
-        filesframe.setLayout(fileslayout)
-        layout.addWidget(filesframe)
-
-        ## Launch Button
-        self.launchButton = QtGui.QPushButton("START") # should be "RECORD", "STREAM" or "PROCESS"
-        self.launchButton.setCheckable(True)           # so the button stays clicked (even when window is left)
-        self.launchButton.clicked.connect(self._do_launch)
-        layout.addWidget(self.launchButton)
-
-        ## Scan Button
-        self.scanButton = QtGui.QPushButton("SCAN")
-        self.scanButton.clicked.connect(self._scan)
-        layout.addWidget(self.scanButton)
-        
-        ## Quit Button
-        self.quitButton = QtGui.QPushButton("QUIT")
-        self.quitButton.clicked.connect(self._quit)
-        layout.addWidget(self.quitButton)
-
-
-        self.setLayout(layout)
         #self.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred))
+        self._connect()
+    def _connect(self):
+        self.selectNoneButton.clicked.connect(self._selectNone)
+        self.selectAllButton.clicked.connect(self._selectAll)
+        self.selectToggleButton.clicked.connect(self._selectToggle)
+        self.pushButton.clicked.connect(self.push)
+        self.pullButton.clicked.connect(self.pull)
+        self.launchButton.clicked.connect(self._do_launch)
+        self.scanButton.clicked.connect(self._scan)
+        self.quitButton.clicked.connect(self._quit)
 
-    def selectNone(self, value=None):
+    def _selectNone(self, value=None):
         self.selectNoneButton.setCheckState(QtCore.Qt.CheckState.Unchecked)
         self.select(False)
-    def selectAll(self, value=None):
+    def _selectAll(self, value=None):
         self.selectAllButton.setCheckState(QtCore.Qt.CheckState.Checked)
         self.select(True)
-    def selectToggle(self, value=None):
+    def _selectToggle(self, value=None):
         self.selectToggleButton.setCheckState(QtCore.Qt.CheckState.PartiallyChecked)
         self.select(None)
 
@@ -127,8 +71,6 @@ class MIXctl(QtGui.QGroupBox):
             pass
         else:             ## deselected
             pass
-    def selected(self):
-        print "FIXME: current selection state"
 
     def push(self):
         ## open up directory selector (with last push-dir pre-selected)
@@ -157,9 +99,6 @@ class MIXctl(QtGui.QGroupBox):
         sys.exit(0)
     def _scan(self):
         self.smmix.scanSM()
-
-    def setLevels(self, levels_dB=[-100.,-100.,-100.,-100.]):
-        self.meter.setValues(levels_dB)
 
     def setState(self, level, msg):
         ## FIXME: add a status widget
