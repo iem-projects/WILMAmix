@@ -91,7 +91,7 @@ class MIXctl(QtGui.QGroupBox):
         ## Launch Button
         self.launchButton = QtGui.QPushButton("START") # should be "RECORD", "STREAM" or "PROCESS"
         self.launchButton.setCheckable(True)           # so the button stays clicked (even when window is left)
-        self.launchButton.clicked.connect(self.launchB)
+        self.launchButton.clicked.connect(self._do_launch)
         layout.addWidget(self.launchButton)
 
         ## Scan Button
@@ -154,7 +154,7 @@ class MIXctl(QtGui.QGroupBox):
         if state is not None:
             self.launchButton.setChecked(state)
         return self.launchButton.isChecked()
-    def launchB(self): ## launchButton callback, toggles the launch state
+    def _do_launch(self): ## launchButton callback, toggles the launch state
         self._launch(self.launchButton.isChecked())
         pass
     def _quit(self):
