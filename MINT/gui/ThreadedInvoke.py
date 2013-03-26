@@ -51,7 +51,11 @@ class Invoker:
     def __init__(self, fn):
         self.fn=fn
     def __call__(self, *args, **kwargs):
-        callback(self.fn, *args, **kwargs)
+        if callable(self.fn):
+            callback(self.fn, *args, **kwargs)
+        else:
+            for fn in self.fn:
+                callback(fn, *args, **kwargs)
 
 if __name__ == '__main__':
     def foo(name):
