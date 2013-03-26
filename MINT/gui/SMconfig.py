@@ -26,6 +26,8 @@ import SMconfig_ui
 import DirChooser
 
 def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
+    if sourcedict is targetdict:
+        return targetdict
     if targetdict is None:
         targetdict=dict()
     if clearFirst:
