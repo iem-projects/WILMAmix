@@ -59,8 +59,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.statemeter.build()
         self.setWindowTitle(QtGui.QApplication.translate("SMconfig", "Configuration of", None, QtGui.QApplication.UnicodeUTF8)+" '"+name+"'")
 
-        self.set_pullDir(self.settings['/path/in'])
-        self.set_pushDir(self.settings['/path/out'])
+        self._set_pullDir(self.settings['/path/in'])
+        self._set_pushDir(self.settings['/path/out'])
 
         self.streamProtocol.clear()
         self.streamProtocol.addItems(_streamProtocols)
@@ -73,68 +73,65 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 
         self._connect()
     def _connect(self):
-        self.closeButtons.accepted.connect(self.do_accept)
-        self.closeButtons.rejected.connect(self.do_reject)
+        self.closeButtons.accepted.connect(self._do_accept)
+        self.closeButtons.rejected.connect(self._do_reject)
 
-        self.copyConfigButton.clicked.connect(self.do_copyConfig)
-        self.pullButton.clicked.connect(self.do_pull)
-        self.pullDirButton.clicked.connect(self.do_pullDir)
-        self.pushButton.clicked.connect(self.do_push)
-        self.pushDirButton.clicked.connect(self.do_pushDir)
+        self.copyConfigButton.clicked.connect(self._do_copyConfig)
+        self.pullButton.clicked.connect(self._do_pull)
+        self.pullDirButton.clicked.connect(self._do_pullDir)
+        self.pushButton.clicked.connect(self._do_push)
+        self.pushDirButton.clicked.connect(self._do_pushDir)
 
-        self.streamProtocol.currentIndexChanged.connect(self.select_streamProtocol)
-        self.streamProfile.currentIndexChanged.connect(self.select_streamProfile)
-        self.streamChannels.valueChanged.connect(self.select_streamChannels)
-        self.modeSelector.currentIndexChanged.connect(self.select_mode)
-        self.networkInterface.currentIndexChanged.connect(self.select_networkInterface)
+        self.streamProtocol.currentIndexChanged.connect(self._select_streamProtocol)
+        self.streamProfile.currentIndexChanged.connect(self._select_streamProfile)
+        self.streamChannels.valueChanged.connect(self._select_streamChannels)
+        self.modeSelector.currentIndexChanged.connect(self._select_mode)
+        self.networkInterface.currentIndexChanged.connect(self._select_networkInterface)
 
-        self.gainFader.valueChanged.connect(self.moved_gainFader)
+        self.gainFader.valueChanged.connect(self._moved_gainFader)
 
-
-    def do_accept(self):
+    def _do_accept(self):
         print "FIXME ok"
         _syncDicts(self.localsettings, self.settings)
         self.hide()
-    def do_reject(self):
+    def _do_reject(self):
         print "FIXME ko"
         self.hide()
-    def do_copyConfig(self):
+    def _do_copyConfig(self):
         if self.parent is not None:
             self.parent.copyConfigToSelected()
 
-    def do_pull(self):
+    def _do_pull(self):
         if self.parent is not None:
             self.parent.pull()
-    def do_pullDir(self):
-        self.pullChooser.choose(self.set_pullDir)
-    def do_push(self):
+    def _do_pullDir(self):
+        self.pullChooser.choose(self._set_pullDir)
+    def _do_push(self):
         if self.parent is not None:
             self.parent.push()
-    def do_pushDir(self):
-        self.pushChooser.choose(self.set_pushDir)
+    def _do_pushDir(self):
+        self.pushChooser.choose(self._set_pushDir)
 
-    def select_streamProtocol(self, value):
+    def _select_streamProtocol(self, value):
         print "FIXME: select streamProtocol:", _streamProtocols[value]
-    def select_streamProfile(self, value):
+    def _select_streamProfile(self, value):
         print "FIXME: select streamProfile:", _streamProfiles[value]
-    def select_streamChannels(self, value):
+    def _select_streamChannels(self, value):
         print "FIXME: select streamChannels:", value
-    def select_networkInterface(self, value):
+    def _select_networkInterface(self, value):
         print "FIXME: select networkInterface:", _networkInterfaces[value]
-    def select_mode(self, value):
+    def _select_mode(self, value):
         # ['stream', 'record', 'process']
         print "FIXME: select mode:", value
 
-    def moved_gainFader(self, value):
+    def _moved_gainFader(self, value): ## this should immediately be sent to the SMi
         print "FIXME: fader", value
 
-    def set_pullDir(self, path):
-        print "setting pulldir", path
+    def _set_pullDir(self, path):
         self.settings['/path/in']=path
         self.pullDir.setText(path)
         pass
-    def set_pushDir(self, path):
-        print "setting pushdir", path
+    def _set_pushDir(self, path):
         self.settings['/path/out']=path
         self.pushDir.setText(path)
         pass
