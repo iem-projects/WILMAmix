@@ -32,7 +32,6 @@ class SMgui:
         self.maxWidth=maxwidth
         if confs is not None:
             print "FIXXME: confs not used in SMchannels"
-        self.showConfig()
 
     def getWidget(self):
         return self.channels
