@@ -40,6 +40,9 @@ class SMgui:
         self.connection=None
         self.critical=[False]*5
 
+        self.pullCb = None
+        self.pushCb = None
+
         try:
             defaultconf=interfaces[0]
             config = confs[defaultconf]
@@ -98,22 +101,37 @@ class SMgui:
         print "FIXME: applySettings"
     def copySettings(self, settings):
         print "FIXME: copySettings"
-    def pull(self, path):
+    def pull(self, path, fun=None):
         source=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/out']+'/' #remote
         target=os.path.join(path, self.name) #local
         self.config.pullEnable(False)
+        self.pullCb=fun
         f=filesync.filesync(source, target,
                             passphrases=[self.settings['/passphrase']],
                             deleteTarget=True,
-                            doneCallback=ThreadedInvoke.Invoker(self.config.pullEnable))
-    def push(self, path):
+                            doneCallback=ThreadedInvoke.Invoker(self.pullDone))
+    def pullDone(self, state):
+        self.config.pullEnable(True)
+        pullCb=self.pullCb
+        self.pullCb=None
+        if pullCb is not None:
+            pullCb(self, state)
+    def push(self, path, fun=None):
         source=path #local
         target=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/in']+'/' #remote
         self.config.pushEnable(False)
+        self.pushCb=fun
         f=filesync.filesync(source, target,
                             passphrases=[self.settings['/passphrase']],
                             deleteTarget=True,
-                            doneCallback=ThreadedInvoke.Invoker(self.config.pushEnable))
+                            doneCallback=ThreadedInvoke.Invoker(self.pushDone))
+    def pushDone(self, state):
+        self.config.pushEnable(True)
+        pushCb=self.pushCb
+        self.pushCb=None
+        if pushCb is not None:
+            pushCb(self, state)
+
     def send(self, msg, data=None):
         self.connection.send(msg, data)
 
