@@ -95,12 +95,14 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def _do_accept(self):
         print "FIXME ok"
         self.hide()
+        if self.parent is not None:
+            self.parent.applySettings(self.settings)
     def _do_reject(self):
         print "FIXME ko"
         self.hide()
     def _do_copyConfig(self):
         if self.parent is not None:
-            self.parent.copyConfigToSelected()
+            self.parent.copySettings(self.settings)
 
     def _do_pull(self):
         if self.parent is not None:
