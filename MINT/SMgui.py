@@ -29,7 +29,6 @@ class SMgui:
         self.channels=SMchannels.SMchannels(self, guiparent=parent, settings=self.settings, maxwidth=maxwidth)
         self.config=SMconfig.SMconfig(self, guiparent=parent, settings=self.settings)
         self.name = name
-        self.maxWidth=maxwidth
         if confs is not None:
             print "FIXXME: confs not used in SMchannels"
 
