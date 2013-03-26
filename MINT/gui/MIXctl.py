@@ -90,16 +90,15 @@ class MIXctl(QtGui.QGroupBox):
         self.launchButton.clicked.connect(self.launchB)
         layout.addWidget(self.launchButton)
 
-        ## Quit Button
-        self.quitButton = QtGui.QPushButton("QUIT")
-        self.quitButton.clicked.connect(self._quit)
-        layout.addWidget(self.quitButton)
-
         ## Scan Button
         self.scanButton = QtGui.QPushButton("SCAN")
         self.scanButton.clicked.connect(self._scan)
         layout.addWidget(self.scanButton)
         
+        ## Quit Button
+        self.quitButton = QtGui.QPushButton("QUIT")
+        self.quitButton.clicked.connect(self._quit)
+        layout.addWidget(self.quitButton)
 
 
         self.setLayout(layout)
