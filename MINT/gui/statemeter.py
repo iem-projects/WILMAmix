@@ -131,11 +131,8 @@ class statemeter(QtGui.QFrame):
                 self.scale[i]=None
 
         if maxheight is not None:
-            numports=len(self.ports)
-            height=maxheight/numports
-            if(height<1):
-                height=1
-            self.meterheight=height
+            self.setMaxheight(maxheight)
+
         colorcount=0
         self.ColorLow    = colorcount; colorcount+=1
         self.ColorMid    = colorcount; colorcount+=1
@@ -175,7 +172,7 @@ class statemeter(QtGui.QFrame):
         maxheight=0
         self.m_values = []
         for i,p in enumerate(self.ports):
-            value=statemeterValue(self, label=p, inverse=self.inverse[i], scale=self.scale[i])
+            value=statemeterValue(self, label=p, inverse=self.inverse[i], scale=self.scale[i], height=self.meterheight)
             self.m_values += [value]
             self.m_layout.addWidget(value)
             minheight+=value.minimumHeight()+1
@@ -209,7 +206,12 @@ class statemeter(QtGui.QFrame):
                 self.inverse[i]=inverse[i]
             except IndexError:
                 self.inverse[i]=False
-
+    def setMaxheight(self, maxheight):
+        numports=len(self.ports)
+        height=maxheight/numports
+        if(height<1):
+            height=1
+        self.meterheight=height
 ######################################################################
 if __name__ == '__main__':
     import sys
