@@ -84,7 +84,7 @@ class SMgui:
         else:             ## deselected
             pass
     def selected(self):
-        return self.isChecked()
+        return self.channels.isChecked()
 
     def ping(self):
         self.connection.sendMsg('/ping')
