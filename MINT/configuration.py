@@ -83,9 +83,12 @@ _defaults['/gain_control'] = '4' ## alsa control for mic amp
 _defaults['/path/in' ] = '/tmp/MINT/in'
 _defaults['/path/out'] = '/tmp/MINT/out'
 
-_defaults['/stream/type'    ]='rtp' # const
-_defaults['/stream/channels']='4' # const
+_defaults['/mode'           ]='stream' # 'stream', 'record', 'process'
+_defaults['/stream/protocol']='rtp' # const
 _defaults['/stream/profile' ]='L16' # const for now
+_defaults['/stream/channels']='4' # const
+
+_defaults['/network/interface']='eth0' # ????
 
 
 _config = ConfigParser.ConfigParser(_defaults)
