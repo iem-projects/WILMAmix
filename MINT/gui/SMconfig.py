@@ -77,9 +77,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 
         self.copyConfigButton.clicked.connect(self._do_copyConfig)
         self.pullButton.clicked.connect(self._do_pull)
-        self.pullDirButton.clicked.connect(self._do_pullDir)
         self.pushButton.clicked.connect(self._do_push)
-        self.pushDirButton.clicked.connect(self._do_pushDir)
 
         self.streamProtocol.currentIndexChanged.connect(self._select_streamProtocol)
         self.streamProfile.currentIndexChanged.connect(self._select_streamProfile)
@@ -98,12 +96,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.sm.copySettings(self.settings)
 
     def _do_pull(self):
-        self.sm.pull(self.settings['/path/in'])
-    def _do_pullDir(self):
         self.pullChooser.choose(self._set_pullDir)
     def _do_push(self):
-        self.sm.push(self.settings['/path/out'])
-    def _do_pushDir(self):
         self.pushChooser.choose(self._set_pushDir)
 
     def _select_streamProtocol(self, value):
@@ -124,21 +118,15 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.sm.send('/gain', [gain])
 
     def _set_pullDir(self, path):
-        self.settings['/path/in']=path
-        self.pullDir.setText(path)
-        pass
+        self.sm.pull(path)
     def _set_pushDir(self, path):
-        self.settings['/path/out']=path
-        self.pushDir.setText(path)
-        pass
+        self.sm.push(path)
 
     def applySettings(self, settings):
         """applies settings to the config-panel
         this really only sets the values in the selection boxes to the proper values.
         it doesn't do anything on the remote end"""
         _syncDicts(settings, self.settings)
-        self._set_pullDir(self.settings['/path/in'])
-        self._set_pushDir(self.settings['/path/out'])
         # mode
         mode=self.settings['/mode']
         imode=0
