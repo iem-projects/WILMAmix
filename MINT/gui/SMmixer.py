@@ -78,6 +78,8 @@ class SMmixer(QtGui.QFrame):
     def setSM(self, SMs=None):
         self.sms=SMs
         self.build()
+    def scanSM(self):
+        print "FIXME: reloadSM"
 
     def ping(self):
         for sm in self.sm:

@@ -160,8 +160,7 @@ class MIXctl(QtGui.QGroupBox):
     def _quit(self):
         sys.exit(0)
     def _scan(self):
-        print "FIXME: scanning"
-        pass
+        self.smmmix.scanSM()
 
     
     def setLevels(self, levels_dB=[-100.,-100.,-100.,-100.]):
