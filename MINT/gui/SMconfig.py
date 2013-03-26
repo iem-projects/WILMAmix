@@ -41,13 +41,11 @@ _streamProfiles =['L16', 'L24']
 _streamChannels =(4,5)
 _networkInterfaces = ['eth0', 'wlan0']
 
-
-
 class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
-    def __init__(self, parent=None, settings={}, confs=None):
-        super(SMconfig, self).__init__(parent)
+    def __init__(self, sm=None, guiparent=None, settings={}, confs=None):
+        super(SMconfig, self).__init__(guiparent)
         name=settings['/id']
-        self.parent=parent
+        self.sm=sm
         self.settings=_syncDicts(settings)
         self.setupUi(self)
 
@@ -93,26 +91,18 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 
     def _do_accept(self):
         self.hide()
-        if self.parent is not None:
-            self.parent.applySettings(self.settings)
-        else: print "FIXME: apply"
+        self.sm.applySettings(self.settings)
     def _do_reject(self):
         self.hide()
     def _do_copyConfig(self):
-        if self.parent is not None:
-            self.parent.copySettings(self.settings)
-        else: print "FIXME: copySettings"
+        self.sm.copySettings(self.settings)
 
     def _do_pull(self):
-        if self.parent is not None:
-            self.parent.pull()
-        else: print "FIXME: pull"
+        self.sm.pull(self.settings['/path/in'])
     def _do_pullDir(self):
         self.pullChooser.choose(self._set_pullDir)
     def _do_push(self):
-        if self.parent is not None:
-            self.parent.push()
-        else: print "FIXME: push"
+        self.sm.push(self.settings['/path/out'])
     def _do_pushDir(self):
         self.pushChooser.choose(self._set_pushDir)
 
@@ -131,9 +121,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 
     def _moved_gainFader(self, value): ## this should immediately be sent to the SMi
         gain=MINT.utils.SCALE(value, self.fader.minimum(), self.fader.maximum(), 0., 1., True)
-        if self.parent is not None:
-            self.parent.send('/gain', [gain])
-        else: print "FIXME: send"
+        self.sm.send('/gain', [gain])
 
     def _set_pullDir(self, path):
         self.settings['/path/in']=path

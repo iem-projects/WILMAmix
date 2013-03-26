@@ -25,15 +25,14 @@ from qsynthMeter import qsynthMeter
 import SMconfig
 
 class SMchannels(QtGui.QGroupBox):
-    def __init__(self, parent=None, settings={'/id':"SMi"}, confs=None, maxwidth=None):
-        super(SMchannels, self).__init__(parent)
+    def __init__(self, sm, guiparent=None, settings={'/id':"SMi"}, maxwidth=None):
+        super(SMchannels, self).__init__(guiparent)
+        self.sm=sm
         name=settings['/id']
         self.settings=settings
         self.config=SMconfig.SMconfig(self, settings=self.settings)
         self.name = name
         self.maxWidth=maxwidth
-        if confs is not None:
-            print "FIXXME: confs not used in SMchannels"
 
         self.icons=dict()
         emptyicon=QtGui.QIcon()
@@ -107,8 +106,7 @@ class SMchannels(QtGui.QGroupBox):
             self.launchButton.setIcon(self.icons[state])
 
     def _do_config(self): ## configButton callback, open the ConfigDialog for this SMi
-        self.config.applySettings(self.settings)
-        self.config.show()
+        self.sm.showConfig()
     def _do_launch(self): ## launchButton callback, toggles the launch state
         self._launch(self.launchButton.isChecked())
         pass
@@ -136,7 +134,7 @@ if __name__ == '__main__':
                 names+=['SM#'+str(i)]
             self.meter=[]
             for n in names:
-                m=SMchannels(self, n)
+                m=SMchannels(self, self, n)
                 self.meter+=[m]
                 layout.addWidget(m)
 
