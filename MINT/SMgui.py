@@ -32,7 +32,7 @@ class SMgui:
         if confs is not None:
             print "FIXXME: confs not used in SMchannels"
 
-    def getWidget(self):
+    def widget(self):
         return self.channels
 
     def select(self, value=None):
@@ -92,7 +92,7 @@ if __name__ == '__main__':
             for n in names:
                 m=SMgui(self, n)
                 self.meter+=[m]
-                layout.addWidget(m.getWidget())
+                layout.addWidget(m.widget())
 
             self.value = QtGui.QDoubleSpinBox(self)
             self.value.setMinimum(-10)
