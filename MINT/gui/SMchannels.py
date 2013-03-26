@@ -73,7 +73,7 @@ class SMchannels(QtGui.QGroupBox):
         ## config and state
         ##
         self.configButton = QtGui.QPushButton("Config") # should be "RECORD", "STREAM" or "PROCESS"
-        self.configButton.clicked.connect(self.configB)
+        self.configButton.clicked.connect(self._do_config)
         layout.addWidget(self.configButton)
 
         self.setLayout(layout)
@@ -106,7 +106,7 @@ class SMchannels(QtGui.QGroupBox):
             self.currentState=state
             self.launchButton.setIcon(self.icons[state])
 
-    def configB(self): ## configButton callback, open the ConfigDialog for this SMi
+    def _do_config(self): ## configButton callback, open the ConfigDialog for this SMi
         print "FIXME: config dialog"
         pass
     def launchB(self): ## launchButton callback, toggles the launch state
