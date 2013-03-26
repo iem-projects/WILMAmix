@@ -37,18 +37,13 @@ class Form(QDialog):
         self.dict=self.discover.getDict()
         print self.dict
         self.mixer=SMmixer(smifactory.SMgui, self, self.dict)
-        self.bRefresh = QPushButton("Refresh")
-        self.bPrint   = QPushButton("Print")
+
         # Create layout and add widgets
         layout = QVBoxLayout()
         layout.addWidget(self.mixer)
-        layout.addWidget(self.bRefresh)
-        layout.addWidget(self.bPrint)
         # Set dialog layout
         self.setLayout(layout)
-        # Add button signal to greetings slot
-        self.bRefresh.clicked.connect(self.refreshIt)
-        self.bPrint.clicked.connect(self.printIt)
+
         self.metro = metro(self.ping, 100)
 
         self.refreshIt()
