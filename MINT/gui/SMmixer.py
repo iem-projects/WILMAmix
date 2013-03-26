@@ -27,6 +27,7 @@ class SMmixer(QtGui.QFrame):
     def __init__(self, smifactory, parent=None, SMs=None):
         super(SMmixer, self).__init__(parent)
         self.sm=[]
+        self.master=parent
         self.sms=SMs
         self.smifactory=smifactory
 
@@ -79,6 +80,7 @@ class SMmixer(QtGui.QFrame):
         self.sms=SMs
         self.build()
     def scanSM(self):
+        self.master.refreshIt()
         print "FIXME: reloadSM"
 
     def ping(self):
