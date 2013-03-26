@@ -27,11 +27,16 @@ import os
 class SMgui:
     def __init__(self, parent=None, name="SMi", confs=None, maxwidth=None):
         self.settings=configuration.getSM(name)
-        self.channels=SMchannels.SMchannels(self, guiparent=parent, settings=self.settings, maxwidth=maxwidth)
-        self.config=SMconfig.SMconfig(self, guiparent=parent, settings=self.settings)
-        self.name = name
+        self.confs=confs
+        interfaces=[]
         if confs is not None:
-            print "FIXXME: confs not used in SMchannels"
+            interfaces=sorted(confs.keys())
+        self.channels=SMchannels.SMchannels(self, guiparent=parent, settings=self.settings, maxwidth=maxwidth)
+        self.config=SMconfig.SMconfig(self, guiparent=parent, settings=self.settings, interfaces=interfaces)
+        self.name = name
+
+        if confs is not None:
+            print "FIXXME: confs not yet used in SMgui"
 
     def widget(self):
         return self.channels
