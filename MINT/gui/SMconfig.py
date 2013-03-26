@@ -55,6 +55,11 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.statemeter.build()
         self.setWindowTitle(QtGui.QApplication.translate("SMconfig", "Configuration of", None, QtGui.QApplication.UnicodeUTF8)+" '"+name+"'")
 
+        self.set_pullDir(self.settings['/path/in'])
+        self.set_pushDir(self.settings['/path/out'])
+
+        self._connect()
+    def _connect(self):
         self.closeButtons.accepted.connect(self.do_accept)
         self.closeButtons.rejected.connect(self.do_reject)
 
@@ -70,8 +75,6 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.modeSelector.currentIndexChanged.connect(self.select_mode)
         self.networkInterface.currentIndexChanged.connect(self.select_networkInterface)
 
-        self.set_pullDir(self.settings['/path/in'])
-        self.set_pushDir(self.settings['/path/out'])
     def do_accept(self):
         print "FIXME ok"
         _syncDicts(self.localsettings, self.settings)
