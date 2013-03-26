@@ -20,8 +20,9 @@
 
 ## that's the main instance for SMi's GUI
 
-from gui import SMconfig, SMchannels
-import configuration
+from gui import SMconfig, SMchannels, ThreadedInvoke
+import configuration, filesync
+import os
 
 class SMgui:
     def __init__(self, parent=None, name="SMi", confs=None, maxwidth=None):
@@ -60,9 +61,21 @@ class SMgui:
     def copySettings(self, settings):
         print "FIXME: copySettings"
     def pull(self, path):
-        print "FIXME: pull"
+        source=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/out']+'/' #remote
+        target=os.path.join(path, self.name) #local
+        self.config.pullEnable(False)
+        f=filesync.filesync(source, target,
+                            passphrases=[self.settings['/passphrase']],
+                            deleteTarget=True,
+                            doneCallback=ThreadedInvoke.Invoker(self.config.pullEnable))
     def push(self, path):
-        print "FIXME: push"
+        source=path #local
+        target=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/in']+'/' #remote
+        self.config.pushEnable(False)
+        f=filesync.filesync(source, target,
+                            passphrases=[self.settings['/passphrase']],
+                            deleteTarget=True,
+                            doneCallback=ThreadedInvoke.Invoker(self.config.pushEnable))
     def send(self, msg, data=None):
         print "FIXME: send"
 

@@ -122,6 +122,11 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def _set_pushDir(self, path):
         self.sm.push(path)
 
+    def pullEnable(self, enable=True):
+        self.pullButton.setEnabled(enable)
+    def pushEnable(self, enable=True):
+        self.pushButton.setEnabled(enable)
+
     def applySettings(self, settings):
         """applies settings to the config-panel
         this really only sets the values in the selection boxes to the proper values.
