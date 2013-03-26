@@ -40,12 +40,10 @@ class SMmixer(QtGui.QFrame):
         smiframe=QtGui.QFrame(self)
         smiframe.setLayout(self.smilayout)
 
-        self.mixctl = MIXctl(self)
-
         self.layout.addWidget(smiframe)
 
-        mixctl = MIXctl()
-        self.layout.addWidget(mixctl)
+        self.mixctl = MIXctl(self)
+        self.layout.addWidget(self.mixctl)
         self.build()
 
     def build(self):
