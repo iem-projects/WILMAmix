@@ -21,6 +21,7 @@
 from PySide import QtCore, QtGui
 
 from PySide.QtGui import *
+import sys
 
 class MIXctl(QtGui.QGroupBox):
     """
