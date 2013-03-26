@@ -71,8 +71,9 @@ class SMmixer(QtGui.QFrame):
         else:
             for count in range(16):
                 name="SM"+str(count)
-                self.sm+=[SM(parent=self, name=name)]
-                self.smilayout.addWidget(self.sm[count])
+                smi=self.smifactory(parent=self, name=name)
+                self.sm+=[smi]
+                self.smilayout.addWidget(smi.widget())
 
     def setSM(self, SMs=None):
         self.sms=SMs
