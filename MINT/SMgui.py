@@ -70,6 +70,7 @@ class SMgui:
         self.connection.add(self._smiInpath,    '/path/in')
         self.connection.add(self._smiFader,     '/gain')
         self.connection.add(self._smiLevel,     '/level')
+        self.connection.add(self._smiTimestamp, '/timestamp')
         self.connection.add(self._smiStreamURI, '/stream/uri')
         self.connection.add(self._smiStateCpu,  '/state/cpu')
         self.connection.add(self._smiStateMem,  '/state/memory')
@@ -165,6 +166,8 @@ class SMgui:
         levels=msg[2:]
         self.channels.setLevels(levels)
         self.config.setLevels  (levels)
+    def _smiTimestamp(self, msg, src):
+        self.config.setTimestamp(msg[2])
     def _smiOutpath(self, msg, src):
         self.settings['/path/out']=msg[2]
     def _smiInpath (self, msg, src):

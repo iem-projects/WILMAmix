@@ -193,6 +193,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.gainFader.blockSignals(False)
     def setState(self, index, value):
         self.statemeter.setValue(index, value)
+    def setTimestamp(self, value):
+        self.timestamp.setText(str(value))
 
 ######################################################################
 if __name__ == '__main__':
