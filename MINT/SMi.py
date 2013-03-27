@@ -44,6 +44,7 @@ class State:
         self.disk = 1.
         self.battery = 1.
         self.runtime = 0
+        self.timestamp = 0L
 
     def update(self):
         if self.mixer is not None:
@@ -60,6 +61,7 @@ class State:
     def addToBundle(self, bundle):
         bundle.append(('/gain', self.gains))
         bundle.append(('/level', self.levels))
+        bundle.append(('/timestamp', self.timestamp))
         bundle.append(('/state/cpu', self.health.cpu))
         bundle.append(('/state/memory', self.health.mem))
         bundle.append(('/state/disk', self.health.disk))
@@ -72,10 +74,16 @@ class PdCommunicator:
         self.server=pdserver.pdserver(workingdir=smi.settings['/path/out'], patchdir=smi.settings['/path/in'])
         self.server.add(self._catchall, None)
         self.server.add(self._meter, "/meter")
+        self.server.add(self._timestamp, "/timestamp")
         self.server.start()
 
     def _meter(self, msg, source):
         self.smi.state.levels=msg[2:]
+    def _timestamp(self, msg, source):
+        hi=int(msg[2])
+        lo=int(msg[3])
+        ts=((hi<<16)+lo)
+        self.smi.state.timestamp=ts
     def _catchall(self, msg, source):
         self.smi.server.sendMsg(msg[0], msg[2:])
         print "got message: ", msg
