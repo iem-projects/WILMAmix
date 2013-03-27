@@ -126,6 +126,11 @@ class SMmixer(QtGui.QFrame):
     def applySettings(self, settings):
         for s in self.selected():
             s.applySettings(settings)
+    def syncTimestamps(self):
+        ts=[]
+        for s in self.selected():
+            ts+=[s.getTimestamp()]
+        return (max(ts), min(ts))
 
     def _pulled(self, sm, ret):
         self.pulling[sm]=False
