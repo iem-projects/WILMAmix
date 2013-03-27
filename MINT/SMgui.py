@@ -160,7 +160,7 @@ class SMgui:
         if len(props)>0:
             bundle = Bundle(oscprefix=self.oscprefix)
             for p in props:
-                bundle.append((p, self.settings[p]))
+                bundle.append((p, [self.settings[p]]))
             self.connection.send(bundle)
 
     def copySettings(self, settings):
