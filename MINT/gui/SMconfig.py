@@ -127,8 +127,16 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.settings['/network/interface']=self.interfaces[value]
     def _select_mode(self, value):
         # ['stream', 'record', 'process']
-        print "FIXME: select mode:", value
-        self.settings['/mode']=value
+        mode=self.settings['/mode']
+        if value is 0:
+            mode='stream'
+        elif value is 1:
+            mode='record'
+        elif value is 2:
+            mode='process'
+        else:
+            print "invalid mode "+str(value)+": falling back to ",mode
+        self.settings['/mode']=mode
 
     def _moved_gainFader(self, value): ## this should immediately be sent to the SMi
         gain=MINT.utils.SCALE(value, self.gainFader.minimum(), self.gainFader.maximum(), 0., 1., True)
