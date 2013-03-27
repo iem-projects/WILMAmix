@@ -124,7 +124,7 @@
      <enum>Qt::Vertical</enum>
     </property>
    </widget>
-   <widget class="qsynthMeter" name="meters" native="true">
+   <widget class="qsynthMeter" name="meter" native="true">
     <property name="geometry">
      <rect>
       <x>30</x>

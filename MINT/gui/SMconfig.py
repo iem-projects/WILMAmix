@@ -67,8 +67,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.pullChooser=DirChooser.PullDirChooser(self, self.settings['/path/in'])
         self.pushChooser=DirChooser.PushDirChooser(self, self.settings['/path/out'])
 
-        self.meters.setPortCount(4)
-        self.meters.setScales(None)
+        self.meter.setPortCount(4)
+        self.meter.setScales(None)
 
         self.statemeter.setPort(['CPU', 'memory', 'disk', "battery", "runtime"])
         self.statemeter.setScale([None, None, None, None, " minutes"])
@@ -187,7 +187,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
                 break
 
     def setLevels(self, levels_dB=[-100.,-100.,-100.,-100.]):
-        self.meters.setValues(levels_dB)
+        self.meter.setValues(levels_dB)
     def setFader(self, value):
         gain=MINT.utils.SCALE(value, 0., 1., self.gainFader.minimum(), self.gainFader.maximum(), True)
         self.gainFader.blockSignals(True)
