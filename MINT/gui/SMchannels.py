@@ -54,15 +54,11 @@ class SMchannels(QtGui.QGroupBox, SMchannels_ui.Ui_SMchannels):
     def _connect(self):
         self.launchButton.clicked.connect(self._do_launch)
         self.configButton.clicked.connect(self._do_config)
+        self.clicked.connect(self._select)
 
-    def select(self, value=None):
+    def _select(self):
         """(de)selects this SMi, or toggles selection"""
-        if value is None: ## toggle
-            pass
-        elif value:       ## selected
-            pass
-        else:             ## deselected
-            pass
+        self.sm.select(self.isChecked())
     def selected(self):
         return self.isChecked()
 
