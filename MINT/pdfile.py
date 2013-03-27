@@ -42,9 +42,8 @@ import re
 
 class pdfile:
     def __init__(self, filename):
-        file = open(filename, 'r')
-        content = file.read()
-        file.close()
+        with open(filename, 'r') as f:
+            content = f.read()
         content=content.replace('\\;', '')
         content=content.replace('\n', '')
         content=content.replace('\r', '')
