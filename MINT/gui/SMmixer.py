@@ -84,6 +84,12 @@ class SMmixer(QtGui.QFrame):
                 smi=self.smifactory(parent=self, name=name)
                 self.sm+=[smi]
                 self.smilayout.addWidget(smi.widget())
+    def setSM(self, SMs=None):
+        self.sms=SMs
+        self.build()
+    def scanSM(self):
+        self.master.refreshIt()
+
     def selected(self):
         # FIXME: i'm sure this can be done very elegant with some lambda function
         result=[]
@@ -95,16 +101,9 @@ class SMmixer(QtGui.QFrame):
         for sm in self.sm:
             sm.select(state)
 
-    def setSM(self, SMs=None):
-        self.sms=SMs
-        self.build()
-    def scanSM(self):
-        self.master.refreshIt()
-
     def ping(self):
         for sm in self.sm:
             sm.ping()
-
     def launch(self, state):
         for s in self.selected():
             s.launch(state)
