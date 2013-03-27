@@ -90,6 +90,11 @@ _defaults['/stream/protocol']='rtp' # const
 _defaults['/stream/profile' ]='L16' # const for now
 _defaults['/stream/channels']='4' # const
 
+
+_defaults['/record/timestamp']='0' # const
+_defaults['/record/filename' ]='MINT' # const
+
+
 _defaults['/network/interface']='eth0' # ????
 
 ## proxy settings
