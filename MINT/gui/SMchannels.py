@@ -20,11 +20,11 @@
 
 from PySide import QtCore, QtGui
 from PySide.QtGui import *
+import SMchannels_ui
 
-from qsynthMeter import qsynthMeter
 import SMconfig
 
-class SMchannels(QtGui.QGroupBox):
+class SMchannels(QtGui.QGroupBox, SMchannels_ui.Ui_SMchannels):
     def __init__(self, sm, guiparent=None, settings={'/id':"SMi"}, maxwidth=None):
         super(SMchannels, self).__init__(guiparent)
         self.sm=sm
@@ -33,6 +33,7 @@ class SMchannels(QtGui.QGroupBox):
         self.config=SMconfig.SMconfig(self, settings=self.settings)
         self.name = name
         self.maxWidth=maxwidth
+        self.setupUi(self)
 
         self.icons=dict()
         emptyicon=QtGui.QIcon()
@@ -42,41 +43,17 @@ class SMchannels(QtGui.QGroupBox):
         self.currentState="OK"
 
         self.setTitle(self.name)
-        self.setCheckable(True)
 
-        layout = QVBoxLayout()
-        layout.setContentsMargins(2,2,2,2)
+        #self.meter = qsynthMeter(self, 4, [], maxwidth=self.maxWidth) # maxwidth should be dynamic and ack other widgets in this subframe
+        self.meter.m_iMaxWidth = self.maxWidth
+        self.meter.setPortCount(4)
+        self.meter.setScales(None)
 
-        # Create widgets
-        #self.selector = QtGui.QCheckBox(self.name, self)
-        #self.selector.stateChanged.connect(self.select)
-        #layout.addWidget(self.selector)
-
-        mixframe=QtGui.QFrame(self)
-        sublayout=QHBoxLayout()
-        sublayout.setContentsMargins(0,0,0,0)
-        mixframe.setLayout(sublayout)
-        layout.addWidget(mixframe)
-
-        self.meter = qsynthMeter(self, 4, [], maxwidth=self.maxWidth) # maxwidth should be dynamic and ack other widgets in this subframe
-        sublayout.addWidget(self.meter)
-
-        ## ideally the launchButton would also have some small icon indicating the current state
-        self.launchButton = QtGui.QPushButton("START") # should be "RECORD", "STREAM" or "PROCESS"
-        self.launchButton.setCheckable(True)           # so the button stays clicked (even when window is left)
         self.launchButton.setIcon(self.icons["OK"])
-
+        self._connect()
+    def _connect(self):
         self.launchButton.clicked.connect(self._do_launch)
-        layout.addWidget(self.launchButton)
-
-        ## config and state
-        ##
-        self.configButton = QtGui.QPushButton("Config") # should be "RECORD", "STREAM" or "PROCESS"
         self.configButton.clicked.connect(self._do_config)
-        layout.addWidget(self.configButton)
-
-        self.setLayout(layout)
-        self.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
 
     def select(self, value=None):
         """(de)selects this SMi, or toggles selection"""
