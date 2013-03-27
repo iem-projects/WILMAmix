@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'SMconfig.ui'
 #
-# Created: Wed Mar 27 14:46:31 2013
+# Created: Wed Mar 27 16:36:37 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -49,9 +49,9 @@ class Ui_SMconfig(object):
         self.gainFader.setGeometry(QtCore.QRect(10, 20, 16, 251))
         self.gainFader.setOrientation(QtCore.Qt.Vertical)
         self.gainFader.setObjectName("gainFader")
-        self.meters = qsynthMeter(self.frame_Audio)
-        self.meters.setGeometry(QtCore.QRect(30, 20, 101, 251))
-        self.meters.setObjectName("meters")
+        self.meter = qsynthMeter(self.frame_Audio)
+        self.meter.setGeometry(QtCore.QRect(30, 20, 101, 251))
+        self.meter.setObjectName("meter")
         self.frame_state = QtGui.QGroupBox(SMconfig)
         self.frame_state.setGeometry(QtCore.QRect(160, 60, 201, 131))
         self.frame_state.setObjectName("frame_state")
