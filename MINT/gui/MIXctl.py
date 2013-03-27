@@ -89,7 +89,7 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
         self.pullChooser.choose(self.smmix.pull)
     def _launch(self, state): ## start launch
         """start/stop the engine on the remote SMi"""
-        self.setChecked(state)
+        self.smmix.launch(state)
         self.launched(state) ## reflect new launch state
     def launched(self, state):
         """called from outside to set/get the current state.
