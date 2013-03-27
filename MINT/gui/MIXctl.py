@@ -40,7 +40,7 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
             guiparent=self
         self.settings=settings
         self.smmix=smmix
-        self.control=MIXconfig.MIXconfig(self, guiparent, self.settings)
+        self.config=MIXconfig.MIXconfig(self, guiparent, self.settings)
         self.pullChooser=DirChooser.PullDirChooser(self)
         self.pushChooser=DirChooser.PushDirChooser(self)
 
@@ -104,7 +104,7 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
     def _scan(self):
         self.smmix.scanSM()
     def _config(self):
-        pass
+        self.config.show()
 
     def setState(self, level, msg):
         ## FIXME: add a status widget
