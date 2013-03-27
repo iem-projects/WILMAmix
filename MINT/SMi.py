@@ -119,6 +119,11 @@ class SMi:
     def __del__(self):
         self.cleanup()
 
+    def _ignoreMessage(self, msg, src):
+        pass
+    def _forwardMessageToPd(self, msg, src):
+        self.pd.sendMsg(msg[0], msg[1])
+
     def setGain(self, msg, src):
         if self.mixer is not None:
             gains=self.mixer.gain(msg[2:])
@@ -144,7 +149,6 @@ class SMi:
 
     def streamStarted(self, uri):
         self.server.sendMsg('/stream/uri', uri)
-
 
     def startStream(self):
         self.pd.send("/control/load/stream")
