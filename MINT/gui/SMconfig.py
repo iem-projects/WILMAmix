@@ -62,6 +62,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.sm=sm
         self.settings=_syncDicts(settings)
         self.setupUi(self)
+        self.setModal(False)
 
         self.pullChooser=DirChooser.PullDirChooser(self, self.settings['/path/in'])
         self.pushChooser=DirChooser.PushDirChooser(self, self.settings['/path/out'])
