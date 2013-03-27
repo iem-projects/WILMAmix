@@ -297,6 +297,7 @@ class CallbackManager:
 
     def __init__(self, verbose=False):
         self.callbacks = {}
+        self.subtreecallbacks = []
         self.verbose=verbose
         self.add(self.unbundler, "#bundle")
 
@@ -311,32 +312,47 @@ class CallbackManager:
         if self.verbose :
             print "dispatching: '", message, "' from ", source
         try:
-            if type(message[0]) == str :
-                # got a single message
-                address = message[0]
+            address=message[0]
+        except IndexError, e:
+            print 'got malformed OSC message', message
+            return
+
+        if type(address) == str :
+            # got a single message
+            found=False
+            ## try direct matching
+            try:
                 if self.isWildcard(address):
                     for a in self.matchWildcards(address, self.callbacks.keys()):
                         self.callbacks[a](message, source)
+                        found=True
                 else:
                     self.callbacks[address](message, source)
+                    found=True
 
-            elif type(message[0]) == list :
-                # smells like nested messages
-                for msg in message :
-                    self.dispatch(msg, source)
+            except KeyError, e:
+                found=False
 
-        except KeyError, e:
+            ## try subtree matching
+            subtree=address.split('/')[1:]
+            subtreefound=False
+            for st, cb in self.subtreecallbacks:
+                if self.matchSubtree(subtree, st):
+                    cb(message, source)
+                    found=True
+
             # address not found
-            if None in self.callbacks:
-                self.callbacks[None](message, source)
-            else:
-                print 'address %s not found ' % address
-                pprint.pprint(message)
-        except IndexError, e:
-            print 'got malformed OSC message', message
-            pass
-        except None, e:
-            print "Exception in", address, "callback :", e
+            if not found:
+                if None in self.callbacks:
+                    self.callbacks[None](message, source)
+                else:
+                    print 'address %s not found ' % address
+                    pprint.pprint(message)
+
+        elif type(address) == list :
+            # smells like nested messages
+            for msg in message :
+                self.dispatch(msg, source)
 
         return
 
@@ -350,7 +366,10 @@ class CallbackManager:
             if callback == None:
                 del self.callbacks[name]
             elif callable(callback):
-                self.callbacks[name] = callback
+                if (name is not None) and name.endswith('/'):
+                    self.subtreecallbacks+=[[name.split('/')[1:-1], callback]]
+                else:
+                    self.callbacks[name] = callback
             else:
                 raise OSCException("callback needs to be callable: "+str(callback))
         else:
@@ -405,6 +424,22 @@ class CallbackManager:
         except:
             raise OSCException("invalid character in pattern '"+pattern+"' -> "+rpattern)
 
+    @staticmethod
+    def matchSubtree(pattern, key):
+        """
+        like matchWildcards, but pattern&keys are decomposed into elements,
+        and even if pattern is longer than key
+        """
+        if len(key)>len(pattern): ## can never match, since the registered address is longer than the address we received
+            return False
+
+        for a,b in zip(pattern, key):
+            if CallbackManager.isWildcard(a):
+                return len(CallbackManager.matchWildcards(a, [b]))>0
+            else:
+                return a == b
+
+        return False
 
 
 
