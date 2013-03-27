@@ -106,10 +106,10 @@ class SMi:
         self.server.add(self.setGain, '/gain')
 
         self.server.add(self.controlStream, '/stream')
-        self.server.add(self.controlStreamType, '/stream/settings/type')
-        self.server.add(self.controlStreamProfile, '/stream/settings/profile')
-        self.server.add(self.controlStreamChannels, '/stream/settings/channels')
-        self.server.add(self.controlStreamDestination, '/stream/settings/destination')
+        self.server.add(self._streamProtocol, '/stream/protocol')
+        self.server.add(self._streamProfile , '/stream/profile')
+        self.server.add(self._streamChannels, '/stream/channels')
+        self.server.add(self._forwardMessageToPd, '/stream/uri')
         self.server.add(self.dumpInfo, '/dump') ## debugging
         self.mixer = self.state.mixer
         self.pd = PdCommunicator(self)
@@ -128,16 +128,16 @@ class SMi:
         if self.mixer is not None:
             gains=self.mixer.gain(msg[2:])
 
-    def controlStreamType(self, msg, src):
-        self.settings['/stream/type']=msg[2]
 
-    def controlStreamProfile(self, msg, src):
-        self.settings['/stream/profile']=msg[2]
+    def _streamProtocol(self, msg, src):
+        protocol=msg[2]
+        self.settings['/stream/protocol']=protocol.lower()
+    def _streamProfile(self, msg, src):
+        profile=msg[2]
+        self.settings['/stream/profile' ]=profile.upper()
+    def _streamChannels(self, msg, src):
+        self.settings['/stream/channels' ]=int(msg[2])
 
-    def controlStreamChannels(self, msg, src):
-        self.settings['/stream/channels']=msg[2]
-    def controlStreamDestination(self, msg, src):
-        self.settings['/stream/destination']=msg[2:4]
 
     def controlStream(self, msg, src):
         state=msg[2]
