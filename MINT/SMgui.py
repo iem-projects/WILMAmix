@@ -116,6 +116,9 @@ class SMgui:
     def ping(self):
         self.alive()
         self.connection.sendMsg('/ping')
+    def send(self, msg, data=None):
+        self.connection.send(msg, data)
+
 
     ## callbacks from childs (SMchannels/SMconfig)
     def showConfig(self):
@@ -160,9 +163,6 @@ class SMgui:
         self.pushCb=None
         if pushCb is not None:
             pushCb(self, state)
-
-    def send(self, msg, data=None):
-        self.connection.send(msg, data)
 
     def _smiUser(self, msg, src):
         self.settings['/user']=msg[2]
