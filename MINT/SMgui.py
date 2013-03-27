@@ -36,10 +36,11 @@ class SMgui:
             interfaces=sorted(confs.keys())
 
         self.settings=configuration.getSM(name)
+        self._enabled = True
         self.confs=confs
         self.connection=None
         self.critical=[False]*5
-
+        self.pingcounter=0
         self.pullCb = None
         self.pushCb = None
 
@@ -81,15 +82,30 @@ class SMgui:
     def select(self, value=None):
         """(de)selects this SMi, or toggles selection"""
         if value is None: ## toggle
-            self.channels.setChecked(not self.channels.isChecked())
+            self._enabled = not self._enabled
         elif value:       ## selected
-            self.channels.setChecked(True)
+            self._enabled=True
         else:             ## deselected
-            self.channels.setChecked(False)
+            self._enabled=False
+        self.channels.setChecked(self._enabled)
     def selected(self):
-        return self.channels.isChecked()
+        return self._enabled and self.channels.isChecked()
+
+    def alive(self, isAlive=False):
+        if isAlive:
+            self.pingcounter=0
+        else:
+            self.pingcounter+=1
+        if self.pingcounter >= 100:
+            if self.channels.isChecked():
+                self.channels.setChecked(False)
+            if self.pingcounter > 65535:
+                self.pingcounter = 100
+        elif self._enabled and not self.channels.isChecked():
+            self.channels.setChecked(True)
 
     def ping(self):
+        self.alive()
         self.connection.sendMsg('/ping')
 
     ## callbacks from childs (SMchannels/SMconfig)
@@ -140,6 +156,7 @@ class SMgui:
     def _smiFader(self, msg, src):
         self.config.setFader(msg[2])
     def _smiLevel(self, msg, src):
+        self.alive(True)
         levels=msg[2:]
         self.channels.setLevels(levels)
         self.config.setLevels  (levels)
