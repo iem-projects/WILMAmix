@@ -37,6 +37,7 @@ class SMgui:
 
         self.settings=configuration.getSM(name)
         self._enabled = True
+        self.running=False
         self.confs=confs
         self.connection=None
         self.critical=[False]*5
@@ -126,8 +127,42 @@ class SMgui:
         self.config.applySettings(self.settings)
         self.config.show()
 
+    def _hasSettingChanged(self, key, newsettings):
+        if not key in newsettings:
+            return False
+        if (key in self.settings) and (self.settings[key]==newsettings[key]):
+            return False
+        self.settings[key]=newsettings[key]
+        return True
     def applySettings(self, settings):
-        print "FIXME: applySettings", settings
+        print "FIXME: SMgui.applySettings", settings
+        # /network/interface
+        ## IGNORED FOR NOW
+        self._hasSettingChanged('/network/interface', settings)
+
+        # /stream
+        streamchanged=(self._hasSettingChanged('/stream/protocol', settings) or
+                       self._hasSettingChanged('/stream/profile' , settings) or
+                       self._hasSettingChanged('/stream/channels', settings))
+        # /mode
+        modechanged=self._hasSettingChanged('/mode', settings)
+
+        # if the mode has changed or the streaming settings have changed while we were streaming,
+        # stop it
+        if modechanged or (streamchanged and self.running and self.settings['/mode'] == 'stream'):
+            self.launch(False)
+        ## send new streamsettings
+        props=[]
+        if streamchanged:
+            props += ['/stream/protocol', '/stream/profile', '/stream/channels']
+        if modechanged:
+            props += ['/mode']
+        if len(props)>0:
+            bundle = Bundle(oscprefix=self.oscprefix)
+            for p in props:
+                bundle.append((p, self.settings[p]))
+            self.connection.send(bundle)
+
     def copySettings(self, settings):
         self.parent.applySettings(settings)
     def pull(self, path, fun=None):
@@ -174,6 +209,7 @@ class SMgui:
             bundle.append(('/record/timestamp', [starttime]))
         bundle.append(('/stream/uri', [uri]))
         bundle.append(('/'+mode, [state]))
+        self.running=state
         self.connection.send(bundle)
 
     def _smiUser(self, msg, src):
