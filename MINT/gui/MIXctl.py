@@ -23,7 +23,7 @@ from PySide import QtCore, QtGui
 from PySide.QtGui import *
 import sys
 import MIXctl_ui
-import DirChooser
+import DirChooser, MIXconfig
 
 class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
     """
@@ -34,9 +34,13 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
     - pull files (from selected)
     - quit
     """
-    def __init__(self, smmix, guiparent=None):
+    def __init__(self, smmix, guiparent=None, settings={}):
         super(MIXctl, self).__init__(guiparent)
+        if guiparent is None:
+            guiparent=self
+        self.settings=settings
         self.smmix=smmix
+        self.control=MIXconfig.MIXconfig(self, guiparent, self.settings)
         self.pullChooser=DirChooser.PullDirChooser(self)
         self.pushChooser=DirChooser.PushDirChooser(self)
 
@@ -54,6 +58,7 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
         self.pullButton.clicked.connect(self._do_pull)
         self.launchButton.clicked.connect(self._do_launch)
         self.scanButton.clicked.connect(self._scan)
+        self.configButton.clicked.connect(self._config)
         self.quitButton.clicked.connect(self._quit)
 
     def _selectNone(self, value=None):
@@ -102,6 +107,8 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
         sys.exit(0)
     def _scan(self):
         self.smmix.scanSM()
+    def _config(self):
+        pass
 
     def setState(self, level, msg):
         ## FIXME: add a status widget
