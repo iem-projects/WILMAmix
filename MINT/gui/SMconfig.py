@@ -28,8 +28,6 @@ import DirChooser
 
 _dictKeys=[
     '/mode',
-    '/path/in',
-    '/path/out',
     '/stream/protocol',
     '/stream/profile',
     '/stream/channels',
