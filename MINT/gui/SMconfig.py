@@ -62,8 +62,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.setupUi(self)
         self.setModal(False)
 
-        self.pullChooser=DirChooser.PullDirChooser(self, self.settings['/path/in'])
-        self.pushChooser=DirChooser.PushDirChooser(self, self.settings['/path/out'])
+        self.pullChooser=DirChooser.PullDirChooser(self, None)
+        self.pushChooser=DirChooser.PushDirChooser(self, None)
 
         self.meter.setPortCount(4)
         self.meter.setScales(None)

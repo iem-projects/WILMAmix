@@ -124,6 +124,8 @@ class SMgui:
     def copySettings(self, settings):
         self.parent.applySettings(settings)
     def pull(self, path, fun=None):
+        if path is None:
+            return
         source=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/out']+'/' #remote
         target=os.path.join(path, self.name) #local
         self.config.pullEnable(False)
@@ -139,6 +141,8 @@ class SMgui:
         if pullCb is not None:
             pullCb(self, state)
     def push(self, path, fun=None):
+        if path is None:
+            return
         source=path #local
         target=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/in']+'/' #remote
         self.config.pushEnable(False)
