@@ -79,11 +79,13 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
         ## open up directory selector (with last push-dir pre-selected)
         ## then check whether the directory contains MAIN.pd
         ## call the SMi's push methods with this directory
+        self.pushButton.setEnabled(False)
         self.pushChooser.choose(self.smmix.push)
     def _do_pull(self):
         ## open up directory selector (with last pull-dir pre-selected)
         ## (warn if directory exists)
         ## call the SMi's pull methods with this directory
+        self.pullButton.setEnabled(False)
         self.pullChooser.choose(self.smmix.pull)
     def _launch(self, state): ## start launch
         """start/stop the engine on the remote SMi"""
@@ -108,8 +110,11 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
         ## FIXME: add a status widget
         ## that gets green/red and displays the error as tooltip
         pass
-
-
+    def pushpulled(self, pushed):
+        if pushed:
+            self.pushButton.setEnabled(True)
+        else:
+            self.pullButton.setEnabled(True)
 
 ######################################################################
 if __name__ == '__main__':

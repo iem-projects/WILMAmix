@@ -102,11 +102,17 @@ class SMmixer(QtGui.QFrame):
         for s in self.selected():
             s.launch(state)
     def pull(self, path):
+        if path is None:
+            self.mixctl.pushpulled(False)
+            return
         self.pulling.clear()
         for s in self.selected():
             self.pulling[s]=True
             s.pull(path, self._pulled)
     def push(self, path):
+        if path is None:
+            self.mixctl.pushpulled(True)
+            return
         self.pushing.clear()
         for s in self.selected():
             self.pushing[s]=True
@@ -118,8 +124,8 @@ class SMmixer(QtGui.QFrame):
     def _pulled(self, sm, ret):
         self.pulling[sm]=False
         if not True in self.pulling.values():
-            print "PULL done"
+            self.mixctl.pushpulled(False)
     def _pushed(self, sm, ret):
         self.pushing[sm]=False
         if not True in self.pushing.values():
-            print "PUSH done"
+            self.mixctl.pushpulled(True)
