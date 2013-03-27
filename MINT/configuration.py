@@ -92,6 +92,11 @@ _defaults['/stream/channels']='4' # const
 
 _defaults['/network/interface']='eth0' # ????
 
+## proxy settings
+_defaults['/proxy/receiver/port']=0
+_defaults['/proxy/sender/port']=0
+_defaults['/proxy/sender/host']='localhost'
+
 
 _config = ConfigParser.ConfigParser(_defaults)
 _config.read(['MINTmix.conf',
