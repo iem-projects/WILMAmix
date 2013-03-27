@@ -100,10 +100,14 @@ class SMgui:
         if self.pingcounter >= 100:
             if self.channels.isChecked():
                 self.channels.setChecked(False)
+                self.config.closeButtons.setEnabled(False)
+                self.config.copyConfigButton.setEnabled(False)
             if self.pingcounter > 65535:
                 self.pingcounter = 100
         elif self._enabled and not self.channels.isChecked():
             self.channels.setChecked(True)
+            self.config.closeButtons.setEnabled(True)
+            self.config.copyConfigButton.setEnabled(True)
 
     def ping(self):
         self.alive()
