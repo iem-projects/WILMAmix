@@ -29,6 +29,12 @@ class PullDirChooser:
         #self.dialog.setAcceptMode(self.dialog.AcceptMode.AcceptSave)
         self.dialog.setConfirmOverwrite (True)
         self.dialog.fileSelected.connect(self._callback)
+        self.dialog.rejected.connect(self._cancelled)
+    def _cancelled(self):
+        callback=self.callback
+        self.callback=None
+        if callback is not None:
+            callback(None)
     def _callback(self, path):
         #TODO: check for non-empty directories
         if self.callback is None:
@@ -58,6 +64,12 @@ class PushDirChooser:
         self.dialog=QtGui.QFileDialog(parent, "select directory to transmit to SMi", startdir)
         self.dialog.setFileMode(self.dialog.FileMode.Directory)
         self.dialog.fileSelected.connect(self._callback)
+        self.dialog.rejected.connect(self._cancelled)
+    def _cancelled(self):
+        callback=self.callback
+        self.callback=None
+        if callback is not None:
+            callback(None)
     def _callback(self, path):
         if self.callback is None:
             return
