@@ -25,7 +25,9 @@ from streaming import Server as StreamingServer
 from audio import AudioMixer
 import systemhealth
 import pdserver
+import pdfile
 import configuration
+
 
 import os
 
@@ -100,10 +102,14 @@ class SMi:
     def __init__(self):
         self.settings=configuration.getSM()
         self.state=State(self.settings)
+        self.mode=None
+
         self.oscprefix='/'+self.settings['/id']
         self.server = NetServer(port=int(self.settings['/port']), oscprefix=self.oscprefix, type=self.settings['/protocol'], service=self.settings['/service'])
         self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
+
+        self.server.add(self._mode, '/mode')
 
         self.server.add(self.controlStream, '/stream')
         self.server.add(self._streamProtocol, '/stream/protocol')
@@ -128,6 +134,34 @@ class SMi:
         if self.mixer is not None:
             gains=self.mixer.gain(msg[2:])
 
+    def _reloadStream(self):
+        if 'stream' == self.mode:
+            self.pd.send('/control/load/stream', [self.settings['/stream/protocol'], self.settings['/stream/profile'], self.settings['/stream/channels']])
+            return True
+        return False
+    def _reloadRecord(self):
+        if 'record' == self.mode:
+            self.pd.send('/control/load/record',[])
+            return True
+        return False
+    def _reloadProcess(self):
+        if 'process' != self.mode:
+            return False
+        inlets=0
+        outlets=0
+        try:
+            pd = pdfile.pdfile(os.path.join(self.settings['/path/in'], 'MAIN.pd'))
+            inlets=pd.getInlets()[0]
+            outlets=pd.getOutlets()[0]
+        catch IOError:
+            pass
+        self.pd.send('/control/load/process',[inlets, outlets, 'MAIN'])
+        return True
+
+    def _mode(self, msg, src):
+        self.mode=str(msg[2]).lower()
+        if self._reloadStream() or self._reloadRecord() or self._reloadProcess():
+            pass
 
     def _streamProtocol(self, msg, src):
         protocol=msg[2]
