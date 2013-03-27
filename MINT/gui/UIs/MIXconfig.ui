@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>MIXconfig</class>
+ <widget class="QDialog" name="MIXconfig">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string notr="true">MINTmix configuration</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
+  <widget class="QDialogButtonBox" name="closeButtons">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -117,9 +117,9 @@
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>closeButtons</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>MIXconfig</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -133,9 +133,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>closeButtons</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>MIXconfig</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
