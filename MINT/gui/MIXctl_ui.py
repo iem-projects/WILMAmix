@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MIXctl.ui'
 #
-# Created: Wed Mar 27 14:46:30 2013
+# Created: Wed Mar 27 21:41:21 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,12 @@ class Ui_MIXctl(object):
     def setupUi(self, MIXctl):
         MIXctl.setObjectName("MIXctl")
         MIXctl.setEnabled(True)
-        MIXctl.resize(200, 281)
+        MIXctl.resize(213, 281)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(MIXctl.sizePolicy().hasHeightForWidth())
+        MIXctl.setSizePolicy(sizePolicy)
         MIXctl.setWindowTitle("MINTmix")
         self.verticalLayout = QtGui.QVBoxLayout(MIXctl)
         self.verticalLayout.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)

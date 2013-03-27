@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'SMconfig.ui'
 #
-# Created: Wed Mar 27 16:36:37 2013
+# Created: Wed Mar 27 21:41:21 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -56,8 +56,18 @@ class Ui_SMconfig(object):
         self.frame_state.setGeometry(QtCore.QRect(160, 60, 201, 131))
         self.frame_state.setObjectName("frame_state")
         self.statemeter = statemeter(self.frame_state)
-        self.statemeter.setGeometry(QtCore.QRect(10, 20, 181, 101))
+        self.statemeter.setGeometry(QtCore.QRect(10, 20, 181, 81))
         self.statemeter.setObjectName("statemeter")
+        self.label_timestamp = QtGui.QLabel(self.frame_state)
+        self.label_timestamp.setGeometry(QtCore.QRect(20, 100, 71, 16))
+        self.label_timestamp.setObjectName("label_timestamp")
+        self.timestamp = QtGui.QLineEdit(self.frame_state)
+        self.timestamp.setGeometry(QtCore.QRect(110, 100, 81, 20))
+        self.timestamp.setFrame(True)
+        self.timestamp.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.timestamp.setReadOnly(True)
+        self.timestamp.setPlaceholderText("")
+        self.timestamp.setObjectName("timestamp")
         self.frame_Mode = QtGui.QWidget(SMconfig)
         self.frame_Mode.setGeometry(QtCore.QRect(370, 20, 211, 181))
         self.frame_Mode.setObjectName("frame_Mode")
@@ -117,6 +127,7 @@ class Ui_SMconfig(object):
         self.pushButton.setText(QtGui.QApplication.translate("SMconfig", "Push data to SMi", None, QtGui.QApplication.UnicodeUTF8))
         self.frame_Audio.setTitle(QtGui.QApplication.translate("SMconfig", "Audio", None, QtGui.QApplication.UnicodeUTF8))
         self.frame_state.setTitle(QtGui.QApplication.translate("SMconfig", "System Health", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_timestamp.setText(QtGui.QApplication.translate("SMconfig", "TimeStamp", None, QtGui.QApplication.UnicodeUTF8))
         self.modeSelector.setItemText(0, QtGui.QApplication.translate("SMconfig", "Streaming", None, QtGui.QApplication.UnicodeUTF8))
         self.modeSelector.setItemText(1, QtGui.QApplication.translate("SMconfig", "Recording", None, QtGui.QApplication.UnicodeUTF8))
         self.modeSelector.setItemText(2, QtGui.QApplication.translate("SMconfig", "Processing", None, QtGui.QApplication.UnicodeUTF8))
