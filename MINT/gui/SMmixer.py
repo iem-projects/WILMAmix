@@ -44,7 +44,14 @@ class SMmixer(QtGui.QFrame):
 
         self.mixctl = MIXctl(self, settings=configmanager.getMIX())
         self.layout.addWidget(self.mixctl)
+
         self.build()
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
+        self.setSizePolicy(sizePolicy)
+        guiparent.setSizePolicy(sizePolicy)
 
         self.pushing=dict()
         self.pulling=dict()
