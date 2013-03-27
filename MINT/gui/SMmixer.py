@@ -105,8 +105,9 @@ class SMmixer(QtGui.QFrame):
         for sm in self.sm:
             sm.ping()
     def launch(self, state):
+        ts=self.syncTimestamps()
         for s in self.selected():
-            s.launch(state)
+            s.launch(state, ts)
     def pull(self, path):
         if path is None:
             self.mixctl.pushpulled(False)
