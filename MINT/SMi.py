@@ -119,6 +119,8 @@ class SMi:
         self.server.add(self._streamProtocol, '/stream/protocol')
         self.server.add(self._streamProfile , '/stream/profile')
         self.server.add(self._streamChannels, '/stream/channels')
+        self.server.add(self._recordTimestamp, '/record/timestamp')
+        self.server.add(self._recordFilename, '/record/filename')
         self.server.add(self._streamURI, '/stream/uri')
         self.server.add(self.dumpInfo, '/dump') ## debugging
         self.mixer = self.state.mixer
@@ -206,8 +208,17 @@ class SMi:
     def stopStream(self):
         self.pd.send("/stream/stop")
 
+    def _recordFilename(self, msg, src):
+        self.settings['/stream/filename' ] = msg[2]
+    def _recordTimestamp(self, msg, src):
+        self.settings['/stream/timestamp' ] = int(msg[2])
+
     def _record(self, msg, src):
         state=msg[2]
+        filename=self.settings['/record/filename']
+        timestamp=int(self.settings['/record/timestamp'])
+        TShi=(timestamp>>16)&0xFFFF
+        TSlo=(timestamp>> 0)&0xFFFF
         if state is not None and int(state) > 0:
             self.pd.send("/record/start", [filename, TSlo, TShi])
         else:
