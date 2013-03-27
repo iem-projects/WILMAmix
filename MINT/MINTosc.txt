@@ -5,6 +5,7 @@ mix->SM (every message prefixed with SMi-ID: '/<ID>')
 -----------------------------------------------------
 /ping
 /gain                   0.5             (preamp gain: 0..1)
+/network/interface      'eth0'          (select network interface; UNIMPLEMENTED)
 /path/in                '/././.'        (where to send data to on the MIX-host; IGNORED)
 /path/out               '/././.'        (where to get data from on the MIX-host; IGNORED)
 /mode                   'stream'        ('stream', 'record', 'process')
