@@ -44,6 +44,7 @@ class SMgui:
         self.pullCb = None
         self.pushCb = None
         self.parent = parent
+        self.timestamp = 0
 
         try:
             defaultconf=interfaces[0]
@@ -92,6 +93,8 @@ class SMgui:
         self.channels.setChecked(self._enabled)
     def selected(self):
         return self._enabled and self.channels.isChecked()
+    def getTimestamp(self):
+        return self.timestamp
 
     def alive(self, isAlive=False):
         if isAlive:
@@ -171,7 +174,8 @@ class SMgui:
         self.channels.setLevels(levels)
         self.config.setLevels  (levels)
     def _smiTimestamp(self, msg, src):
-        self.config.setTimestamp(msg[2])
+        self.timestamp=msg[2]
+        self.config.setTimestamp(self.timestamp)
     def _smiOutpath(self, msg, src):
         self.settings['/path/out']=msg[2]
     def _smiInpath (self, msg, src):
