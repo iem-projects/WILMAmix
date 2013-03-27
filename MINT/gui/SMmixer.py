@@ -24,8 +24,8 @@ from PySide.QtGui import *
 from MIXctl import MIXctl
 
 class SMmixer(QtGui.QFrame):
-    def __init__(self, smifactory, parent=None, SMs=None):
-        super(SMmixer, self).__init__(parent)
+    def __init__(self, configmanager, smifactory, parent=None, guiparent=None, SMs=None):
+        super(SMmixer, self).__init__(guiparent)
         self.sm=[]
         self.master=parent
         self.sms=SMs
@@ -42,7 +42,7 @@ class SMmixer(QtGui.QFrame):
 
         self.layout.addWidget(smiframe)
 
-        self.mixctl = MIXctl(self)
+        self.mixctl = MIXctl(self, settings=configmanager.getMIX())
         self.layout.addWidget(self.mixctl)
         self.build()
 
