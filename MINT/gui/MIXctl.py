@@ -73,13 +73,7 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
 
     def select(self, value=None):
         """(de)selects the SMis, or toggles selection"""
-        print "select", value
-        if value is None: ## toggle
-            pass
-        elif value:       ## selected
-            pass
-        else:             ## deselected
-            pass
+        self.smmix.select(value)
 
     def _do_push(self):
         ## open up directory selector (with last push-dir pre-selected)

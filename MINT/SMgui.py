@@ -81,11 +81,11 @@ class SMgui:
     def select(self, value=None):
         """(de)selects this SMi, or toggles selection"""
         if value is None: ## toggle
-            pass
+            self.channels.setChecked(not self.channels.isChecked())
         elif value:       ## selected
-            pass
+            self.channels.setChecked(True)
         else:             ## deselected
-            pass
+            self.channels.setChecked(False)
     def selected(self):
         return self.channels.isChecked()
 

@@ -84,6 +84,9 @@ class SMmixer(QtGui.QFrame):
             if sm.selected():
                 result+=[sm]
         return result
+    def select(self, state):
+        for sm in self.sm:
+            sm.select(state)
 
     def setSM(self, SMs=None):
         self.sms=SMs
