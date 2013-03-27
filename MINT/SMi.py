@@ -61,7 +61,7 @@ class State:
         bundle.append(('/gain', self.gains))
         bundle.append(('/level', self.levels))
         bundle.append(('/state/cpu', self.health.cpu))
-        bundle.append(('/state/mem', self.health.mem))
+        bundle.append(('/state/memory', self.health.mem))
         bundle.append(('/state/disk', self.health.disk))
         bundle.append(('/state/battery', self.health.battery))
         bundle.append(('/state/runtime', self.health.runtime))

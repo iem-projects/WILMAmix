@@ -70,7 +70,7 @@ class SMgui:
         self.connection.add(self._smiLevel,     '/level')
         self.connection.add(self._smiStreamURI, '/stream/uri')
         self.connection.add(self._smiStateCpu,  '/state/cpu')
-        self.connection.add(self._smiStateMem,  '/state/mem')
+        self.connection.add(self._smiStateMem,  '/state/memory')
         self.connection.add(self._smiStateDisk, '/state/disk')
         self.connection.add(self._smiStateBatt, '/state/battery')
         self.connection.add(self._smiStateRuntime, '/state/runtime')
