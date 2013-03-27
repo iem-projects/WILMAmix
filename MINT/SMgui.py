@@ -43,6 +43,7 @@ class SMgui:
         self.pingcounter=0
         self.pullCb = None
         self.pushCb = None
+        self.parent = parent
 
         try:
             defaultconf=interfaces[0]
@@ -116,7 +117,7 @@ class SMgui:
     def applySettings(self, settings):
         print "FIXME: applySettings", settings
     def copySettings(self, settings):
-        self.sm.applySettings(settings)
+        self.parent.applySettings(settings)
     def pull(self, path, fun=None):
         source=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/out']+'/' #remote
         target=os.path.join(path, self.name) #local
