@@ -97,6 +97,10 @@ class SMmixer(QtGui.QFrame):
     def ping(self):
         for sm in self.sm:
             sm.ping()
+
+    def launch(self, state):
+        for s in self.selected():
+            s.launch(state)
     def pull(self, path):
         self.pulling.clear()
         for s in self.selected():
@@ -107,6 +111,9 @@ class SMmixer(QtGui.QFrame):
         for s in self.selected():
             self.pushing[s]=True
             s.push(path, self._pushed)
+    def applySettings(self, settings):
+        for s in self.selected():
+            s.applySettings(settings)
 
     def _pulled(self, sm, ret):
         self.pulling[sm]=False
