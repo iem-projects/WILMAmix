@@ -87,6 +87,7 @@ class SMchannels(QtGui.QGroupBox, SMchannels_ui.Ui_SMchannels):
     def _launch(self, state): ## start launch
         """start/stop the engine on the remote SMi"""
         ## FIXME: launch!
+        self.sm.launch(state)
         self.setLaunched(state) ## reflect new launch state
 
     def ping(self):
