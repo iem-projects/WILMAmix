@@ -30,7 +30,6 @@ class SMchannels(QtGui.QGroupBox, SMchannels_ui.Ui_SMchannels):
         self.sm=sm
         name=settings['/id']
         self.settings=settings
-        self.config=SMconfig.SMconfig(self, settings=self.settings)
         self.name = name
         self.maxWidth=maxwidth
         self.setupUi(self)
