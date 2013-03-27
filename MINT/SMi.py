@@ -19,6 +19,8 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 from net import server as NetServer
+from urlparse import urlparse
+
 from net.osc import Bundle
 
 from streaming import Server as StreamingServer
@@ -164,14 +166,30 @@ class SMi:
             pass
 
     def _streamProtocol(self, msg, src):
-        protocol=msg[2]
-        self.settings['/stream/protocol']=protocol.lower()
-    def _streamProfile(self, msg, src):
-        profile=msg[2]
-        self.settings['/stream/profile' ]=profile.upper()
-    def _streamChannels(self, msg, src):
-        self.settings['/stream/channels' ]=int(msg[2])
+        protocol=str(msg[2]).lower()
+        if self.settings['/stream/protocol'] == protocol:
+            return
+        self.settings['/stream/protocol']=protocol
+        self._reloadStream()
 
+    def _streamProfile(self, msg, src):
+        profile=str(msg[2]).upper()
+        if self.settings['/stream/profile'] == profile:
+            return
+        self.settings['/stream/profile' ]=profile
+        self._reloadStream()
+    def _streamChannels(self, msg, src):
+        channels=int(msg[2])
+        if channels == self.settings['/stream/channels' ]:
+            return
+        self.settings['/stream/channels' ] = channels
+        self._reloadStream()
+
+    def _streamURI(self, msg, src):
+        o=urlparse(msg[2])
+        port=o.port
+        host=o.hostname
+        self.settings['/stream/destination']=[host, port]
 
     def controlStream(self, msg, src):
         state=msg[2]
@@ -185,8 +203,7 @@ class SMi:
         self.server.sendMsg('/stream/uri', uri)
 
     def startStream(self):
-        self.pd.send("/control/load/stream")
-        self.pd.send("/stream/start", ["localhost", 8888])
+        self.pd.send("/stream/start", self.settings['/stream/destination'])
 
     def stopStream(self):
         self.pd.send("/stream/stop")
