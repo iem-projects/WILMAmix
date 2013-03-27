@@ -511,11 +511,17 @@ if __name__ == "__main__":
         for i in stuff:
             sys.stdout.write(str(i) + " ")
         sys.stdout.write("\n")
+    def subtreeCallback(*stuff):
+        sys.stdout.write("subtree Got: ")
+        for i in stuff:
+            sys.stdout.write(str(i) + " ")
+        sys.stdout.write("\n")
 
     print "Testing the callback manager."
 
     c = CallbackManager()
     c.add(printingCallback, "/print")
+    c.add(subtreeCallback, "/foo/")
 
     c.handle(message.getBinary())
     message.setAddress("/print")
@@ -541,3 +547,19 @@ if __name__ == "__main__":
 
     print "sending a bundle to the callback manager"
     c.handle(bundlebinary)
+
+    msg = OSCMessage()
+    msg.setAddress("/foo/bar/baz")
+    msg.append(666)
+    print "sending a message to the callback manager (should match subtree)"
+    c.handle(msg.getBinary())
+    msg = OSCMessage()
+    print "sending a message to the callback manager (should patternmatch subtree)"
+    msg.setAddress("/f*o/schu")
+    msg.append(42)
+    c.handle(msg.getBinary())
+    msg = OSCMessage()
+    print "sending a message to the callback manager (should NOT patternmatch subtree)"
+    msg.setAddress("/f*u/didoo")
+    msg.append(9)
+    c.handle(msg.getBinary())
