@@ -18,53 +18,26 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-from PySide.QtCore import *
-from PySide.QtGui import *
+from PySide.QtGui import QDialog, QApplication, QVBoxLayout
 import sys
-from MINT import metro, configuration
-from MINT import SMgui as smifactory
-from MINT.gui import SMmixer, Translator
-import MINT.net
 
-class Form(QDialog):
+from MINT import MIXgui
+class _Form(QDialog):
    
     def __init__(self, parent=None):
-        super(Form, self).__init__(parent)
-        self.conf=configuration.getMIX()
-        service=(self.conf['/service']+'._'+self.conf['/protocol'])
-        self.discover=MINT.net.discoverer(service=service)
-        # Create widgets
-        self.dict=self.discover.getDict()
-        print self.dict
-        self.mixer=SMmixer(smifactory.SMgui, self, self.dict)
-
+        super(_Form, self).__init__(parent)
+        self.mix=MIXgui.MIXgui(self)
         # Create layout and add widgets
         layout = QVBoxLayout()
-        layout.addWidget(self.mixer)
+        layout.addWidget(self.mix.widget())
         # Set dialog layout
         self.setLayout(layout)
-
-        self.metro = metro(self.ping, 100)
-
-        self.refreshIt()
-
-    def refreshIt(self):
-        self.dict = self.discover.getDict()
-        self.mixer.setSM(self.dict)
-        self.show()
-
-    def printIt(self):
-        print self.dict
-
-    def ping(self):
-        self.mixer.ping()
-
 if __name__ == '__main__':
     # Create the Qt Application
     app = QApplication(sys.argv)
-    translator = Translator(app)
+    #translator = Translator(app)
     # Create and show the form
-    form = Form()
+    form = _Form()
     form.show()
     # Run the main Qt loop
     sys.exit(app.exec_())
