@@ -23,7 +23,7 @@
 import configuration, filesync
 from gui import SMconfig, SMchannels, ThreadedInvoke
 from net import client as _NetClient
-
+from net.osc import Bundle
 import os
 
 class SMgui:
@@ -45,6 +45,7 @@ class SMgui:
         self.pushCb = None
         self.parent = parent
         self.timestamp = 0
+        self.oscprefix='/'+oscprefix
 
         try:
             defaultconf=interfaces[0]
@@ -52,7 +53,7 @@ class SMgui:
             self.settings['/host'] = config['address']
             self.connection = _NetClient(config['address'],
                                          config['port'],
-                                         oscprefix='/'+oscprefix,
+                                         oscprefix=self.oscprefix,
                                          type=self.settings['/protocol'])
             self._connect()
         except IndexError:
@@ -163,6 +164,17 @@ class SMgui:
         self.pushCb=None
         if pushCb is not None:
             pushCb(self, state)
+
+    def launch(self, state, ts=None):
+        bundle = Bundle(oscprefix=self.oscprefix)
+        mode=self.settings['/mode']
+        uri ='rtp://localhost:8787'
+        if ts is not None: ## (TSmax, TSmin)
+            starttime=ts[1]+10000
+            bundle.append(('/record/timestamp', [starttime]))
+        bundle.append(('/stream/uri', [uri]))
+        bundle.append(('/'+mode, [state]))
+        self.connection.send(bundle)
 
     def _smiUser(self, msg, src):
         self.settings['/user']=msg[2]
