@@ -25,6 +25,7 @@ from gui import SMconfig, SMchannels, ThreadedInvoke
 from net import client as _NetClient
 from net.osc import Bundle
 import os
+import datetime as _datetime
 
 class SMgui:
     def __init__(self, parent=None, name="SMi", confs=None, maxwidth=None):
@@ -204,9 +205,11 @@ class SMgui:
         bundle = Bundle(oscprefix=self.oscprefix)
         mode=self.settings['/mode']
         uri ='rtp://localhost:8787'
+        starttime=0
         if ts is not None: ## (TSmax, TSmin)
             starttime=ts[1]+10000
-            bundle.append(('/record/timestamp', [starttime]))
+        bundle.append(('/record/timestamp', [starttime]))
+        bundle.append(('/record/filename',  [_datetime.datetime.now().strftime('%Y%m%d-%H%M')]))
         bundle.append(('/stream/uri', [uri]))
         bundle.append(('/'+mode, [state]))
         self.running=state
