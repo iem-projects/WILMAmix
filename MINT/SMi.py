@@ -130,7 +130,7 @@ class SMi:
     def _ignoreMessage(self, msg, src):
         pass
     def _forwardMessageToPd(self, msg, src):
-        self.pd.sendMsg(msg[0], msg[1])
+        self.pd.send(msg[0], msg[2:])
 
     def setGain(self, msg, src):
         if self.mixer is not None:
