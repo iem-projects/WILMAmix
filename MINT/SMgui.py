@@ -98,9 +98,9 @@ class SMgui:
         self.config.show()
 
     def applySettings(self, settings):
-        print "FIXME: applySettings"
+        print "FIXME: applySettings", settings
     def copySettings(self, settings):
-        print "FIXME: copySettings"
+        self.sm.applySettings(settings)
     def pull(self, path, fun=None):
         source=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/out']+'/' #remote
         target=os.path.join(path, self.name) #local
