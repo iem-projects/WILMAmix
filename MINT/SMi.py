@@ -113,7 +113,9 @@ class SMi:
 
         self.server.add(self._mode, '/mode')
 
-        self.server.add(self.controlStream, '/stream')
+        self.server.add(self._process, '/process')
+        self.server.add(self._record, '/record')
+        self.server.add(self._stream, '/stream')
         self.server.add(self._streamProtocol, '/stream/protocol')
         self.server.add(self._streamProfile , '/stream/profile')
         self.server.add(self._streamChannels, '/stream/channels')
@@ -191,22 +193,32 @@ class SMi:
         host=o.hostname
         self.settings['/stream/destination']=[host, port]
 
-    def controlStream(self, msg, src):
+    def _stream(self, msg, src):
         state=msg[2]
-        #print "controlStream", msg
         if state is not None and int(state) > 0:
             self.startStream()
         else:
             self.stopStream()
-
     def streamStarted(self, uri):
         self.server.sendMsg('/stream/uri', uri)
-
     def startStream(self):
         self.pd.send("/stream/start", self.settings['/stream/destination'])
-
     def stopStream(self):
         self.pd.send("/stream/stop")
+
+    def _record(self, msg, src):
+        state=msg[2]
+        if state is not None and int(state) > 0:
+            self.pd.send("/record/start", [filename, TSlo, TShi])
+        else:
+            self.pd.send("/record/stop")
+    def _process(self, msg, src):
+        state=msg[2]
+        if state is not None and int(state) > 0:
+            self.pd.send("/process/start")
+        else:
+            self.pd.send("/process/stop")
+
 
     def ping(self, msg, src):
         self.state.update()
