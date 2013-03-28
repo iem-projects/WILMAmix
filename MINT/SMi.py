@@ -79,6 +79,7 @@ class PdCommunicator:
         self.server.add(self._catchall, None)
         self.server.add(self._meter, "/meter")
         self.server.add(self._timestamp, "/timestamp")
+        self.server.add(self._forward, "/process/")
         self.server.start()
 
     def _meter(self, msg, source):
@@ -92,6 +93,8 @@ class PdCommunicator:
         self.smi.server.sendMsg(msg[0], msg[2:])
         print "got message: ", msg
         print "       from: ", source
+    def _forward(self, msg, source):
+        self.smi.server.sendMsg(msg[0], msg[2:])
 
     def stop(self):
         self.server.stop()
