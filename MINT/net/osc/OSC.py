@@ -435,11 +435,13 @@ class CallbackManager:
 
         for a,b in zip(pattern, key):
             if CallbackManager.isWildcard(a):
-                return len(CallbackManager.matchWildcards(a, [b]))>0
+                if 0 == len(CallbackManager.matchWildcards(a, [b])):
+                    return False
             else:
-                return a == b
+                if a != b:
+                    return False
 
-        return False
+        return True
 
 
 
@@ -507,14 +509,14 @@ if __name__ == "__main__":
     print decodeOSC(blob.getBinary())
 
     def printingCallback(*stuff):
-        sys.stdout.write("Got: ")
+        sys.stdout.write("\tGot: ")
         for i in stuff:
-            sys.stdout.write(str(i) + " ")
+            sys.stdout.write("\t"+str(i) + " ")
         sys.stdout.write("\n")
     def subtreeCallback(*stuff):
-        sys.stdout.write("subtree Got: ")
+        sys.stdout.write("\tSUBTREE Got: ")
         for i in stuff:
-            sys.stdout.write(str(i) + " ")
+            sys.stdout.write("\t"+str(i) + " ")
         sys.stdout.write("\n")
 
     print "Testing the callback manager."
@@ -522,6 +524,9 @@ if __name__ == "__main__":
     c = CallbackManager()
     c.add(printingCallback, "/print")
     c.add(subtreeCallback, "/foo/")
+
+    c.add(printingCallback, "/path/print")
+    c.add(subtreeCallback, "/path/subpath/")
 
     c.handle(message.getBinary())
     message.setAddress("/print")
@@ -563,3 +568,15 @@ if __name__ == "__main__":
     msg.setAddress("/f*u/didoo")
     msg.append(9)
     c.handle(msg.getBinary())
+
+    msg = OSCMessage()
+    msg.setAddress("/path/print")
+    msg.append("PRINT")
+    print "sending a message to the callback manager (should NOT match subtree, but print)"
+    c.handle(msg.getBinary())
+    msg = OSCMessage()
+    msg.setAddress("/path/subpath/file")
+    msg.append("SUBTREE")
+    print "sending a message to the callback manager (should NOT print, but match subtree)"
+    c.handle(msg.getBinary())
+    
