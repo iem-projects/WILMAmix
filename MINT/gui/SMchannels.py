@@ -58,6 +58,7 @@ class SMchannels(QtGui.QGroupBox, SMchannels_ui.Ui_SMchannels):
     def _select(self):
         """(de)selects this SMi, or toggles selection"""
         self.sm.select(self.isChecked())
+
     def selected(self):
         return self.isChecked()
 
@@ -92,6 +93,7 @@ class SMchannels(QtGui.QGroupBox, SMchannels_ui.Ui_SMchannels):
 
     def ping(self):
         ## FIXME: compat implementation for SM.py
+        print "FIXME: SMchannels ping"
         pass
 
 
