@@ -98,9 +98,9 @@ _defaults['/record/filename' ]='MINT' # const
 _defaults['/network/interface']='eth0' # ????
 
 ## proxy settings
-_defaults['/proxy/receiver/port']=0
-_defaults['/proxy/sender/port']=0
-_defaults['/proxy/sender/host']='localhost'
+_defaults['/proxy/server/port']=0
+_defaults['/proxy/client/port']=0
+_defaults['/proxy/client/host']='localhost'
 
 
 _config = ConfigParser.ConfigParser(_defaults)

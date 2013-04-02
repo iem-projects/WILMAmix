@@ -22,9 +22,9 @@ from PySide import QtGui
 import MIXconfig_ui
 
 _dictKeys=[
-    '/proxy/receiver/port',
-    '/proxy/sender/port',
-    '/proxy/sender/host',
+    '/proxy/server/port',
+    '/proxy/client/port',
+    '/proxy/client/host',
     ]
 def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
 
@@ -67,9 +67,9 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         self.hide()
     def _getSettings(self):
         # proxy
-        self.settings['/proxy/receiver/port']=self.proxy_recvPort.value()
-        self.settings['/proxy/sender/port'  ]=self.proxy_sendPort.value()
-        self.settings['/proxy/sender/host'  ]=self.proxy_sendHost.text()
+        self.settings['/proxy/server/port']=self.proxy_recvPort.value()
+        self.settings['/proxy/client/port'  ]=self.proxy_sendPort.value()
+        self.settings['/proxy/client/host'  ]=self.proxy_sendHost.text()
 
 
     def applySettings(self, settings):
@@ -81,9 +81,9 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         print "settings", self.settings
 
         # proxy
-        self.proxy_recvPort.setValue(int(self.settings['/proxy/receiver/port']))
-        self.proxy_sendPort.setValue(int(self.settings['/proxy/sender/port']))
-        self.proxy_sendHost.setText(self.settings['/proxy/sender/host'])
+        self.proxy_recvPort.setValue(int(self.settings['/proxy/server/port']))
+        self.proxy_sendPort.setValue(int(self.settings['/proxy/client/port']))
+        self.proxy_sendHost.setText(self.settings['/proxy/client/host'])
 
 ######################################################################
 if __name__ == '__main__':
@@ -93,9 +93,9 @@ if __name__ == '__main__':
             super(Form, self).__init__(parent)
             self.d=dict()
 
-            self.d['/proxy/receiver/port']=1
-            self.d['/proxy/sender/port']=2
-            self.d['/proxy/sender/host']='localhost'
+            self.d['/proxy/server/port']=1
+            self.d['/proxy/client/port']=2
+            self.d['/proxy/client/host']='localhost'
 
             self.mixconf=MIXconfig(self, settings=self.d)
             layout = QtGui.QHBoxLayout()
