@@ -104,11 +104,14 @@ class serverTCP(serverAbstract.serverAbstract):
             slip=None
         am=self.addressManager
 
-        if len(data) and (slip is not None) and (am is not None):
-            slip=self.remotes[sock]
-            slip.append(data)
-            for d in slip.get():
-                am.handle(d, address)
+        if len(data):
+            if (slip is not None) and (am is not None):
+                slip=self.remotes[sock]
+                slip.append(data)
+                for d in slip.get():
+                    am.handle(d, address)
+        elif (slip is not None):
+            del self.remotes[sock]
         self.remote=(len(self.remotes)>0 or None)
         return (len(data)>0) and self.remotes.has_key(sock)
 

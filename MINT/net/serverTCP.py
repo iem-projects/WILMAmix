@@ -77,17 +77,21 @@ class serverTCP(serverAbstract.serverAbstract):
 ##        print "DATA", data
 ##        for d in data:
 ##            print "data: ",ord(d)
+
         try:
             slip=self.remotes[sock]
         except KeyError:
             slip=None
         am=self.addressManager
 
-        if len(data) and (slip is not None) and (am is not None):
-            slip=self.remotes[sock]
-            slip.append(data)
-            for d in slip.get():
-                am.handle(d, address)
+        if len(data):
+            if (slip is not None) and (am is not None):
+                slip=self.remotes[sock]
+                slip.append(data)
+                for d in slip.get():
+                    am.handle(d, address)
+        elif slip is not None:
+            del self.remotes[sock]
 
         self.remote=(len(self.remotes) or None)
         return (len(data)>0) and self.remotes.has_key(sock)
