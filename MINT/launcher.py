@@ -41,12 +41,15 @@ class launcher(threading.Thread):
         #out=subprocess.PIPE
         self.process = subprocess.Popen(self.prog, cwd=self.cwd, stdout=out, stderr=out)
         self._starting = False
-        if out is subprocess.PIPE:
-            ## attaching to the stdout/stderr will make the process defunct
-            ## between it's natural death and a shutdown()
-            self.out, self.err = self.process.communicate()
-        else:
-            self.process.wait()
+        try:
+            if out is subprocess.PIPE:
+                ## attaching to the stdout/stderr will make the process defunct
+                ## between it's natural death and a shutdown()
+                self.out, self.err = self.process.communicate()
+            else:
+                self.process.wait()
+        except KeyboardInterrupt:
+            print "............................................. KEYBOARD INTERRUPT ......"
         self.process=None
         if self.__doneCb is not None:
             self.__doneCb()
