@@ -25,16 +25,19 @@ from gui import SMmixer, MIXctl, MIXconfig
 
 class MIXgui:
     def __init__(self, parent=None):
-        self.conf=configuration.getMIX()
-        service=(self.conf['/service']+'._'+self.conf['/protocol'])
+        self.settings=configuration.getMIX()
+        service=(self.settings['/service']+'._'+self.settings['/protocol'])
         self.discover=net.discoverer(service=service)
 
         self.dict=None
         self.pushing=dict()
         self.pulling=dict()
 
-        self.mixconfig = MIXconfig.MIXconfig(self, guiparent=parent, settings=self.conf)
-        self.mixctl = MIXctl.MIXctl(self, guiparent=parent, settings=self.conf)
+        self.proxyserver = None
+        self.proxyclient = None
+
+        self.mixconfig = MIXconfig.MIXconfig(self, guiparent=parent, settings=self.settings)
+        self.mixctl = MIXctl.MIXctl(self, guiparent=parent, settings=self.settings)
         self.sm     = [] ## array of active SMi's
         self.smmixer=SMmixer(guiparent=parent, mixctl=self.mixctl)
 
@@ -43,11 +46,50 @@ class MIXgui:
         self.scanSM()
         self.smmixer.show()
 
+        self._proxyServer()
+        self._proxyClient()
+
     def widget(self):
         return self.smmixer
 
     def _config(self):
         self.mixconfig.show()
+
+    def _proxyServer(self):
+        self.proxyserver = None
+        port=int(self.settings['/proxy/server/port'])
+        if (port>0) and (port<65536):
+            self.proxyserver = net.server(port=port)
+            self.proxyserver.add(self._proxyCallback, None)
+        print "proxyServer", (self.proxyserver, port)
+    def _proxyClient(self):
+        self.proxyclient = None
+        port=int(self.settings['/proxy/client/port'])
+        host=self.settings['/proxy/client/host']
+        if (port>0) and (port<65536):
+            self.proxyclient = net.client(port=port)
+            self.proxyclient.add(self._proxyCallback, None)
+        print "proxyClient", (self.proxyclient, host, port)
+
+    def _proxyCallback(self, msg, src):
+        """new data from the remote add, forward it to the SMi's"""
+        # FIXXME: only sent messages relevant for the given proxy
+        self.send(msg[0], msg[2:])
+        pass
+
+    def sendProxy(self, addr, msg=None):
+        """send data to the proxy/proxies"""
+        print "sending ", (addr, msg)
+        print "     -> ", (self.proxyclient, self.proxyserver)
+        if self.proxyclient is not None:
+            self.proxyclient.send(addr, msg)
+        if self.proxyserver is not None:
+            self.proxyserver.send(addr, msg)
+
+    def send(self, addr, msg=None):
+        """send an OSC-message to all SMi's"""
+        for s in self.selected():
+            s.send(addr, msg)
 
     def scanSM(self):
         self.dict = self.discover.getDict()
@@ -99,11 +141,25 @@ class MIXgui:
         for s in self.selected():
             self.pushing[s]=True
             s.push(path, self._pushed)
+    def _hasSettingChanged(self, key, newsettings):
+        if not key in newsettings:
+            return False
+        if (key in self.settings) and (self.settings[key]==newsettings[key]):
+            return False
+        self.settings[key]=newsettings[key]
+        return True
     def applySMiSettings(self, settings):
         for s in self.selected():
             s.applySettings(settings)
     def applyMixSettings(self, settings):
-        print "FIXME: applyMixSettings"
+        proxyclientchanged = (self._hasSettingChanged('/proxy/client/port', settings) or
+                              self._hasSettingChanged('/proxy/client/host', settings))
+        proxyserverchanged = (self._hasSettingChanged('/proxy/server/port', settings))
+        if proxyclientchanged:
+            self._proxyClient()
+        if proxyserverchanged:
+            self._proxyServer()
+
     def syncTimestamps(self):
         ts=[]
         for s in self.selected():
