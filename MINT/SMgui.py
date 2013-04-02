@@ -274,6 +274,17 @@ class SMgui:
         pass
 
 
+    def _proxyCallback(self, msg, src):
+        if not self.selected():
+            return
+        addr=msg[0].split('/')
+        data=msg[2:]
+        addr[1]='process'
+        self.send('/'.join(addr), data)
+
+    def addProxy(self, proxy):
+        proxy.add(self.oscprefix, self._proxyCallback)
+
 
 ######################################################################
 if __name__ == '__main__':
