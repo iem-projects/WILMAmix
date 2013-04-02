@@ -19,16 +19,35 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def client(host='', port=0, oscprefix=None, verbose=False, transport='udp'):
-    if 'udp' == transport:
-        import clientUDP_PySide
-        return clientUDP_PySide.clientUDP(host=host, port=port, oscprefix=oscprefix, verbose=verbose)
-    elif 'tcp' == transport:
-        import clientTCP_PySide
-        return clientTCP_PySide.clientTCP(host=host, port=port, oscprefix=oscprefix, verbose=verbose)
+def client(host='', port=0, oscprefix=None, verbose=False, transport='udp', backend=None):
+    if backend is None:
+        backend = 'pyside'
+    elif type(backend) is str:
+        backend=backend.lower()
+        if 'gui' == backend:
+            backend='pyside'
+        elif ('smi' == backend) or ('sm' == backend):
+            backend='gobject'
 
+    if backend == 'gobject':
+        if 'udp' == transport:
+            import clientUDP
+            return clientUDP.clientUDP(host=host, port=port, oscprefix=oscprefix, verbose=verbose)
+        elif 'tcp' == transport:
+            import clientTCP
+            return clientTCP.clientTCP(host=host, port=port, oscprefix=oscprefix, verbose=verbose)
+        raise Exception("invalid stream transport: "+transport)
+    elif backend == 'pyside':
+        if 'udp' == transport:
+            import clientUDP_PySide as clientUDP
+            return clientUDP.clientUDP(host=host, port=port, oscprefix=oscprefix, verbose=verbose)
+        elif 'tcp' == transport:
+            import clientTCP_PySide as clientTCP
+            return clientTCP.clientTCP(host=host, port=port, oscprefix=oscprefix, verbose=verbose)
+        raise Exception("invalid stream transport: "+transport)
 
-    raise Exception("invalid stream transport: "+transport)
+    raise Exception("invalid network backend: "+backend)
+
 
 
 

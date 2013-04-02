@@ -19,15 +19,36 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def server(host='', port=0, oscprefix=None, service=None, verbose=False, transport='udp'):
-    if 'udp' == transport:
-        import serverUDP
-        return serverUDP.serverUDP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
-    if 'tcp' == transport:
-        import serverTCP
-        return serverTCP.serverTCP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
+def server(host='', port=0, oscprefix=None, service=None, verbose=False, transport='udp', backend=None):
+    if backend is None:
+        backend = 'gobject'
+    elif (type(backend) is str):
+        backend=backend.lower()
+        if 'qt'  == backend:
+            backend='pyside'
+        elif 'gui' == backend:
+            backend='pyside'
+        elif ('smi' == backend) or ('sm' == backend):
+            backend='gobject'
 
-    raise Exception("invalid stream transport: "+transport)
+    if backend == 'gobject':
+        if 'udp' == transport:
+            import serverUDP
+            return serverUDP.serverUDP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
+        if 'tcp' == transport:
+            import serverTCP
+            return serverTCP.serverTCP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
+        raise Exception("invalid stream transport: "+transport)
+    elif backend == 'pyside':
+        if 'udp' == transport:
+            import serverUDP_PySide as serverUDP
+            return serverUDP.serverUDP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
+        if 'tcp' == transport:
+            import serverTCP_PySide as serverTCP
+            return serverTCP.serverTCP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
+        raise Exception("invalid stream transport: "+transport)
+    else:
+        raise Exception("invalid network backend: "+str(backend))
 
 
 
