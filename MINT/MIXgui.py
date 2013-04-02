@@ -24,16 +24,6 @@ import net
 from gui import SMmixer, MIXctl, MIXconfig
 
 class MIXgui:
-    class smi2process:
-        def __init(self, name, callback):
-            self.name=name
-            self._callback=callback
-        def callback(self, msg, src):
-            addr=msg[0].split('/')
-            addr[1]='process'
-            data=msg[2:]
-            self._callback('/'.join(addr), data)
-
     def __init__(self, parent=None):
         self.settings=configuration.getMIX()
         service=(self.settings['/service']+'._'+self.settings['/protocol'])
