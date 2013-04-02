@@ -74,7 +74,16 @@ class MIXgui:
     def _proxyCallback(self, msg, src):
         """new data from the remote add, forward it to the SMi's"""
         # FIXXME: only sent messages relevant for the given proxy
-        self.send(msg[0], msg[2:])
+        ###  e.g.: '/SM[12]/foo/bar'
+        ###  should translate to
+        ###        '/SM1/process/foo/bar'
+        ###        '/SM2/process/foo/bar'
+        addr=msg[0]
+        addr='/process'+addr
+
+        data=msg[2:]
+
+        self.send(addr, data)
         pass
 
     def sendProxy(self, addr, msg=None):
