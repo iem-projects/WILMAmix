@@ -83,6 +83,8 @@ class serverAbstract(object):
 
     def getPort(self):
         return self.port
+    def getRemote(self):
+        return self.remote
 
 ######################################################################
 ## no testing (this is an abstract class)
