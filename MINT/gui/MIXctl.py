@@ -20,10 +20,9 @@
 
 from PySide import QtCore, QtGui
 
-from PySide.QtGui import *
 import sys
 import MIXctl_ui
-import DirChooser, MIXconfig
+import DirChooser
 
 class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
     """

@@ -18,8 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-from PySide import QtCore, QtGui
-from PySide.QtGui import *
+from PySide import QtGui
 import MIXconfig_ui
 
 _dictKeys=[

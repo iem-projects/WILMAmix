@@ -20,8 +20,8 @@
 
 import metro, configuration
 import SMgui
-from gui import SMmixer, Translator, MIXctl, MIXconfig
 import net
+from gui import SMmixer, MIXctl, MIXconfig
 
 class MIXgui:
     def __init__(self, parent=None):

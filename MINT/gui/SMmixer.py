@@ -18,19 +18,18 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-from PySide import QtCore, QtGui
-from PySide.QtGui import *
+from PySide import QtGui
 
 class SMmixer(QtGui.QFrame):
     def __init__(self, guiparent=None, mixctl=None):
         super(SMmixer, self).__init__(guiparent)
         self.sm=[]
 
-        self.layout = QHBoxLayout()
+        self.layout = QtGui.QHBoxLayout()
         self.layout.setSpacing(0)
         self.setLayout(self.layout)
 
-        self.smilayout = QHBoxLayout()
+        self.smilayout = QtGui.QHBoxLayout()
         self.smilayout.setSpacing(0)
         smiframe=QtGui.QFrame(self)
         smiframe.setLayout(self.smilayout)
