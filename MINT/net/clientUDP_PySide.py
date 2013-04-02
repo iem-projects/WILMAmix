@@ -58,7 +58,7 @@ class clientUDP:
         self.socket = None
 
     def _callback(self):
-        '''Asynchronous connection listener. Starts a handler for each connection.'''
+        '''Asynchronous connection listener. Receives data and passes it to OSC-addressManager.'''
         while self.socket.hasPendingDatagrams():
             datagram, sender, senderPort = self.socket.readDatagram(self.socket.pendingDatagramSize())
             self.addressManager.handle(datagram.data(), (sender.toString(), senderPort))
@@ -66,7 +66,11 @@ class clientUDP:
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
         if self.addressManager is not None:
-            self.addressManager.add(callback,  self.oscPrefix+oscAddress)
+            if oscAddress is None:
+                if self.oscPrefix is not '': oscAddress = self.oscPrefix+'/'
+            else:
+                oscAddress=self.oscPrefix+oscAddress
+            self.addressManager.add(callback, oscAddress)
 
     def _send(self, data):
         from PySide.QtNetwork import QHostAddress
