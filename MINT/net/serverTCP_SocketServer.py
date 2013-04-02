@@ -21,12 +21,12 @@
 import socket, gobject
 import SocketServer
 from Discovery import Publisher
-import osc
+import serverAbstract
 from SLIP import SLIP
 
 class OSCRequestHandler(SocketServer.BaseRequestHandler):
 
-class serverTCP:
+class serverTCP(serverAbstract.serverAbstract):
     """ OSC-server running on SMi.
     publishes connection information (via zeroconf),
     receives OSC-messages (and emits signals with the data),
@@ -35,20 +35,10 @@ class serverTCP:
 
     def __init__(self, host='', port=0, oscprefix=None, service=None, verbose=False):
         """creates a listener on any (or specified) port"""
-        self.verbose=verbose
+        super(serverTCP, self).__init__(port=port, oscprefix=oscprefix, verbose=verbose)
         self.remotes = dict()
         self.publisher=None
         self.keepListening=True
-        if oscprefix is None:
-            self.oscPrefix=''
-        else:
-            self.oscPrefix=oscprefix
-        self.addressManager = osc.CallbackManager(verbose=verbose)
-
-        publishname=oscprefix
-        if publishname is not None:
-            while publishname.startswith('/'):
-                publishname=publishname[1:]
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -58,7 +48,7 @@ class serverTCP:
         self.socket.listen(1)
 
         if service is not None:
-            self.publisher = Publisher(port=port, name=publishname, service=service+'._tcp')
+            self.publisher = Publisher(port=port, name=self.publishname, service=service+'._tcp')
 
     def __del__(self):
         self.shutdown()
@@ -120,11 +110,6 @@ class serverTCP:
 
         return (len(data)>0) and self.remotes.has_key(sock)
 
-    def add(self, callback, oscAddress):
-        """add a callback for oscAddress"""
-        if self.addressManager is not None:
-            self.addressManager.add(callback, self.oscPrefix+oscAddress)
-
     def _send(self, data):
         if self.remotes is not None:
             for s in self.remotes:
@@ -133,26 +118,6 @@ class serverTCP:
                 slip = SLIP();
                 slip+=data;
                 s.sendall( slip.getData() )
-
-    def sendMsg(self, oscAddress, dataArray=[]):
-        """send an OSC-message to connected client(s)"""
-        self._send(osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray))
-    def sendBundle(self, bundle):
-        """send an OSC-bundle to connected client(s)"""
-        if isinstance(bundle, osc.Bundle):
-            self._send(bundle.data())
-        else:
-            self._send(bundle.message)
-    def send(self, addr, data=None):
-        if type(addr) is str: # it's an addr/data pair
-            self.sendMsg(addr, data)
-        elif data is None:    # it's a bundle
-            self.sendBundle(addr)
-        else:
-            raise Exception("usage: send(addr, data) OR send(bundle)")
-
-
-
 
 ######################################################################
 

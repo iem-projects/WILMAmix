@@ -35,11 +35,6 @@ class serverUDP(serverAbstract.serverAbstract):
         self.verbose=verbose
         self.keepListening=True
 
-        publishname=self.oscPrefix
-        if publishname is not None:
-            while publishname.startswith('/'):
-                publishname=publishname[1:]
-
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((host, port))
@@ -48,7 +43,7 @@ class serverUDP(serverAbstract.serverAbstract):
         self.port=port
 
         if service is not None:
-            self.publisher = publisher(port=port, name=publishname, service=service+'._udp')
+            self.publisher = publisher(port=port, name=self.publishname, service=service+'._udp')
 
     def __del__(self):
         self.shutdown()
