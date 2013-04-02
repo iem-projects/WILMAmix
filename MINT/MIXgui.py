@@ -61,7 +61,6 @@ class MIXgui:
         if (port>0) and (port<65536):
             self.proxyserver = net.server(port=port, transport='udp', backend='gui')
             self.proxyserver.add(self._proxyCallback, None)
-        print "proxyServer", (self.proxyserver, port)
     def _proxyClient(self):
         self.proxyclient = None
         port=int(self.settings['/proxy/client/port'])
@@ -69,7 +68,9 @@ class MIXgui:
         if (port>0) and (port<65536):
             self.proxyclient = net.client(host=host, port=port, transport='udp', backend='gui')
             self.proxyclient.add(self._proxyCallback, None)
-        print "proxyClient", (self.proxyclient, host, port)
+
+    def _nullCallback(self, msg, src):
+        pass
 
     def _proxyCallback(self, msg, src):
         """new data from the remote add, forward it to the SMi's"""
