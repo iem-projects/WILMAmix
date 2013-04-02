@@ -81,7 +81,7 @@ class serverUDP(serverAbstract.serverAbstract):
     def _send(self, data):
         if self.socket is not None and self.remote is not None:
             if self.verbose:
-                print "sending '", data, "' to ", self.remote
+                print "serverUDP.sending '", data, "' to ", self.remote
             self.socket.sendto( data,  self.remote)
 
 ######################################################################
