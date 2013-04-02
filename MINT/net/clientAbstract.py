@@ -28,7 +28,10 @@ class clientAbstract:
 
     def __init__(self, oscprefix='', verbose=False):
         self.addressManager = osc.CallbackManager(verbose=verbose)
-        self.oscPrefix=oscprefix
+        if oscprefix is None:
+            self.oscPrefix=''
+        else:
+            self.oscPrefix=oscprefix
         self.verbose=verbose
         self.remote =None
 
