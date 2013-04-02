@@ -3,6 +3,7 @@ GUI.MIXConfig:
 
 Proxy:
   Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
+  A: kind of working (TODO: filter by SMi prefix)
 
 net.serverTCP:
   Q: quitting might result in: "socket.error: [Errno 104] Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
