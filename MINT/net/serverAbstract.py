@@ -30,14 +30,14 @@ class serverAbstract(object):
         """creates a listener on any (or specified) port"""
         self.verbose=verbose
         self.keepListening=True
+        self.oscPrefix = oscprefix
         if oscprefix is None:
             self.oscPrefix=''
-        else:
-            self.oscPrefix=oscprefix
 
         self.remote = None # tuple describing the remote-side (host, port)
         self.port   = port # local listening port
         self.addressManager = osc.CallbackManager(verbose=verbose)
+        self.publisher=None
 
     def __del__(self):
         self.shutdown()
