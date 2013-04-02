@@ -101,7 +101,7 @@
 #X obj 82 265 pack;
 #X obj 114 240 + 1;
 #X obj 221 306 list trim;
-#X msg 82 287 connect 0 \$2 4 \$1;
+#X msg 82 287 connect 0 \$2 3 \$1;
 #X msg 368 166 list obj 250 200 dac~;
 #X obj 221 138 > 0;
 #X obj 221 160 select 1;
