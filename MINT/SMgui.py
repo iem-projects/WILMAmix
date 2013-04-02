@@ -28,7 +28,7 @@ import os
 import datetime as _datetime
 
 class SMgui:
-    def __init__(self, parent=None, name="SMi", confs=None, maxwidth=None):
+    def __init__(self, mixer=None, guiparent=None, name="SMi", confs=None, maxwidth=None):
         oscprefix=name
         while oscprefix.startswith('/'):
             oscprefix=oscprefix[1:]
@@ -45,7 +45,7 @@ class SMgui:
         self.pingcounter=0
         self.pullCb = None
         self.pushCb = None
-        self.parent = parent
+        self.mixer = mixer
         self.timestamp = 0
         self.oscprefix='/'+oscprefix
 
@@ -61,12 +61,18 @@ class SMgui:
         except IndexError:
             print "no network configurations -> no connection"
 
-        self.channels=SMchannels.SMchannels(self, guiparent=parent, settings=self.settings, maxwidth=maxwidth)
-        self.config=SMconfig.SMconfig(self, guiparent=parent, settings=self.settings, interfaces=interfaces)
+        self.channels=SMchannels.SMchannels(self, guiparent=guiparent, settings=self.settings, maxwidth=maxwidth)
+        self.config=SMconfig.SMconfig(self, guiparent=guiparent, settings=self.settings, interfaces=interfaces)
         self.name = name
 
         if confs is not None:
             print "FIXXME: confs not yet used in SMgui"
+
+    def __del__(self):
+        self.shutdown()
+    def shutdown(self):
+        print "shutdown", self
+        self.connection.shutdown()
 
     def _connect(self):
         self.connection.add(self._smiUser,      '/user')
@@ -165,7 +171,7 @@ class SMgui:
             self.connection.send(bundle)
 
     def copySettings(self, settings):
-        self.parent.applySettings(settings)
+        self.mixer.applySMiSettings(settings)
     def pull(self, path, fun=None):
         if path is None:
             return
@@ -265,8 +271,8 @@ if __name__ == '__main__':
     import sys
     from PySide import QtGui
     class Form(QtGui.QDialog):
-        def __init__(self, parent=None):
-            super(Form, self).__init__(parent)
+        def __init__(self, guiparent=None):
+            super(Form, self).__init__(guiparent)
             self.d=dict()
             self.d['/network/interface']='eth0'
             self.d['/path/in' ]='/tmp/MINT/in'

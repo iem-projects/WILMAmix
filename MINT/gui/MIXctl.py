@@ -34,13 +34,12 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
     - pull files (from selected)
     - quit
     """
-    def __init__(self, smmix, guiparent=None, settings={}):
+    def __init__(self, mixer, guiparent=None, settings={}):
         super(MIXctl, self).__init__(guiparent)
         if guiparent is None:
             guiparent=self
         self.settings=settings
-        self.smmix=smmix
-        self.config=MIXconfig.MIXconfig(self, guiparent, self.settings)
+        self.mixer=mixer
         self.pullChooser=DirChooser.PullDirChooser(self)
         self.pushChooser=DirChooser.PushDirChooser(self)
 
@@ -58,7 +57,7 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
         self.pullButton.clicked.connect(self._do_pull)
         self.launchButton.clicked.connect(self._do_launch)
         self.scanButton.clicked.connect(self._scan)
-        self.configButton.clicked.connect(self._config)
+        self.configButton.clicked.connect(self.mixer._config)
         self.quitButton.clicked.connect(self._quit)
 
     def _selectNone(self, value=None):
@@ -73,23 +72,23 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
 
     def select(self, value=None):
         """(de)selects the SMis, or toggles selection"""
-        self.smmix.select(value)
+        self.mixer.select(value)
 
     def _do_push(self):
         ## open up directory selector (with last push-dir pre-selected)
         ## then check whether the directory contains MAIN.pd
         ## call the SMi's push methods with this directory
         self.pushButton.setEnabled(False)
-        self.pushChooser.choose(self.smmix.push)
+        self.pushChooser.choose(self.mixer.push)
     def _do_pull(self):
         ## open up directory selector (with last pull-dir pre-selected)
         ## (warn if directory exists)
         ## call the SMi's pull methods with this directory
         self.pullButton.setEnabled(False)
-        self.pullChooser.choose(self.smmix.pull)
+        self.pullChooser.choose(self.mixer.pull)
     def _launch(self, state): ## start launch
         """start/stop the engine on the remote SMi"""
-        self.smmix.launch(state)
+        self.mixer.launch(state)
         self.launched(state) ## reflect new launch state
     def launched(self, state):
         """called from outside to set/get the current state.
@@ -102,9 +101,7 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
     def _quit(self):
         sys.exit(0)
     def _scan(self):
-        self.smmix.scanSM()
-    def _config(self):
-        self.config.show()
+        self.mixer.scanSM()
 
     def setState(self, level, msg):
         ## FIXME: add a status widget

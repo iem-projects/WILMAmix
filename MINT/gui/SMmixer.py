@@ -21,15 +21,10 @@
 from PySide import QtCore, QtGui
 from PySide.QtGui import *
 
-from MIXctl import MIXctl
-
 class SMmixer(QtGui.QFrame):
-    def __init__(self, configmanager, smifactory, parent=None, guiparent=None, SMs=None):
+    def __init__(self, guiparent=None, mixctl=None):
         super(SMmixer, self).__init__(guiparent)
         self.sm=[]
-        self.master=parent
-        self.sms=SMs
-        self.smifactory=smifactory
 
         self.layout = QHBoxLayout()
         self.layout.setSpacing(0)
@@ -42,8 +37,8 @@ class SMmixer(QtGui.QFrame):
         self.smilayout.setContentsMargins(0,0,0,0)
         self.layout.addWidget(smiframe)
 
-        self.mixctl = MIXctl(self, settings=configmanager.getMIX())
-        self.layout.addWidget(self.mixctl)
+        if mixctl is not None:
+            self.layout.addWidget(mixctl)
 
         self.build()
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
@@ -53,91 +48,23 @@ class SMmixer(QtGui.QFrame):
         self.setSizePolicy(sizePolicy)
         guiparent.setSizePolicy(sizePolicy)
 
-        self.pushing=dict()
-        self.pulling=dict()
-
     def build(self):
-        self.sm=[]
-
         while self.smilayout.count() > 0:
             item = self.smilayout.takeAt(0)
             if not item:
                 continue
-
             w = item.widget()
             if w:
                 w.deleteLater()
 
         # Create widgets
         count = 0
-        SMs=self.sms
-        if True:
-            for sm in sorted(SMs.keys()):
-                d=SMs[sm]
-                smi=self.smifactory(parent=self, name=sm, confs=d)
-                self.sm+=[smi]
-                self.smilayout.addWidget(smi.widget())
-                count+=1
-        else:
-            for count in range(16):
-                name="SM"+str(count)
-                smi=self.smifactory(parent=self, name=name)
-                self.sm+=[smi]
-                self.smilayout.addWidget(smi.widget())
-    def setSM(self, SMs=None):
-        self.sms=SMs
+        SMs=self.sm
+        for sm in SMs:
+            self.smilayout.addWidget(sm.widget())
+            count+=1
+
+    def setSM(self, SMs=[]):
+        self.sm=SMs
         self.build()
-    def scanSM(self):
-        self.master.refreshIt()
 
-    def selected(self):
-        # FIXME: i'm sure this can be done very elegant with some lambda function
-        result=[]
-        for sm in self.sm:
-            if sm.selected():
-                result+=[sm]
-        return result
-    def select(self, state):
-        for sm in self.sm:
-            sm.select(state)
-
-    def ping(self):
-        for sm in self.sm:
-            sm.ping()
-    def launch(self, state):
-        ts=self.syncTimestamps()
-        for s in self.selected():
-            s.launch(state, ts)
-    def pull(self, path):
-        if path is None:
-            self.mixctl.pushpulled(False)
-            return
-        self.pulling.clear()
-        for s in self.selected():
-            self.pulling[s]=True
-            s.pull(path, self._pulled)
-    def push(self, path):
-        if path is None:
-            self.mixctl.pushpulled(True)
-            return
-        self.pushing.clear()
-        for s in self.selected():
-            self.pushing[s]=True
-            s.push(path, self._pushed)
-    def applySettings(self, settings):
-        for s in self.selected():
-            s.applySettings(settings)
-    def syncTimestamps(self):
-        ts=[]
-        for s in self.selected():
-            ts+=[s.getTimestamp()]
-        return (max(ts), min(ts))
-
-    def _pulled(self, sm, ret):
-        self.pulling[sm]=False
-        if not True in self.pulling.values():
-            self.mixctl.pushpulled(False)
-    def _pushed(self, sm, ret):
-        self.pushing[sm]=False
-        if not True in self.pushing.values():
-            self.mixctl.pushpulled(True)

@@ -47,9 +47,9 @@ _streamProfiles =['L16', 'L24']
 _streamChannels =(4,5)
 
 class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
-    def __init__(self, mix=None, guiparent=None, settings={}):
+    def __init__(self, mixer, guiparent=None, settings={}):
         super(MIXconfig, self).__init__(guiparent)
-        self.mix=mix
+        self.mixer=mixer
         self.settings=_syncDicts(settings)
         self.orgsettings=_syncDicts(settings)
         self.setupUi(self)
@@ -62,7 +62,7 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
     def _do_accept(self):
         self.hide()
         self._getSettings()
-        self.mix.applySettings(self.settings)
+        self.mixer.applyMixSettings(self.settings)
     def _do_reject(self):
         _syncDicts(self.orgsettings, self.settings)
         self.hide()
