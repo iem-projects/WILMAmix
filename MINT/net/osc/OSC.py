@@ -296,10 +296,10 @@ class CallbackManager:
     the typetags as the first two arguments."""
 
     def __init__(self, verbose=False):
+        self.verbose=verbose
         self.callbacks = {}
         self.subtreecallbacks = []
-        self.verbose=verbose
-        self.add(self.unbundler, "#bundle")
+        self.removeAll()
 
     def handle(self, data, source = None):
         """Given OSC data, tries to call the callback with the
@@ -378,6 +378,11 @@ class CallbackManager:
     def remove(self, name):
         """Removes a callback from our callback set"""
         self.add(None, name)
+    def removeAll(self):
+        """Removes all callbacks"""
+        self.callbacks={}
+        self.subtreecallbacks = []
+        self.add(self.unbundler, "#bundle")
 
     def unbundler(self, messages):
         """Dispatch the messages in a decoded bundle."""
