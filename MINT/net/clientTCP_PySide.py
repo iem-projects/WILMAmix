@@ -22,7 +22,7 @@ import clientAbstract
 from SLIP import SLIP
 from PySide.QtNetwork import QTcpSocket, QHostAddress
 
-class clientTCP:
+class clientTCP(clientAbstract.clientAbstract):
     """ OSC-client running on GOD.
     sends OSC-messages to SMi.
     receives OSC-messages from SMi (and emits signals with the data)
