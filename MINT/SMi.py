@@ -162,7 +162,6 @@ class SMi:
             pd = pdfile.pdfile(os.path.join(self.settings['/path/in'], 'MAIN.pd'))
             inlets=pd.getInlets()
             outlets=pd.getOutlets()
-            print "iolets:", (inlets, outlets)
         except IOError:
             pass
         self.pd.send('/control/load/process',[inlets[1], outlets[1], 'MAIN'])
