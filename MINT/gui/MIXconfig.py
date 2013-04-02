@@ -82,8 +82,8 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         print "settings", self.settings
 
         # proxy
-        self.proxy_recvPort.setValue(self.settings['/proxy/receiver/port'])
-        self.proxy_sendPort.setValue(self.settings['/proxy/sender/port'])
+        self.proxy_recvPort.setValue(int(self.settings['/proxy/receiver/port']))
+        self.proxy_sendPort.setValue(int(self.settings['/proxy/sender/port']))
         self.proxy_sendHost.setText(self.settings['/proxy/sender/host'])
 
 ######################################################################
