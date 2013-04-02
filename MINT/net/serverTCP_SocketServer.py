@@ -87,6 +87,8 @@ class serverTCP(serverAbstract.serverAbstract):
 #        print "Connected", sock
         self.remotes[conn]=SLIP()
         gobject.io_add_watch(conn, gobject.IO_IN, self._callback)
+        self.remote=(len(self.remotes)>0 or None)
+
         return True
 
     def _callback(self, sock, *args):
@@ -107,7 +109,7 @@ class serverTCP(serverAbstract.serverAbstract):
             slip.append(data)
             for d in slip.get():
                 am.handle(d, address)
-
+        self.remote=(len(self.remotes)>0 or None)
         return (len(data)>0) and self.remotes.has_key(sock)
 
     def _send(self, data):
