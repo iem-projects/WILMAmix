@@ -20,7 +20,7 @@
 
 import osc
 
-class clientAbstract:
+class clientAbstract(object):
     """OSC-client.
     sends OSC-messages to server.
     receives OSC-messages from server (and passes them on)
