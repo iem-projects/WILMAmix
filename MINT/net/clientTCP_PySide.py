@@ -18,9 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
-import osc
+import clientAbstract
 from SLIP import SLIP
-from PySide.QtNetwork import QTcpSocket
+from PySide.QtNetwork import QTcpSocket, QHostAddress
 
 class clientTCP:
     """ OSC-client running on GOD.
@@ -29,11 +29,9 @@ class clientTCP:
     """
 
     def __init__(self, host, port, oscprefix='', verbose=False):
-        self.addressManager = osc.CallbackManager(verbose=verbose)
+        super(clientTCP, self).__init__(oscprefix=oscprefix, verbose=verbose)
         self.remote = (host, port) ## FIXXME: 'host' is not canonicalized
         self.keepListening=True
-        self.oscPrefix=oscprefix
-        self.verbose=verbose
 
         self.slip = SLIP()
         
@@ -69,14 +67,7 @@ class clientTCP:
         for d in self.slip.get():
             self.addressManager.handle(d, self.sender)
         
-
-    def add(self, callback, oscAddress):
-        """add a callback for oscAddress"""
-        if self.addressManager is not None:
-            self.addressManager.add(callback,  self.oscPrefix+oscAddress)
     def _send(self, data):
-        from PySide.QtNetwork import QHostAddress
-
         if self.socket is not None and self.remote is not None:
             if self.verbose:
                 print "sending '", data, "' to ", self.remote
@@ -84,28 +75,6 @@ class clientTCP:
             slip+=data;
             sdata=str(slip.getData())
             self.socket.writeData(sdata, len(sdata))
-
-    def sendMsg(self, oscAddress, dataArray=[]):
-        """send an OSC-message to the server"""
-        self._send( osc.createBinaryMsg(self.oscPrefix+oscAddress, dataArray) )
-    def sendBundle(self, bundle):
-        """send an OSC-bundle to the server"""
-        if isinstance(bundle, osc.Bundle):
-            self._send(bundle.data())
-        else:
-            self._send(bundle.message)
-    def send(self, addr, data=None):
-        if type(addr) is str: # it's an addr/data pair
-            self.sendMsg(addr, data)
-        elif data is None:    # it's a bundle
-            self.sendBundle(addr)
-        else:
-            raise Exception("usage: send(addr, data) OR send(bundle)")
-
-    def getRemote(self):
-        return self.remote
-
-
 
 ######################################################################
 
