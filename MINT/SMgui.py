@@ -56,7 +56,7 @@ class SMgui:
             self.connection = _NetClient(config['address'],
                                          config['port'],
                                          oscprefix=self.oscprefix,
-                                         type=self.settings['/protocol'])
+                                         transport=self.settings['/protocol'])
             self._connect()
         except IndexError:
             print "no network configurations -> no connection"

@@ -110,7 +110,7 @@ class SMi:
         self.mode=None
 
         self.oscprefix='/'+self.settings['/id']
-        self.server = NetServer(port=int(self.settings['/port']), oscprefix=self.oscprefix, type=self.settings['/protocol'], service=self.settings['/service'])
+        self.server = NetServer(port=int(self.settings['/port']), oscprefix=self.oscprefix, transport=self.settings['/protocol'], service=self.settings['/service'])
         self.server.add(self.ping, '/ping')
         self.server.add(self.setGain, '/gain')
 

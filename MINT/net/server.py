@@ -19,15 +19,15 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def server(host='', port=0, oscprefix=None, service=None, verbose=False, type='udp'):
-    if 'udp' == type:
+def server(host='', port=0, oscprefix=None, service=None, verbose=False, transport='udp'):
+    if 'udp' == transport:
         import serverUDP
         return serverUDP.serverUDP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
-    if 'tcp' == type:
+    if 'tcp' == transport:
         import serverTCP
         return serverTCP.serverTCP(host=host, port=port, oscprefix=oscprefix, service=service, verbose=verbose)
 
-    raise Exception("invalid stream type: "+type)
+    raise Exception("invalid stream transport: "+transport)
 
 
 
