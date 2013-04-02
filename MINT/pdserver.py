@@ -42,7 +42,8 @@ class _pdprocess:
             cwd=tempfile.mkdtemp()
         self.cwd=cwd
         self.args=[]
-        self.args+=['-path', ".:/usr/lib/pd/extra/iemnet:/usr/lib/pd/extra/osc:~/src/cvs/MINT/pd/iemrtp"]
+        self.args+=['-path', "."]
+        #self.args+=['-path', ".:/usr/lib/pd/extra/iemnet:/usr/lib/pd/extra/osc:~/src/cvs/MINT/pd/iemrtp"]
         if cpd is not None: ## patch directory
             self.args+=['-path', cpd]
         self.args+=['-path', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pd')]
