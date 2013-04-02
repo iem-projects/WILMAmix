@@ -97,7 +97,9 @@ class PdCommunicator:
         self.smi.server.sendMsg(msg[0], msg[2:])
 
     def stop(self):
+        print "PdCommunicator: stop"
         self.server.stop()
+        print "PdCommunicator: stopped"
 
     def send(self, addr, data=None):
         self.server.send(addr, data)

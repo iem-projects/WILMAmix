@@ -31,6 +31,7 @@ if __name__ == '__main__':
     try:
         gobject.MainLoop().run()
     except KeyboardInterrupt:
+        print "MINTsm KeyboardInterrupt"
         pass
     sm.cleanup()
 
