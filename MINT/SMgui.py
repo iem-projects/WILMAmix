@@ -90,6 +90,8 @@ class SMgui:
         self.connection.add(self._smiStateBatt, '/state/battery')
         self.connection.add(self._smiStateRuntime, '/state/runtime')
 
+        self.connection.add(self._smiProcess, '/process/')
+
     def widget(self):
         return self.channels
 
@@ -267,6 +269,10 @@ class SMgui:
         index=4
         self.config.setState(index, value)
         self.critical[index]=value<10
+    def _smiProcess(self, msg, src):
+        self.mixer.sendProxy(msg[0], msg[2:])
+        pass
+
 
 
 ######################################################################

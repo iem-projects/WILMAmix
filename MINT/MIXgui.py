@@ -59,7 +59,7 @@ class MIXgui:
         self.proxyserver = None
         port=int(self.settings['/proxy/server/port'])
         if (port>0) and (port<65536):
-            self.proxyserver = net.server(port=port)
+            self.proxyserver = net.server(port=port, transport='udp', backend='gui')
             self.proxyserver.add(self._proxyCallback, None)
         print "proxyServer", (self.proxyserver, port)
     def _proxyClient(self):
@@ -67,7 +67,7 @@ class MIXgui:
         port=int(self.settings['/proxy/client/port'])
         host=self.settings['/proxy/client/host']
         if (port>0) and (port<65536):
-            self.proxyclient = net.client(port=port)
+            self.proxyclient = net.client(host=host, port=port, transport='udp', backend='gui')
             self.proxyclient.add(self._proxyCallback, None)
         print "proxyClient", (self.proxyclient, host, port)
 
@@ -79,8 +79,6 @@ class MIXgui:
 
     def sendProxy(self, addr, msg=None):
         """send data to the proxy/proxies"""
-        print "sending ", (addr, msg)
-        print "     -> ", (self.proxyclient, self.proxyserver)
         if self.proxyclient is not None:
             self.proxyclient.send(addr, msg)
         if self.proxyserver is not None:
