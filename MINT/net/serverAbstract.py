@@ -38,7 +38,11 @@ class serverAbstract(object):
         self.port   = port # local listening port
         self.addressManager = osc.CallbackManager(verbose=verbose)
         self.publisher=None
-
+        publishname=oscprefix
+        if publishname is not None:
+            while publishname.startswith('/'):
+                publishname=publishname[1:]
+        self.publishname=publishname
     def __del__(self):
         self.shutdown()
 
