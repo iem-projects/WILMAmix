@@ -65,6 +65,8 @@ class SMgui:
         self.config=SMconfig.SMconfig(self, guiparent=guiparent, settings=self.settings, interfaces=interfaces)
         self.name = name
 
+        self.channels.launchButton.setText(self.settings['/mode'].upper())
+
         if confs is not None:
             print "FIXXME: confs not yet used in SMgui"
 
@@ -153,6 +155,7 @@ class SMgui:
                        self._hasSettingChanged('/stream/channels', settings))
         # /mode
         modechanged=self._hasSettingChanged('/mode', settings)
+        self.channels.launchButton.setText(self.settings['/mode'].upper())
 
         # if the mode has changed or the streaming settings have changed while we were streaming,
         # stop it
