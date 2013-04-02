@@ -149,6 +149,7 @@ class _TestServer:
 
 if __name__ == '__main__':
     n = _TestServer(port=7777)
+    gobject.threads_init()
 
     try:
         gobject.MainLoop().run()
