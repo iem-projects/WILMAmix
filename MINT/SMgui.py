@@ -284,9 +284,9 @@ if __name__ == '__main__':
             self.d['/stream/protocol']='RTP'
             self.d['/stream/profile' ]='L16'
             self.d['/stream/channels']=4
-            self.d['/proxy/receiver/port']=9998
-            self.d['/proxy/sender/host']='localhost'
-            self.d['/proxy/sender/port']=9999
+            self.d['/proxy/server/port']=9998
+            self.d['/proxy/client/host']='localhost'
+            self.d['/proxy/client/port']=9999
             layout = QtGui.QHBoxLayout()
             names=[]
             for i in range(10):

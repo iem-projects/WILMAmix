@@ -210,9 +210,6 @@ if __name__ == '__main__':
             self.d['/stream/protocol']='RTP'
             self.d['/stream/profile' ]='L16'
             self.d['/stream/channels']=4
-            self.d['/proxy/receiver/port']=9998
-            self.d['/proxy/sender/host']='localhost'
-            self.d['/proxy/sender/port']=9999
             self.smconf=SMconfig(name="foo", settings=self.d)
             layout = QtGui.QHBoxLayout()
             self.openButton= QtGui.QPushButton("Config")
