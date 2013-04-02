@@ -19,7 +19,7 @@
 # along with MINTmix.  If not, see <http://www.gnu.org/licenses/>.
 
 import clientAbstract
-from PySide.QtNetwork import QUdpSocket
+from PySide.QtNetwork import QUdpSocket, QHostAddress
 
 class clientUDP(clientAbstract.clientAbstract):
     """ OSC-client running on GOD.
@@ -30,7 +30,6 @@ class clientUDP(clientAbstract.clientAbstract):
     def __init__(self, host, port, oscprefix='', verbose=False):
         super(clientUDP, self).__init__(oscprefix=oscprefix, verbose=verbose)
         self.keepListening=True
-        self.verbose=verbose
 
         self.socket = QUdpSocket()
         self.socket.readyRead.connect(self._callback)
@@ -61,7 +60,6 @@ class clientUDP(clientAbstract.clientAbstract):
             self.addressManager.handle(datagram.data(), (sender.toString(), senderPort))
 
     def _send(self, data):
-        from PySide.QtNetwork import QHostAddress
         if self.socket is not None and self.remote is not None:
             if self.verbose:
                 print "sending '", data, "' to ", self.remote
