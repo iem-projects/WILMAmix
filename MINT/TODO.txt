@@ -1,5 +1,8 @@
-GUI/SMiConfig
+GUI.MIXConfig:
   Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
+
+GUI.SMi/SMiConfig:
+  Q: reflect current mode in "START" button
 
 
 
