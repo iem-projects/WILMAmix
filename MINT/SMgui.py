@@ -66,7 +66,6 @@ class SMgui:
         self.name = name
 
         self.channels.launchButton.setText(self.settings['/mode'].upper())
-
         if confs is not None:
             print "FIXXME: confs not yet used in SMgui"
 
@@ -88,7 +87,9 @@ class SMgui:
         self.connection.add(self._smiStateMem,  '/state/memory')
         self.connection.add(self._smiStateDisk, '/state/disk')
         self.connection.add(self._smiStateBatt, '/state/battery')
-        self.connection.add(self._smiStateRuntime, '/state/runtime')
+        self.connection.add(self._smiStateRuntime,'/state/runtime')
+        self.connection.add(self._smiStateSync, '/state/sync')
+        self.connection.add(self._smiStateLock, '/state/lock')
 
         self.connection.add(self._smiProcess, '/process/')
 
@@ -269,10 +270,17 @@ class SMgui:
         index=4
         self.config.setState(index, value)
         self.critical[index]=value<10
+    def _smiStateSync(self, msg, src):
+        value=msg[2]
+        self.config.setSync(value)
+        self.critical[5]=not value
+    def _smiStateLock(self, msg, src):
+        value=msg[2]
+        self.config.setSyncLock(value)
+        self.critical[6]=not value
     def _smiProcess(self, msg, src):
         self.mixer.sendProxy(msg[0], msg[2:])
         pass
-
 
     def _proxyCallback(self, msg, src):
         if not self.selected():
