@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>581</width>
-    <height>329</height>
+    <width>571</width>
+    <height>345</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,375 +16,493 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <widget class="QDialogButtonBox" name="closeButtons">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>290</y>
-     <width>221</width>
-     <height>39</height>
-    </rect>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>0</number>
    </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="copyConfigButton">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>300</y>
-     <width>181</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Copy to selected SMi's</string>
-   </property>
-  </widget>
-  <widget class="QGroupBox" name="frame_FileSync">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>200</y>
-     <width>201</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>FileSync</string>
-   </property>
-   <widget class="QCommandLinkButton" name="pullButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="text">
-     <string>Pull data from SMi</string>
-    </property>
-   </widget>
-   <widget class="QCommandLinkButton" name="pushButton">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="text">
-     <string>Push data to SMi</string>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="frame_Audio">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>141</width>
-     <height>281</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Audio</string>
-   </property>
-   <widget class="QSlider" name="gainFader">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>16</width>
-      <height>251</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Vertical</enum>
-    </property>
-   </widget>
-   <widget class="qsynthMeter" name="meter" native="true">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>20</y>
-      <width>101</width>
-      <height>251</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="frame_state">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>60</y>
-     <width>201</width>
-     <height>131</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>System Health</string>
-   </property>
-   <widget class="statemeter" name="statemeter" native="true">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>181</width>
-      <height>81</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_timestamp">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>100</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TimeStamp</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="timestamp">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>100</y>
-      <width>81</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="frame">
-     <bool>true</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-    <property name="readOnly">
-     <bool>true</bool>
-    </property>
-    <property name="placeholderText">
-     <string notr="true"/>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QWidget" name="frame_Mode" native="true">
-   <property name="geometry">
-    <rect>
-     <x>370</x>
-     <y>20</y>
-     <width>211</width>
-     <height>181</height>
-    </rect>
-   </property>
-   <widget class="QComboBox" name="modeSelector">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>20</y>
-      <width>110</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>Streaming</string>
+   <item>
+    <widget class="QWidget" name="frameConfig" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Recording</string>
+     <property name="autoFillBackground">
+      <bool>false</bool>
      </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Processing</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLabel" name="label_mode">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>52</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Mode</string>
-    </property>
-   </widget>
-   <widget class="QGroupBox" name="frame_StreamSettings">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>191</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Stream Settings</string>
-    </property>
-    <widget class="QComboBox" name="streamProtocol">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>20</y>
-       <width>81</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <item>
-      <property name="text">
-       <string>RTP</string>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="spacing">
+       <number>0</number>
       </property>
-     </item>
-    </widget>
-    <widget class="QLabel" name="label_streamProtocol">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>52</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Protocol</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_streamProfile">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>50</y>
-       <width>52</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Profile</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_streamChannels">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>80</y>
-       <width>52</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Channels</string>
-     </property>
-    </widget>
-    <widget class="QSpinBox" name="streamChannels">
-     <property name="geometry">
-      <rect>
-       <x>130</x>
-       <y>80</y>
-       <width>50</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="minimum">
-      <number>4</number>
-     </property>
-     <property name="maximum">
-      <number>4</number>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="streamProfile">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>50</y>
-       <width>81</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <item>
-      <property name="text">
-       <string>L16</string>
+      <property name="margin">
+       <number>0</number>
       </property>
-     </item>
+      <item>
+       <widget class="QGroupBox" name="frameAudio">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Audio</string>
+        </property>
+        <widget class="QSlider" name="gainFader">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>16</width>
+           <height>251</height>
+          </rect>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+        <widget class="qsynthMeter" name="meter" native="true">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>20</y>
+           <width>101</width>
+           <height>251</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="frameMid" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>213</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>213</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <widget class="QGroupBox" name="frameNetwork">
+         <property name="geometry">
+          <rect>
+           <x>1</x>
+           <y>0</y>
+           <width>210</width>
+           <height>51</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>210</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Network</string>
+         </property>
+         <widget class="QComboBox" name="networkInterface">
+          <property name="geometry">
+           <rect>
+            <x>90</x>
+            <y>20</y>
+            <width>101</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <item>
+           <property name="text">
+            <string>eth0</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>wlan0</string>
+           </property>
+          </item>
+         </widget>
+         <widget class="QLabel" name="label_networkInterface">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>20</y>
+            <width>52</width>
+            <height>13</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Interface</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QGroupBox" name="frameState">
+         <property name="geometry">
+          <rect>
+           <x>1</x>
+           <y>50</y>
+           <width>210</width>
+           <height>141</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>210</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>System Health</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="statemeter" name="statemeter" native="true"/>
+          </item>
+          <item>
+           <widget class="QWidget" name="frameSync" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QCheckBox" name="stateSync">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Sync</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="stateLock">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Lock</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="frameTimestamp" native="true">
+            <layout class="QGridLayout" name="gridLayout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_timestamp">
+               <property name="text">
+                <string>TimeStamp</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="timestamp">
+               <property name="frame">
+                <bool>true</bool>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="placeholderText">
+                <string notr="true"/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QGroupBox" name="frameFileSync">
+         <property name="geometry">
+          <rect>
+           <x>1</x>
+           <y>190</y>
+           <width>210</width>
+           <height>90</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>210</width>
+           <height>90</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>FileSync</string>
+         </property>
+         <widget class="QCommandLinkButton" name="pullButton">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>20</y>
+            <width>181</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Pull data from SMi</string>
+          </property>
+         </widget>
+         <widget class="QCommandLinkButton" name="pushButton">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>50</y>
+            <width>181</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Push data to SMi</string>
+          </property>
+         </widget>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="frameMode" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>190</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>190</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <widget class="QComboBox" name="modeSelector">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>20</y>
+           <width>110</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <item>
+          <property name="text">
+           <string>Streaming</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Recording</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Processing</string>
+          </property>
+         </item>
+        </widget>
+        <widget class="QLabel" name="label_mode">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>52</width>
+           <height>13</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Mode</string>
+         </property>
+        </widget>
+        <widget class="QGroupBox" name="frameStreamSettings">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>50</y>
+           <width>191</width>
+           <height>121</height>
+          </rect>
+         </property>
+         <property name="title">
+          <string>Stream Settings</string>
+         </property>
+         <widget class="QComboBox" name="streamProtocol">
+          <property name="geometry">
+           <rect>
+            <x>100</x>
+            <y>20</y>
+            <width>81</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <item>
+           <property name="text">
+            <string>RTP</string>
+           </property>
+          </item>
+         </widget>
+         <widget class="QLabel" name="label_streamProtocol">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>20</y>
+            <width>52</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Protocol</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_streamProfile">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>50</y>
+            <width>52</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Profile</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_streamChannels">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>80</y>
+            <width>52</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Channels</string>
+          </property>
+         </widget>
+         <widget class="QSpinBox" name="streamChannels">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>80</y>
+            <width>50</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="minimum">
+           <number>4</number>
+          </property>
+          <property name="maximum">
+           <number>4</number>
+          </property>
+         </widget>
+         <widget class="QComboBox" name="streamProfile">
+          <property name="geometry">
+           <rect>
+            <x>100</x>
+            <y>50</y>
+            <width>81</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <item>
+           <property name="text">
+            <string>L16</string>
+           </property>
+          </item>
+         </widget>
+        </widget>
+       </widget>
+      </item>
+     </layout>
     </widget>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="frame_Network">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>10</y>
-     <width>201</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Network</string>
-   </property>
-   <widget class="QComboBox" name="networkInterface">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>20</y>
-      <width>101</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>eth0</string>
+   </item>
+   <item>
+    <widget class="QWidget" name="frameButtons" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>wlan0</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLabel" name="label_networkInterface">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>52</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Interface</string>
-    </property>
-   </widget>
-  </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="copyConfigButton">
+        <property name="text">
+         <string>Copy to selected SMi's</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>200</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QDialogButtonBox" name="closeButtons">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="standardButtons">
+         <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <customwidgets>
   <customwidget>
