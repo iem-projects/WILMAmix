@@ -111,6 +111,14 @@ class MIXgui:
             self.sm+=[smi]
         self.smmixer.setSM(self.sm)
 
+    def registerProxy4SM(self):
+        """register the proxy callbacks for the various SMis"""
+        if self.proxyclient:
+            sm.proxyclient.removeAll()
+            for sm in self.sm: sm.addProxy(self.proxyclient)
+        if self.proxyserver:
+            sm.proxyserver.removeAll()
+            for sm in self.sm: sm.addProxy(self.proxyserver)
     def printIt(self):
         print self.dict
 
