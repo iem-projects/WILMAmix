@@ -46,6 +46,10 @@ class clientAbstract(object):
         self.remote = None
         raise Exception("shutdown()")
 
+    def removeAll(self):
+        """remove all callbacks"""
+        if self.addressManager is not None:
+            self.addressManager.removeAll()
     def _callback(self):
         '''ABSTRACT: Asynchronous connection listener. Receives data and passes it to OSC-addressManager.'''
         raise Exception("_callback()")

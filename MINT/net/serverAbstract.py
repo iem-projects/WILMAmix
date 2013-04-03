@@ -54,6 +54,11 @@ class serverAbstract(object):
         self.remote = None
         raise Exception("shutdown()")
 
+    def removeAll(self):
+        """remove all callbacks"""
+        if self.addressManager is not None:
+            self.addressManager.removeAll()
+
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
         if self.addressManager is not None:
