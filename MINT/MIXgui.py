@@ -60,15 +60,14 @@ class MIXgui:
         port=int(self.settings['/proxy/server/port'])
         if (port>0) and (port<65536):
             self.proxyserver = net.server(port=port, transport='udp', backend='gui')
-            self.proxyserver.add(self._proxyCallback, None)
+            self.registerProxies([self.proxyserver])
     def _proxyClient(self):
         self.proxyclient = None
         port=int(self.settings['/proxy/client/port'])
         host=self.settings['/proxy/client/host']
         if (port>0) and (port<65536):
             self.proxyclient = net.client(host=host, port=port, transport='udp', backend='gui')
-            self.proxyclient.add(self._proxyCallback, None)
-
+            self.registerProxies([self.proxyclient])
     def _nullCallback(self, msg, src):
         pass
 
@@ -110,7 +109,7 @@ class MIXgui:
             smi=SMgui.SMgui(mixer=self, guiparent=self.smmixer, name=sm, confs=d)
             self.sm+=[smi]
         self.smmixer.setSM(self.sm)
-
+        self.registerProxies()
     def registerProxies(self, proxies=None):
         """register the proxy callbacks for the various SMis"""
         if proxies is None:
