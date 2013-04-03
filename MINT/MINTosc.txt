@@ -32,6 +32,8 @@ SM->mix (every message prefixed with SMi-ID: '/<ID>')
 /state/disk             0.9     (disk-usage: 0..1)
 /state/battery          0.5     (battery charge state: 1.0=100%)
 /state/runtime          ???     (estimated time to go)
+/state/sync             True    (SMi is receiving syncs)
+/state/lock             True    (SMi is synched)
 /timestamp              43124   (32bitUINT, "now")
 /process/...            ...     (pass to the proxy)
 
