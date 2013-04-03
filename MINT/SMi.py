@@ -119,6 +119,7 @@ class SMi:
         self.server.add(self._mode, '/mode')
 
         self.server.add(self._process, '/process')
+        self.server.add(self._processProxy, '/process/')
         self.server.add(self._record, '/record')
         self.server.add(self._stream, '/stream')
         self.server.add(self._streamProtocol, '/stream/protocol')
@@ -234,7 +235,12 @@ class SMi:
             self.pd.send("/process/start")
         else:
             self.pd.send("/process/stop")
-
+    def _processProxy(self, msg, src):
+        addr=msg[0].split('/')
+        addr.pop(1) # remove SMi ID
+        data=msg[2:]
+        newaddr='/'.join(addr)
+        self.pd.send(newaddr, data)
 
     def ping(self, msg, src):
         self.state.update()
