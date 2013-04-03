@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MIXctl.ui'
 #
-# Created: Wed Mar 27 21:41:21 2013
+# Created: Wed Apr  3 13:18:25 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
