@@ -283,7 +283,8 @@ class SMgui:
         self.send('/'.join(addr), data)
 
     def addProxy(self, proxy):
-        proxy.add(self.oscprefix, self._proxyCallback)
+        subtree=self.oscprefix+'/'
+        proxy.add(self._proxyCallback, subtree)
 
 
 ######################################################################
