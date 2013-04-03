@@ -119,6 +119,8 @@ class MIXgui:
             p.removeAll()
             for sm in self.sm:
                 sm.addProxy(p)
+            p.add(self._nullCallback, None)
+
     def printIt(self):
         print self.dict
 
