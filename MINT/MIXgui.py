@@ -115,6 +115,8 @@ class MIXgui:
         if proxies is None:
             proxies = [self.proxyclient, self.proxyserver]
         for p in proxies:
+            if not p:
+                continue
             p.removeAll()
             for sm in self.sm:
                 sm.addProxy(p)
