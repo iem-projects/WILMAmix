@@ -280,7 +280,8 @@ class SMgui:
         addr=msg[0].split('/')
         data=msg[2:]
         addr[1]='process'
-        self.send('/'.join(addr), data)
+        newaddr='/'.join(addr)
+        self.send(newaddr, data)
 
     def addProxy(self, proxy):
         subtree=self.oscprefix+'/'
