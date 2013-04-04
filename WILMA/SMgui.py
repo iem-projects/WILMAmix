@@ -41,7 +41,7 @@ class SMgui:
         self.running=False
         self.confs=confs
         self.connection=None
-        self.critical=[False]*5
+        self.critical=[False]*7
         self.pingcounter=0
         self.pullCb = None
         self.pushCb = None
