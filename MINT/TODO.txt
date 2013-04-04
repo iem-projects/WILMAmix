@@ -1,13 +1,25 @@
-GUI.MIXConfig:
-  Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
+naming:
+  Q: rename MINT to WILMA (MINT is really only the fund that sponsors the project)
 
-Proxy:
-  Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
-  A: kind of working (TODO: filter by SMi prefix)
+RTPclient:
+  Q: implement RTP-receiver (in Pd)
+
+RTPclient.communication:
+  Q: tell RTP-server where to send data to
+
+MINTsm:
+  Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
 
 net.serverTCP:
   Q: quitting might result in: "socket.error: [Errno 104] Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
 
+GUI.MIXConfig:
+  Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
+  A: done
+
+Proxy:
+  Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
+  A: done
 
 GUI.SMi/SMiConfig:
   Q: reflect current mode in "START" button
@@ -19,11 +31,11 @@ sync:
 
 sfwrite:
   Q: write module that dumps audio to file
-  A: via Pd
+  A: done (via Pd)
 
 process:
   Q: write module that runs Pd
-  A: via Pd
+  A: done (via Pd)
 
 OSC:
   Q: sub-tree patterns (e.g. '/foo/' matches '/foo/bar/baz')
