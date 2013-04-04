@@ -1,15 +1,25 @@
-#N canvas 208 181 738 409 10;
-#X obj 95 48 inlet resume;
-#X obj 260 48 inlet suspend;
-#X obj 411 123 r pd;
-#X obj 411 145 route dsp;
-#X obj 393 173 i;
-#X obj 260 70 t b b;
-#X obj 95 196 i;
-#X obj 95 70 t b;
-#X msg 95 240 \; pd dsp 1;
-#X obj 95 218 select 1;
-#X msg 260 92 \; pd dsp 0;
+#N canvas 212 165 738 409 10;
+#X obj 95 138 inlet resume;
+#X obj 260 138 inlet suspend;
+#X obj 411 173 r pd;
+#X obj 411 195 route dsp;
+#X obj 393 223 i;
+#X obj 260 170 t b b;
+#X obj 95 246 i;
+#X obj 95 170 t b;
+#X msg 95 290 \; pd dsp 1;
+#X obj 95 268 select 1;
+#X msg 260 192 \; pd dsp 0;
+#X text 198 332 when running JACK (pd<0.44 \, probably pd>0.42) \,
+this might actually be slower \, since "dsp 0" will stop jackclient
+\, and "dsp 1" will start it again.;
+#X text 173 317 NOTE:;
+#X text 64 21 temporarily turn off DSP and turn it on later (if it
+was running before);
+#X text 65 53 this should speedup dynamic patching \, as the DSP-grph
+only needs to be rebuild once.;
+#X text 64 95 NOTE: for this abstraction to work properly \, it must
+be created before DSP is turned on.;
 #X connect 0 0 7 0;
 #X connect 1 0 5 0;
 #X connect 2 0 3 0;
