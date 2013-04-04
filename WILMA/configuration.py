@@ -22,6 +22,12 @@ import socket
 import ConfigParser, os
 import ast as _ast
 
+_configfiles=['WILMix.conf',
+              os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', 'WILMix.conf'),
+              os.path.expanduser('~/.config/wilma.iem.at/WILMix.conf'),
+             ]
+
+
 ### OSC-style configuration
 # mapping ConfigParser to a diectionary of OSC-addresses
 # e.g.
@@ -104,18 +110,12 @@ _defaults['/proxy/client/host']='localhost'
 
 
 _config = ConfigParser.ConfigParser(_defaults)
-_config.read(['WILMix.conf',
-              os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', 'WILMix.conf'),
-              os.path.expanduser('~/.config/iem.at/WILMix.conf'),
-              ])
+_config.read(_configfiles)
 _mixConf=_getDict(_config, 'MIX')
 
 _smDefaults=_getDict(_config, 'SM')
 _config = ConfigParser.ConfigParser(_smDefaults)
-_config.read(['WILMix.conf',
-              os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', 'WILMix.conf'),
-              os.path.expanduser('~/.config/iem.at/WILMix.conf'),
-              ])
+_config.read(_configfiles)
 _smConf=_getDict(_config, _smDefaults['/id'])
 _smConf['/id']=_smDefaults['/id']
 
