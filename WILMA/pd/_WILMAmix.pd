@@ -1,5 +1,6 @@
-#N canvas 95 569 559 300 10;
+#N canvas 96 565 559 300 10;
 #X text 39 26 stream-receiver (HG-side);
 #X obj 123 83 r _WILMA_pwd;
 #X obj 92 213 _WILMA/STREAMRECVR;
-#X obj 92 141 _WILMA/STREAMrtpreceiver \$0 udp 0 L16 32768 4 0;
+#X msg 98 173 /create /foo /bar /baz;
+#X connect 3 0 2 0;
