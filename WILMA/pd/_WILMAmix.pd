@@ -1,6 +1,15 @@
-#N canvas 96 565 559 300 10;
+#N canvas 97 561 648 375 10;
 #X text 39 26 stream-receiver (HG-side);
 #X obj 123 83 r _WILMA_pwd;
-#X obj 92 213 _WILMA/STREAMRECVR;
-#X msg 98 173 /create /foo /bar /baz;
-#X connect 3 0 2 0;
+#X obj 92 253 _WILMA/STREAMRECVR;
+#X obj 292 95 _WILMA/suspendresumedsp;
+#X msg 92 176 /stream/create /fo1 /bar /baz;
+#X msg 237 204 /stream/protocol rtp \, /stream/profile L16;
+#X msg 57 123 /stream/protocol rtsp \, /stream/profile L20 \, /stream/create
+/foo;
+#X msg 236 264 /stream/fo1/protocol rtp \, /stream/fo1/profile L16
+\, /stream/fo1/transport/protocol udp;
+#X connect 4 0 2 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;
+#X connect 7 0 2 0;
