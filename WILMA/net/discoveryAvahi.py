@@ -61,7 +61,7 @@ class discoverer:
             print "removed element not in dict: ", key
 	#print "deleted...", self.dict
 
-    def __init__(self, service = '_mint-sm._udp', domain='local'):
+    def __init__(self, service = '_wilma-sm._udp', domain='local'):
         self.dict=dict()
         loop = DBusGMainLoop()
         bus = dbus.SystemBus(mainloop=loop)
@@ -93,7 +93,7 @@ class discoverer:
 ##############
 
 class publisher:
-    def __init__(self,  service='_mint-sm._udp', port=7777, name=None):
+    def __init__(self,  service='_wilma-sm._udp', port=7777, name=None):
         DBusGMainLoop( set_as_default=True )
         self.group       = None #our entry group
         self.domain      = "" # Domain to publish on, default to .local
@@ -188,8 +188,8 @@ def test_discover():
 
 
 def test_publish():
-    tcp = publisher('_mint-sm._tcp')
-    udp = publisher('_mint-sm._udp')
+    tcp = publisher('_wilma-sm._tcp')
+    udp = publisher('_wilma-sm._udp')
     test_doloop()
 
 if __name__ == '__main__':

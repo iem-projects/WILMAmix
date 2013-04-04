@@ -78,7 +78,7 @@ except ImportError:
 _defaults['/passphrase'] = '****'
 
 _defaults['/protocol'] = 'udp'
-_defaults['/service' ] = '_mint-sm'
+_defaults['/service' ] = '_wilma-sm'
 _defaults['/port'    ] = '7777' # LATER change to 0
 _defaults['/gain_control'] = '4' ## alsa control for mic amp
 

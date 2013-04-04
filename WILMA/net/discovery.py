@@ -25,13 +25,13 @@
 import discoveryAvahi
 
 
-def discoverer(service = '_mint-sm._udp', domain='local'):
+def discoverer(service = '_wilma-sm._udp', domain='local'):
     return discoveryAvahi.discoverer(service=service, domain=domain)
 
 
 ##############
 
-def publisher(service='_mint-sm._udp', port=7777, name=None):
+def publisher(service='_wilma-sm._udp', port=7777, name=None):
     return discoveryAvahi.publisher(service=service, port=port, name=name)
 
 
@@ -51,8 +51,8 @@ def test_discover():
 
 
 def test_publish():
-    tcp = publisher('_mint-sm._tcp')
-    udp = publisher('_mint-sm._udp')
+    tcp = publisher('_wilma-sm._tcp')
+    udp = publisher('_wilma-sm._udp')
     test_doloop()
 
 if __name__ == '__main__':
