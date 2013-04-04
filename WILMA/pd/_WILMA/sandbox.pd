@@ -1,12 +1,12 @@
-#N canvas 381 438 450 300 10;
+#N canvas 384 426 450 300 10;
 #X obj 27 23 inlet~ dummy;
 #X obj 44 203 outlet~ dummy;
 #X obj 287 22 inlet open;
 #X msg 342 67 clear;
 #X obj 250 66 r \$1;
-#N canvas 428 194 450 300 _\$1 0;
-#X restore 116 114 pd _\$1;
-#X obj 287 88 s pd-_\$1;
+#N canvas 433 174 523 307 _\$0 0;
+#X restore 116 114 pd _\$0;
+#X obj 287 88 s pd-_\$0;
 #X connect 2 0 6 0;
 #X connect 3 0 6 0;
 #X connect 4 0 6 0;
