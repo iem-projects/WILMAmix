@@ -1,0 +1,49 @@
+OSC-messages for WILMA
+=====================
+
+mix->SM (every message prefixed with SMi-ID: '/<ID>')
+-----------------------------------------------------
+/ping
+/gain                   0.5             (preamp gain: 0..1)
+/network/interface      'eth0'          (select network interface; UNIMPLEMENTED)
+/path/in                '/././.'        (where to send data to on the MIX-host; IGNORED)
+/path/out               '/././.'        (where to get data from on the MIX-host; IGNORED)
+/mode                   'stream'        ('stream', 'record', 'process')
+/stream                 True            (start/stop streaming)
+/record                 True            (start/stop recording)
+/process                True            (start/stop processing)
+/stream/protocol        'RTP'           (FIXED)
+/stream/profile         'L16'           (FIXED)
+/stream/channels        4               (FIXED)
+/stream/uri             'rtp://192.168.171.180:7958'    (where to send stream to)
+/record/file            'foo'           (filename prefix)
+/record/timestamp       54132           (32bitUINT, when to start recording)
+/process/...            ...             (pass to the processing unit)
+
+SM->mix (every message prefixed with SMi-ID: '/<ID>')
+-----------------------------------------------------
+/path/in                '/tmp/in'       (where to send data to on the SMi)
+/path/out               '/tmp/out'      (where to get data from on the SMi)
+/user                   'iem'           (user for connecting to the SMi)
+/gain                   0.1             (current preamp gain)
+/level                  [0., -4., -12.3, 0.]    (input peak-levels in dB)
+/state/cpu              0.9     (CPU-load 0..1)
+/state/memory           0.2     (memory-usage: 0..1)
+/state/disk             0.9     (disk-usage: 0..1)
+/state/battery          0.5     (battery charge state: 1.0=100%)
+/state/runtime          ???     (estimated time to go)
+/state/sync             True    (SMi is receiving syncs)
+/state/lock             True    (SMi is synched)
+/timestamp              43124   (32bitUINT, "now")
+/process/...            ...     (pass to the proxy)
+
+
+
+configuration only (SM)
+-----------------------
+/passphrase             'foo'           (passphrase to use to log into the SMi (for file-transfer))
+configuration only (MIX)
+------------------------
+/proxy/client/port      7890            (port to send proxied process data to)
+/proxy/client/host      'localhost'     (host to send proxied process data to
+/proxy/server/port      7891            (prot we listen on to send data to the process)

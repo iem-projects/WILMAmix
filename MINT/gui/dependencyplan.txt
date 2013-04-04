@@ -1,9 +1,0 @@
-MINTmix
-        SMmixer
-                MIXctl
-             n* SMchannels
-	                 SMsettings (hidden by default)
-
-alle submodule halten eine Referenz auf MINTmix,
-worüber dann kommuniziert wird:
-	

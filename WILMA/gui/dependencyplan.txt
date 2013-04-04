@@ -1,0 +1,9 @@
+WILMix
+        SMmixer
+                MIXctl
+             n* SMchannels
+	                 SMsettings (hidden by default)
+
+alle submodule halten eine Referenz auf WILMix,
+worüber dann kommuniziert wird:
+	

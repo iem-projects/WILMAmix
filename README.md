@@ -1,12 +1,13 @@
-MINTmix - mixer application for MINT-MASSE
-==========================================
+WILMix - mixer application for WILMA
+====================================
 
 
-MINTmix is a multichannel mixer application written in python.
-it is intended for the use within the MINT-MASSE project, that aims at building
+WILMix is a multichannel mixer application written in python.
+it is intended for the use within the WILMA (WIreless
+Large-scale Microphone Array) project, that aims at building
 a distributed wireless acoustic sensor array.
 
-MINT-architecture
+WILMA-architecture
 -----------------
 a number of small satellites (SMi's) are equipped with up to four microphones.
 these satellites are controlled from a central computer (GOD).
@@ -15,26 +16,26 @@ stream them to the central computer (using some lossless protocol) or store the
 data on disk, for later retrieval.
 optionally, the satellites might do some pre-processing of the signal.
 
-MINTmix controls the satellites, so they know what to do.
+WILMix controls the satellites, so they know what to do.
 
 
 
-MINTmix architecture
+WILMix architecture
 --------------------
-MINTmix has two components:
-- MINTmix: a GUI running on the GOD machine. it allows the user to configure and
+WILMix has two components:
+- WILMix: a GUI running on the GOD machine. it allows the user to configure and
            monitor the SMi's.
-- MINTsm : the daemon running on the SMi's that does what the MINTmix requests.
+- WILMAsm : the daemon running on the SMi's that does what the WILMix requests.
 
 
 Communication
 -------------
-MINTmix discovers the SMi's by use of ZeroConf.
+WILMix discovers the SMi's by use of ZeroConf.
 All control communication is done via [OSC](http://opensoundcontrol.org).
 Audio data is sent back to GOD using RTSP/RTP, using a user-selected codec
 (currently: L16).
 
-Dependencies (MINTmix)
+Dependencies (WILMix)
 ----------------------
 + python
 + python-pyside.qtcore
@@ -45,7 +46,7 @@ Dependencies (MINTmix)
 + python-numpy
 + avahi-daemon
 
-Dependencies (MINTsm)
+Dependencies (WILMAsm)
 ---------------------
 + python
 + python-avahi
