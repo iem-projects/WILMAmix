@@ -1,17 +1,17 @@
-naming:
-  Q: rename WILMA to WILMA (WILMA is really only the fund that sponsors the project)
-
 RTPclient:
   Q: implement RTP-receiver (in Pd)
 
 RTPclient.communication:
   Q: tell RTP-server where to send data to
 
-WILMAsm:
+BUG:WILMAsm:
   Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
 
-net.serverTCP:
+BUG:net.serverTCP:
   Q: quitting might result in: "socket.error: [Errno 104] Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
+
+
+------------------------------------
 
 GUI.MIXConfig:
   Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
@@ -49,3 +49,7 @@ RTSPserver:
 
 import:
   Q: WILMAsm.py requires 'python-psutil'?
+
+naming:
+  Q: rename WILMA to WILMA (WILMA is really only the fund that sponsors the project)
+  A: done
