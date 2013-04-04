@@ -49,6 +49,8 @@ class State:
         self.battery = 1.
         self.runtime = 0
         self.timestamp = 0L
+        self.synced = False
+        self.locked = False
 
     def update(self):
         if self.mixer is not None:
@@ -61,6 +63,8 @@ class State:
         self.disk = self.health.disk
         self.battery = self.health.battery
         self.runtime = self.health.runtime
+        self.synced = self.health.synced
+        self.locked = self.health.locked
 
     def addToBundle(self, bundle):
         bundle.append(('/gain', self.gains))
@@ -71,6 +75,8 @@ class State:
         bundle.append(('/state/disk', self.health.disk))
         bundle.append(('/state/battery', self.health.battery))
         bundle.append(('/state/runtime', self.health.runtime))
+        bundle.append(('/state/lock', self.health.locked))
+        bundle.append(('/state/sync', self.health.synced))
 
 class PdCommunicator:
     def __init__(self, smi):

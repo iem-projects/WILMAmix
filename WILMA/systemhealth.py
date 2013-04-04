@@ -67,6 +67,8 @@ class systemhealth:
             self.battery = 1.
             self.runtime = 0
             self.last=0
+            self.synced = True # just for testing
+            self.locked  = False
 
             self.keepRunning=True
             self.isRunning=False
@@ -94,18 +96,24 @@ class systemhealth:
 
                 ### battery
                 if self.smbus is not None:
+                    charge=0.
+                    runtime=0.
+                    synched=False
+                    locked=False
+
                     try:
                         charge  = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr, systemhealth.SystemHealthThread.SMBUS_cmdRelativeStateOfCharge)
                         runtime = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr, systemhealth.SystemHealthThread.SMBUS_cmdRunTimeToEmpty)
                         state   = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr, systemhealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
+                        # FIXXME: sync
+                        # FIXXME: lock
                     except IOError:
-                        charge=0.
-                        runtime=0.
                         pass # hopefully a temporary error...
-                    
 
                     self.battery = charge/100.
                     self.runtime = runtime
+                    self.synced = synced
+                    self.locked = locked
 
                 deltime = self.interval - (time.time()-now)
                 if deltime > 0.:
@@ -121,6 +129,8 @@ class systemhealth:
         self.disk= 1.
         self.battery = 1.
         self.runtime = 0
+        self.synced = False
+        self.locked = False
         self.thread.start()
         while not (self.thread.keepRunning and self.thread.isRunning):
             time.sleep(0.1)
@@ -139,12 +149,16 @@ class systemhealth:
             self.disk = self.thread.disk
             self.battery = self.thread.battery
             self.runtime = self.thread.runtime
+            self.synced = self.thread.synced
+            self.locked = self.thread.locked
         else:
             self.cpu = 1.
             self.mem = 1.
             self.disk= 1.
             self.battery = 1.
             self.runtime = 0
+            self.synced = True
+            self.locked = False
 
 ######################################################################
 
