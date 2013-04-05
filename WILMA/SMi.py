@@ -209,7 +209,10 @@ class SMi:
         o=urlparse(msg[2])
         port=o.port
         host=o.hostname
+        if host == '':
+            host=src[0]
         self.settings['/stream/destination']=[host, port]
+        print "stream settings",self.settings['/stream/destination']
 
     def _stream(self, msg, src):
         state=msg[2]
