@@ -131,7 +131,10 @@ class SMi:
         self.server.add(self._process, '/process')
         self.server.add(self._processProxy, '/process/')
         self.server.add(self._record, '/record')
+
         self.server.add(self._stream, '/stream')
+        self.server.add(self._streamTransport, '/stream/transport/protocol')
+        self.server.add(self._streamTransportPort, '/stream/transport/port')
         self.server.add(self._streamProtocol, '/stream/protocol')
         self.server.add(self._streamProfile , '/stream/profile')
         self.server.add(self._streamChannels, '/stream/channels')
@@ -193,6 +196,14 @@ class SMi:
         self.settings[key] = value
         return True
 
+    def _streamTransport(self, msg, src):
+        transport=str(msg[2]).lower()
+        if self._hasSettingChanged('/stream/transport/protocol', transport):
+            self._reloadStream()
+    def _streamTransportPort(self, msg, src):
+        port=msg[2]
+        if self._hasSettingChanged('/stream/transport/port', port):
+            self._reloadStream()
 
     def _streamProtocol(self, msg, src):
         protocol=str(msg[2]).lower()
