@@ -184,6 +184,15 @@ class SMi:
         self.mode=str(msg[2]).lower()
         if self._reloadStream() or self._reloadRecord() or self._reloadProcess():
             pass
+    def _hasSettingChanged(self, key, value):
+        if not key in self.settings:
+            self.settings[key] = value
+            return True
+        if self.settings[key] == value:
+            return False
+        self.settings[key] = value
+        return True
+
 
     def _streamProtocol(self, msg, src):
         protocol=str(msg[2]).lower()
