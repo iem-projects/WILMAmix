@@ -163,7 +163,12 @@ class SMi:
 
     def _reloadStream(self):
         if 'stream' == self.mode:
-            self.pd.send('/control/load/stream', [self.settings['/stream/protocol'], self.settings['/stream/profile'], self.settings['/stream/channels']])
+            self.pd.send('/control/load/stream', [self.settings['/stream/transport/protocol'],
+                                                  self.settings['/stream/transport/port'],
+                                                  self.settings['/stream/protocol'],
+                                                  self.settings['/stream/profile'],
+                                                  self.settings['/stream/channels']
+                                                  ])
             return True
         return False
     def _reloadRecord(self):
