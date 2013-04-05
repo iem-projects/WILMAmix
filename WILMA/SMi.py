@@ -221,13 +221,42 @@ class SMi:
             self._reloadStream()
 
     def _streamURI(self, msg, src):
-        o=urlparse(msg[2])
-        port=o.port
+        uri=msg[2]
+        o=urlparse(uri)
+        protocol='udp'
+        ## rtp:// = RTP
+        ## rtp.udp:// = RTP over UDP (the default)
+        ## rtp.tcp:// = RTP over TCP/IP (non-standard)
+        schemelist=o.scheme.lower().split('.')
+        scheme=schemelist[0]
+        if scheme == 'rtp':
+            transport='udp'
+        else:
+            print "ERROR: unsupported scheme in", uri
+        if len(schemelist)>1:
+            transport=schemelist[1]
+        if not (('udp' == transport) or ('tcp' == transport)):
+            print "ERROR: unsupported transport protocol in", uri
+            transport='udp'
+        restart=False
+        if self._hasSettingChanged('/stream/transport/protocol', transport):
+            print "ERROR: transport protocol changed to", transport
+            restart=True
+
+        if self._hasSettingChanged('/stream/protocol', scheme):
+            print "ERROR: stream protocol changed to", scheme
+            restart=True
+
         host=o.hostname
         if host == '':
             host=src[0]
+        port=o.port
         self.settings['/stream/destination']=[host, port]
-        print "stream settings",self.settings['/stream/destination']
+        #self.pd.send("/stream/destination", self.settings['/stream/destination'])
+
+        if restart:
+            print "reload"
+            #self._reloadStream()
 
     def _stream(self, msg, src):
         state=msg[2]
