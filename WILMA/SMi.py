@@ -243,9 +243,9 @@ class SMi:
         self.pd.send("/stream/stop")
 
     def _recordFilename(self, msg, src):
-        self.settings['/stream/filename' ] = msg[2]
+        self.settings['/record/filename' ] = msg[2]
     def _recordTimestamp(self, msg, src):
-        self.settings['/stream/timestamp' ] = int(msg[2])
+        self.settings['/record/timestamp' ] = int(msg[2])
 
     def _record(self, msg, src):
         state=msg[2]
