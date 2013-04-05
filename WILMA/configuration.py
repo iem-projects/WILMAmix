@@ -92,6 +92,8 @@ _defaults['/path/in' ] = '/tmp/WILMA/in'
 _defaults['/path/out'] = '/tmp/WILMA/out'
 
 _defaults['/mode'           ]='stream' # 'stream', 'record', 'process'
+_defaults['/stream/transport/protocol']='udp'
+_defaults['/stream/transport/port']='0'
 _defaults['/stream/protocol']='rtp' # const
 _defaults['/stream/profile' ]='L16' # const for now
 _defaults['/stream/channels']='4' # const
