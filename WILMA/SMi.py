@@ -267,6 +267,7 @@ class SMi:
     def streamStarted(self, uri):
         self.server.sendMsg('/stream/uri', uri)
     def startStream(self):
+        self.pd.send("/stream/destination", self.settings['/stream/destination'])
         self.pd.send("/stream/start", self.settings['/stream/destination'])
     def stopStream(self):
         self.pd.send("/stream/stop")
