@@ -15,7 +15,7 @@
 #X msg 72 316 /control/load/process 4 2 foobarbaz;
 #X obj 50 484 s \$0-OSCin;
 #X msg 58 449 /control/load/process;
-#X msg 41 55 /control/load/stream rtp L16 4;
+#X msg 41 55 /control/load/stream udp 0 rtp L16 4;
 #X connect 0 0 4 0;
 #X connect 1 0 6 0;
 #X connect 2 0 6 0;
