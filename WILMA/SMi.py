@@ -138,9 +138,11 @@ class SMi:
         self.server.add(self._streamProtocol, '/stream/protocol')
         self.server.add(self._streamProfile , '/stream/profile')
         self.server.add(self._streamChannels, '/stream/channels')
+        self.server.add(self._streamURI, '/stream/uri')
+
         self.server.add(self._recordTimestamp, '/record/timestamp')
         self.server.add(self._recordFilename, '/record/filename')
-        self.server.add(self._streamURI, '/stream/uri')
+
         self.server.add(self.dumpInfo, '/dump') ## debugging
         self.mixer = self.state.mixer
         self.pd = PdCommunicator(self)
