@@ -320,18 +320,25 @@ class CallbackManager:
         if type(address) == str :
             # got a single message
             found=False
+            cb=None
             ## try direct matching
-            try:
-                if self.isWildcard(address):
-                    for a in self.matchWildcards(address, self.callbacks.keys()):
-                        self.callbacks[a](message, source)
+            if self.isWildcard(address):
+                for a in self.matchWildcards(address, self.callbacks.keys()):
+                    try:
+                        cb=self.callbacks[a](message, source)
                         found=True
-                else:
-                    self.callbacks[address](message, source)
+                    except KeyError, e:
+                        cb=None
+                    if cb is not None:
+                        cb(message, source)
+            else:
+                try:
+                    cb=self.callbacks[address]
                     found=True
-
-            except KeyError, e:
-                found=False
+                except KeyError, e:
+                    cb=None
+                if cb is not None:
+                    cb(message, source)
 
             ## try subtree matching
             subtree=address.split('/')[1:]
@@ -346,7 +353,7 @@ class CallbackManager:
                 if None in self.callbacks:
                     self.callbacks[None](message, source)
                 else:
-                    print 'address %s not found ' % address
+                    print 'OSC-address %s not found in callback manager ' % address
                     pprint.pprint(message)
 
         elif type(address) == list :
