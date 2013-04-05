@@ -11,6 +11,10 @@ BUG:net.serverTCP:
   Q: quitting might result in: "socket.error: [Errno 104] Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
 
 
+BUG:modeswitching
+  Q: switching between modes will send a "/<newmode>/stop" message to the SMi before "/control/load/<newmode>"
+     it really should send "/<oldmode>/stop"!
+
 ------------------------------------
 
 GUI.MIXConfig:
