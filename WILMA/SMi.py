@@ -207,23 +207,18 @@ class SMi:
 
     def _streamProtocol(self, msg, src):
         protocol=str(msg[2]).lower()
-        if self.settings['/stream/protocol'] == protocol:
-            return
-        self.settings['/stream/protocol']=protocol
-        self._reloadStream()
+        if self._hasSettingChanged('/stream/protocol', protocol):
+            self._reloadStream()
 
     def _streamProfile(self, msg, src):
         profile=str(msg[2]).upper()
-        if self.settings['/stream/profile'] == profile:
-            return
-        self.settings['/stream/profile' ]=profile
-        self._reloadStream()
+        if self._hasSettingChanged('/stream/profile', profile):
+            self._reloadStream()
+
     def _streamChannels(self, msg, src):
         channels=int(msg[2])
-        if channels == self.settings['/stream/channels' ]:
-            return
-        self.settings['/stream/channels' ] = channels
-        self._reloadStream()
+        if self._hasSettingChanged('/stream/channels', channels):
+            self._reloadStream()
 
     def _streamURI(self, msg, src):
         o=urlparse(msg[2])
