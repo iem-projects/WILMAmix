@@ -83,6 +83,7 @@ class SMgui:
         self.connection.add(self._smiLevel,     '/level')
         self.connection.add(self._smiTimestamp, '/timestamp')
         self.connection.add(self._smiStreamURI, '/stream/uri')
+        self.connection.add(self._smiState,     '/state')
         self.connection.add(self._smiStateCpu,  '/state/cpu')
         self.connection.add(self._smiStateMem,  '/state/memory')
         self.connection.add(self._smiStateDisk, '/state/disk')
@@ -245,6 +246,8 @@ class SMgui:
         self.settings['/path/in']=msg[2]
     def _smiStreamURI(self, msg, src):
         print "FIXME: smiURI"
+    def _smiState(self, msg, src):
+        print "FIXME STATE:", msg[2]
     def _smiStateCpu(self, msg, src):
         value=msg[2]
         index=0
