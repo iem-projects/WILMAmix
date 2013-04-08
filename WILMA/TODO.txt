@@ -1,3 +1,16 @@
+pd.SMi:
+  Q: rethink architecture
+     1-wrapper abs per mode:
+     	_WILMA/SMiSTREAM.pd
+	_WILMA/SMiRECORD.pd
+	_WILMA/SMiPROCESS.pd
+      streamer:
+      	_WILMA/STREAMERrtp.pd transport:udp transPort:0 profile:L16 channels:4
+				bufsize:0 dacoffset:0
+
+	abstraction: adc2send (multichannel)
+
+
 RTPclient:
   Q: implement RTP-receiver (in Pd)
 
