@@ -338,7 +338,7 @@ class CallbackManager:
             if self.isWildcard(address):
                 for a in self.matchWildcards(address, self.callbacks.keys()):
                     try:
-                        cb=self.callbacks[a](message, source)
+                        cb=self.callbacks[a]([a, message[0]], message[1], message[2:], source)
                         found=True
                     except KeyError, e:
                         cb=None
@@ -351,20 +351,22 @@ class CallbackManager:
                 except KeyError, e:
                     cb=None
                 if cb is not None:
-                    cb(message, source)
+                    cb([address, message[0]], message[1], message[2:], source)
 
             ## try subtree matching
             subtree=address.split('/')[1:]
             subtreefound=False
             for st, cb in self.subtreecallbacks:
                 if self.matchSubtree(subtree, st):
-                    cb(message, source)
+                    ## the rest address, without the subtree
+                    staddr='/'+'/'.join(subtree[len(st):])
+                    cb([staddr, message[0]], message[1], message[2:], source)
                     found=True
 
             # address not found
             if not found:
                 if None in self.callbacks:
-                    self.callbacks[None](message, source)
+                    self.callbacks[None]([message[0], message[0]], message[1], message[2:], source)
                 else:
                     print '\tOSC-address %s not found in callback manager:' % address
                     pprint.pprint(message)
