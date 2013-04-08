@@ -137,6 +137,13 @@ def readLong(data):
     rest = data[8:]
     return (big, rest)
 
+def readULong(data):
+    """Tries to interpret the next 8 bytes of the data
+    as a 64-bit unsigned integer."""
+    high, low = struct.unpack(">LL", data[0:8])
+    big = (long(high) << 32) + low
+    rest = data[8:]
+    return (big, rest)
 
 def readDouble(data):
     """Tries to interpret the next 8 bytes of the data
@@ -263,7 +270,7 @@ def decodeOSC(data):
     typetags = ""
 
     if address == "#bundle":
-        time, rest = readLong(rest)
+        time, rest = readULong(rest)
         decoded.append(address)
         decoded.append(time)
         while len(rest)>0:
