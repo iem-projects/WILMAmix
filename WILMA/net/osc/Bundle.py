@@ -26,8 +26,13 @@ class Bundle:
         b = OSCMessage()
         b.address = ""
         b.append("#bundle")
-        b.append(0)
-        b.append(0)
+        if timestamp is None:
+            b.append(0)
+            b.append(1)
+        else:
+            b.append((timestamp>>32)&0xFFFFFFFF)
+            b.append((timestamp>> 0)&0xFFFFFFFF)
+
         self.b=b
         self.prefix=oscprefix
         if self.prefix is None:
