@@ -299,6 +299,8 @@ class CallbackManager:
         self.verbose=verbose
         self.callbacks = {}
         self.subtreecallbacks = []
+        self.bundlecallback = None
+        self.bundledepth    = 0
         self.removeAll()
 
     def handle(self, data, source = None):
@@ -370,6 +372,9 @@ class CallbackManager:
         wildcard patterns are NOT supported.
         """
         if (name is None) or (type(name) is str):
+            if '#bundle' == name:
+                self.bundlecallback=callback
+                return
             if callback == None:
                 del self.callbacks[name]
             elif callable(callback):
@@ -389,7 +394,7 @@ class CallbackManager:
         """Removes all callbacks"""
         self.callbacks={}
         self.subtreecallbacks = []
-        self.add(self.unbundler, "#bundle")
+        self.callbacks['#bundle']=self.unbundler
 
     def unbundler(self, messages, source):
         """Dispatch the messages in a decoded bundle."""
