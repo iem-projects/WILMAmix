@@ -92,7 +92,9 @@ def _callback(message, source):
 class _TestServer:
     def __init__(self, port=0):
         self.serv = serverUDP(port=port)
+        self.bundle = None
         self.serv.add(self.callback, '/test')
+        self.serv.add(self.bundles , '#bundle')
 
     def __del__(self):
         if self.serv is not None:
@@ -100,9 +102,21 @@ class _TestServer:
             del self.serv
             self.serv = None
 
+    def bundles(self, timestamp, state, depth, source):
+        # we inflate all bundles to a single one
+        if 0==depth:
+            if state:
+                from osc import Bundle
+                self.bundle = Bundle(timestamp=timestamp)
+            else:
+                self.serv.sendBundle(self.bundle)
+
     def callback(self, message, source):
-        print "callback: ",message
-        self.serv.sendMsg(message[0], message[2:])
+        print "callback: ",(message, source)
+        if self.bundle is None:
+            self.serv.sendMsg(message[0], message[2:])
+        else:
+            self.bundle.append((message[0], message[2:]))
 
     def shutdown(self):
         self.serv.shutdown()
