@@ -264,8 +264,8 @@ def decodeOSC(data):
 
     if address == "#bundle":
         time, rest = readLong(rest)
-#       decoded.append(address)
-#       decoded.append(time)
+        decoded.append(address)
+        decoded.append(time)
         while len(rest)>0:
             length, rest = readInt(rest)
             decoded.append(decodeOSC(rest[:length]))
@@ -391,11 +391,11 @@ class CallbackManager:
         self.subtreecallbacks = []
         self.add(self.unbundler, "#bundle")
 
-    def unbundler(self, messages):
+    def unbundler(self, messages, source):
         """Dispatch the messages in a decoded bundle."""
         # first two elements are #bundle and the time tag, rest are messages.
         for message in messages[2:]:
-            self.dispatch(message)
+            self.dispatch(message, source)
 
 ## pattern matching code
 # Copyright © 2009 Alexandre Quessy, Arjan Scherpenisse
