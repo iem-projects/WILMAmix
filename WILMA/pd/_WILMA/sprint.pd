@@ -1,0 +1,15 @@
+#N canvas 393 340 450 300 10;
+#X obj 91 178 inlet;
+#X obj 91 200 spigot;
+#X obj 91 222 print \$1;
+#X obj 102 102 tgl 15 0 \$0-onoff \$0-onoff empty 17 7 0 10 -262144
+-1 -1 0 1;
+#X obj 248 83 inlet;
+#X obj 248 105 t f;
+#X obj 248 127 s \$0-onoff;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 3 0 1 1;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X coords 0 -1 1 1 20 20 1 100 100;

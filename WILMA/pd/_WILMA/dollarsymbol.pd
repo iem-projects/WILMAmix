@@ -1,0 +1,8 @@
+#N canvas 162 271 454 341 10;
+#X obj 83 110 inlet;
+#X obj 83 132 i \$1;
+#X obj 83 154 makefilename $%d;
+#X obj 83 176 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
