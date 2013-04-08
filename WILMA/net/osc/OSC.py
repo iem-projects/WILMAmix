@@ -542,7 +542,7 @@ if __name__ == "__main__":
     print decodeOSC(blob.getBinary())
 
     def printingCallback(*stuff):
-        sys.stdout.write("\tGot: ")
+        sys.stdout.write("\tPRINT   Got: ")
         for i in stuff:
             sys.stdout.write("\t"+str(i) + " ")
         sys.stdout.write("\n")
@@ -551,6 +551,8 @@ if __name__ == "__main__":
         for i in stuff:
             sys.stdout.write("\t"+str(i) + " ")
         sys.stdout.write("\n")
+    def bundleCallback(timetag, starting, depth, source):
+        print "\t#bundle", (timetag, starting, depth, source)
 
     print "Testing the callback manager."
 
@@ -560,10 +562,22 @@ if __name__ == "__main__":
 
     c.add(printingCallback, "/path/print")
     c.add(subtreeCallback, "/path/subpath/")
+    c.add(bundleCallback, "#bundle")
 
+    print "testing message: /foo/play"
     c.handle(message.getBinary())
+
     message.setAddress("/print")
+    print "testing message: /print"
     c.handle(message.getBinary())
+
+    print1 = OSCMessage()
+    print1.setAddress("/pr?nt")
+    print1.append("Hey man, patterns match.")
+    print1.append(42)
+
+    print "testing pattern-matching: /pr?nt"
+    c.handle(print1.getBinary(), "matcher")
 
     print1 = OSCMessage()
     print1.setAddress("/print")
@@ -571,7 +585,8 @@ if __name__ == "__main__":
     print1.append(42)
     print1.append(3.1415926)
 
-    c.handle(print1.getBinary())
+    print "testing single message: /print"
+    c.handle(print1.getBinary(), "bar")
 
     bundle = OSCMessage()
     bundle.setAddress("")
@@ -584,18 +599,23 @@ if __name__ == "__main__":
     bundlebinary = bundle.message
 
     print "sending a bundle to the callback manager"
-    c.handle(bundlebinary)
+    c.handle(bundlebinary, source="foo")
 
     msg = OSCMessage()
     msg.setAddress("/foo/bar/baz")
     msg.append(666)
-    print "sending a message to the callback manager (should match subtree)"
+    print "sending a message to the callback manager (should match subtree: /foo/)"
     c.handle(msg.getBinary())
     msg = OSCMessage()
-    print "sending a message to the callback manager (should patternmatch subtree)"
+    print "sending a message to the callback manager (should patternmatch subtree: /foo/)"
     msg.setAddress("/f*o/schu")
     msg.append(42)
     c.handle(msg.getBinary())
+    print "sending a message to the callback manager (should patternmatch subtree: /foo/)"
+    msg.setAddress("/f*o/b?z")
+    msg.append(777)
+    c.handle(msg.getBinary())
+
     msg = OSCMessage()
     print "sending a message to the callback manager (should NOT patternmatch subtree)"
     msg.setAddress("/f*u/didoo")
@@ -610,6 +630,6 @@ if __name__ == "__main__":
     msg = OSCMessage()
     msg.setAddress("/path/subpath/file")
     msg.append("SUBTREE")
-    print "sending a message to the callback manager (should NOT print, but match subtree)"
+    print "sending a message to the callback manager (should NOT print, but match subtree: /path/subpath/)"
     c.handle(msg.getBinary())
     
