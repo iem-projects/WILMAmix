@@ -52,7 +52,8 @@ class _pdprocess:
         ## NOTE: "sent" messages are executed _after_ loadbang
         self.args+=['-send', "_WILMA_pwd "+cwd]
         self.args+=['-send', "_WILMA_port "+str(port)]
-        self.args+=['-open', "_WILMAsm.pd"]
+        if patch is not None:
+            self.args+=['-open', patch]
         self.shouldRun=False
         self.pd=None
 
