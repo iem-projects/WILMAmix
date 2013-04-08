@@ -399,8 +399,17 @@ class CallbackManager:
     def unbundler(self, messages, source):
         """Dispatch the messages in a decoded bundle."""
         # first two elements are #bundle and the time tag, rest are messages.
+        timetag=messages[1]
+        bc = self.bundlecallback
+        depth = self.bundledepth
+        self.bundledepth+=1
+        if bc is not None:
+            bc(timetag, True, depth, source)
         for message in messages[2:]:
             self.dispatch(message, source)
+        if bc is not None:
+            bc(timetag, False, depth, source)
+        self.bundledepth-=1
 
 ## pattern matching code
 # Copyright © 2009 Alexandre Quessy, Arjan Scherpenisse
