@@ -47,6 +47,7 @@ class _pdprocess:
         if cpd is not None: ## patch directory
             self.args+=['-path', cpd]
         self.args+=['-path', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pd')]
+        self.args+=['-path', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pd', 'lib')]
 
         ## NOTE: "sent" messages are executed _after_ loadbang
         self.args+=['-send', "_WILMA_pwd "+cwd]
