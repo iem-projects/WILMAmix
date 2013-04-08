@@ -327,6 +327,10 @@ class CallbackManager:
             return
 
         if type(address) == str :
+            if '#bundle' == address:
+                self.unbundler(message, source)
+                return
+
             # got a single message
             found=False
             cb=None
@@ -401,7 +405,6 @@ class CallbackManager:
         """Removes all callbacks"""
         self.callbacks={}
         self.subtreecallbacks = []
-        self.callbacks['#bundle']=self.unbundler
 
     def unbundler(self, messages, source):
         """Dispatch the messages in a decoded bundle."""
