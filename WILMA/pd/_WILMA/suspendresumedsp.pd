@@ -1,14 +1,13 @@
-#N canvas 212 165 738 409 10;
+#N canvas 213 161 738 409 10;
 #X obj 95 138 inlet resume;
 #X obj 260 138 inlet suspend;
 #X obj 411 173 r pd;
 #X obj 411 195 route dsp;
 #X obj 393 223 i;
 #X obj 260 170 t b b;
-#X obj 95 246 i;
-#X obj 95 170 t b;
-#X msg 95 290 \; pd dsp 1;
-#X obj 95 268 select 1;
+#X obj 95 276 i;
+#X msg 95 320 \; pd dsp 1;
+#X obj 95 298 select 1;
 #X msg 260 192 \; pd dsp 0;
 #X text 198 332 when running JACK (pd<0.44 \, probably pd>0.42) \,
 this might actually be slower \, since "dsp 0" will stop jackclient
@@ -20,13 +19,15 @@ was running before);
 only needs to be rebuild once.;
 #X text 64 95 NOTE: for this abstraction to work properly \, it must
 be created before DSP is turned on.;
-#X connect 0 0 7 0;
+#X text 55 167 bang: try to restore state;
+#X text 102 179 before "suspend";
+#X text 57 203 1: force DSP-on;
+#X connect 0 0 6 0;
 #X connect 1 0 5 0;
 #X connect 2 0 3 0;
 #X connect 3 0 4 1;
 #X connect 4 0 6 1;
-#X connect 5 0 10 0;
+#X connect 5 0 9 0;
 #X connect 5 1 4 0;
-#X connect 6 0 9 0;
-#X connect 7 0 6 0;
-#X connect 9 0 8 0;
+#X connect 6 0 8 0;
+#X connect 8 0 7 0;
