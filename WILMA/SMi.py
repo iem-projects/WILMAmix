@@ -81,7 +81,9 @@ class State:
 class PdCommunicator:
     def __init__(self, smi):
         self.smi=smi
-        self.server=pdserver.pdserver(workingdir=smi.settings['/path/out'], patchdir=smi.settings['/path/in'])
+        self.server=pdserver.pdserver(mainpatch='_WILMAsm.pd',
+                                      workingdir=smi.settings['/path/out'],
+                                      patchdir=smi.settings['/path/in'])
         self.server.add(self._catchall, None)
         self.server.add(self._meter, "/meter")
         self.server.add(self._timestamp, "/timestamp")
