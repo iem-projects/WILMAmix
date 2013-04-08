@@ -78,8 +78,8 @@ class serverUDP(serverAbstract.serverAbstract):
 
 ######################################################################
 
-def _callback(message, source):
-    print "callback (no class): ", message
+def _callback(addr, typetags, message, source):
+    print "callback (no class): ", (addr, typetags, message, source)
 
 if __name__ == '__main__':
     import sys

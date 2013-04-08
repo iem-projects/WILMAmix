@@ -127,8 +127,8 @@ class serverTCP(serverAbstract.serverAbstract):
 ######################################################################
 
 if __name__ == '__main__':
-    def _callback(message, source):
-        print "callback (no class): ", message
+    def _callback(addr, typetags, message, source):
+        print "callback (no class): ", (addr, typetags, message, source)
 
     class _TestServer:
         def __init__(self, port=0):
@@ -141,9 +141,9 @@ if __name__ == '__main__':
                 del self.serv
                 self.serv = None
 
-        def callback(self, message, source):
-            print "callback: ",message
-            self.serv.sendMsg(message[0], message[2:])
+        def callback(self, addr, typetags, message, source):
+            print "callback: ", (addr, typetags, message, source)
+            self.serv.sendMsg(addr[1], message)
 
         def shutdown(self):
             self.serv.shutdown()

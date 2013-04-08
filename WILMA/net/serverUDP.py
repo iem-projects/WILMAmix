@@ -86,8 +86,8 @@ class serverUDP(serverAbstract.serverAbstract):
 
 ######################################################################
 
-def _callback(message, source):
-    print "callback (no class): ", message
+def _callback(addr, typetags, message, source):
+    print "callback (no class): ", (addr, typetags, message, source)
 
 class _TestServer:
     def __init__(self, port=0):
@@ -111,12 +111,12 @@ class _TestServer:
             else:
                 self.serv.sendBundle(self.bundle)
 
-    def callback(self, message, source):
-        print "callback: ",(message, source)
+    def callback(self, addr, typetags, data, source):
+        print "callback: ",(addr, typetags, data, source)
         if self.bundle is None:
-            self.serv.sendMsg(message[0], message[2:])
+            self.serv.sendMsg(addr[1], data)
         else:
-            self.bundle.append((message[0], message[2:]))
+            self.bundle.append((addr[1], data))
 
     def shutdown(self):
         self.serv.shutdown()

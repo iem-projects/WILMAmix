@@ -68,8 +68,8 @@ class clientUDP(clientAbstract.clientAbstract):
 
 ######################################################################
 
-def _callback(message, source):
-    print "callback (no class): ", message
+def _callback(addr, typetags, message, source):
+    print "callback (no class): ", (addr, typetags, message, source)
 
 n = None
 
