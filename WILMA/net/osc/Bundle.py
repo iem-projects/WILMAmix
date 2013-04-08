@@ -20,6 +20,7 @@
 
 from OSC import OSCMessage
 import socket
+import struct
 
 class Bundle:
     def __init__(self, oscprefix=None, timestamp=None):
@@ -30,9 +31,9 @@ class Bundle:
             b.append(0)
             b.append(1)
         else:
-            b.append((timestamp>>32)&0xFFFFFFFF)
-            b.append((timestamp>> 0)&0xFFFFFFFF)
-
+            ts_hi=int((timestamp>>32)&0xFFFFFFFF)
+            ts_lo=int((timestamp>> 0)&0xFFFFFFFF)
+            b.rawAppend(struct.pack(">II",ts_hi,ts_lo))
         self.b=b
         self.prefix=oscprefix
         if self.prefix is None:
