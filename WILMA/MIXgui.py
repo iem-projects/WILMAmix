@@ -68,20 +68,17 @@ class MIXgui:
         if (port>0) and (port<65536):
             self.proxyclient = net.client(host=host, port=port, transport='udp', backend='gui')
             self.registerProxies([self.proxyclient])
-    def _nullCallback(self, msg, src):
+    def _nullCallback(self, addr, typetags, data, source):
         pass
 
-    def _proxyCallback(self, msg, src):
+    def _proxyCallback(self, addr, typetags, data, source):
         """new data from the remote add, forward it to the SMi's"""
         # FIXXME: only sent messages relevant for the given proxy
         ###  e.g.: '/SM[12]/foo/bar'
         ###  should translate to
         ###        '/SM1/process/foo/bar'
         ###        '/SM2/process/foo/bar'
-        addr=msg[0]
-        addr='/process'+addr
-
-        data=msg[2:]
+        addr='/process'+addr[1]
 
         self.send(addr, data)
         pass

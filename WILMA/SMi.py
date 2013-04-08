@@ -88,19 +88,18 @@ class PdCommunicator:
         self.server.add(self._forward, "/process/")
         self.server.start()
 
-    def _meter(self, msg, source):
-        self.smi.state.levels=msg[2:]
-    def _timestamp(self, msg, source):
-        hi=int(msg[2])
-        lo=int(msg[3])
+    def _meter(self, addr, typetags, data, source):
+        self.smi.state.levels=data
+    def _timestamp(self, addr, typetags, data, source):
+        hi=int(data[0])
+        lo=int(data[1])
         ts=((hi<<16)+lo)
         self.smi.state.timestamp=ts
-    def _catchall(self, msg, source):
-        self.smi.server.sendMsg(msg[0], msg[2:])
-        print "got message: ", msg
-        print "       from: ", source
-    def _forward(self, msg, source):
-        self.smi.server.sendMsg(msg[0], msg[2:])
+    def _catchall(self, addr, typetags, data, source):
+        self.smi.server.sendMsg(addr[0], data)
+        print "got message: ", (addr, typetags, data, source)
+    def _forward(self, addr, typetags, data, source):
+        self.smi.server.sendMsg(addr[0], data)
 
     def stop(self):
         print "PdCommunicator: stop"
@@ -124,7 +123,7 @@ class SMi:
             oscprefix=self.oscprefix,
             verbose=False)
         self.server.add(self.ping, '/ping')
-        self.server.add(self.setGain, '/gain')
+        self.server.add(self._gain, '/gain')
 
         self.server.add(self._mode, '/mode')
 
@@ -152,14 +151,9 @@ class SMi:
     def __del__(self):
         self.cleanup()
 
-    def _ignoreMessage(self, msg, src):
-        pass
-    def _forwardMessageToPd(self, msg, src):
-        self.pd.send(msg[0], msg[2:])
-
-    def setGain(self, msg, src):
+    def _gain(self, addr, typetags, data, source):
         if self.mixer is not None:
-            gains=self.mixer.gain(msg[2:])
+            gains=self.mixer.gain(data)
 
     def _reloadStream(self):
         if 'stream' == self.mode:
@@ -190,8 +184,8 @@ class SMi:
         self.pd.send('/control/load/process',[inlets, outlets, 'MAIN'])
         return True
 
-    def _mode(self, msg, src):
-        self.mode=str(msg[2]).lower()
+    def _mode(self, addr, typetags, data, source):
+        self.mode=str(data[0]).lower()
         if self._reloadStream() or self._reloadRecord() or self._reloadProcess():
             pass
     def _hasSettingChanged(self, key, value):
@@ -203,32 +197,32 @@ class SMi:
         self.settings[key] = value
         return True
 
-    def _streamTransport(self, msg, src):
-        transport=str(msg[2]).lower()
+    def _streamTransport(self, addr, typetags, data, source):
+        transport=str(data[0]).lower()
         if self._hasSettingChanged('/stream/transport/protocol', transport):
             self._reloadStream()
-    def _streamTransportPort(self, msg, src):
-        port=msg[2]
+    def _streamTransportPort(self, addr, typetags, data, src):
+        port=data[0]
         if self._hasSettingChanged('/stream/transport/port', port):
             self._reloadStream()
 
-    def _streamProtocol(self, msg, src):
-        protocol=str(msg[2]).lower()
+    def _streamProtocol(self, addr, typetags, data, src):
+        protocol=str(data[0]).lower()
         if self._hasSettingChanged('/stream/protocol', protocol):
             self._reloadStream()
 
-    def _streamProfile(self, msg, src):
-        profile=str(msg[2]).upper()
+    def _streamProfile(self, addr, typetags, data, src):
+        profile=str(data[0]).upper()
         if self._hasSettingChanged('/stream/profile', profile):
             self._reloadStream()
 
-    def _streamChannels(self, msg, src):
-        channels=int(msg[2])
+    def _streamChannels(self, addr, typetags, data, src):
+        channels=int(data[0])
         if self._hasSettingChanged('/stream/channels', channels):
             self._reloadStream()
 
-    def _streamURI(self, msg, src):
-        uri=msg[2]
+    def _streamURI(self, addr, typetags, data, src):
+        uri=data[0]
         o=urlparse(uri)
         protocol='udp'
         ## rtp:// = RTP
@@ -265,8 +259,8 @@ class SMi:
             print "reload"
             #self._reloadStream()
 
-    def _stream(self, msg, src):
-        state=msg[2]
+    def _stream(self, addr, typetags, data, src):
+        state=data[0]
         if state is not None and int(state) > 0:
             self.startStream()
         else:
@@ -279,13 +273,13 @@ class SMi:
     def stopStream(self):
         self.pd.send("/stream/stop")
 
-    def _recordFilename(self, msg, src):
-        self.settings['/record/filename' ] = msg[2]
-    def _recordTimestamp(self, msg, src):
-        self.settings['/record/timestamp' ] = int(msg[2])
+    def _recordFilename(self, addr, typetags, data, src):
+        self.settings['/record/filename' ] = data[0]
+    def _recordTimestamp(self, addr, typetags, data, src):
+        self.settings['/record/timestamp' ] = int(data[0])
 
-    def _record(self, msg, src):
-        state=msg[2]
+    def _record(self, addr, typetags, data, src):
+        state=data[0]
         filename=self.settings['/record/filename']
         timestamp=int(self.settings['/record/timestamp'])
         TShi=(timestamp>>16)&0xFFFF
@@ -294,20 +288,16 @@ class SMi:
             self.pd.send("/record/start", [filename, TSlo, TShi])
         else:
             self.pd.send("/record/stop")
-    def _process(self, msg, src):
-        state=msg[2]
+    def _process(self, addr, typetags, data, src):
+        state=data[0]
         if state is not None and int(state) > 0:
             self.pd.send("/process/start")
         else:
             self.pd.send("/process/stop")
-    def _processProxy(self, msg, src):
-        addr=msg[0].split('/')
-        addr.pop(1) # remove SMi ID
-        data=msg[2:]
-        newaddr='/'.join(addr)
-        self.pd.send(newaddr, data)
+    def _processProxy(self, addr, typetags, data, src):
+        self.pd.send(addr[0], data)
 
-    def ping(self, msg, src):
+    def ping(self, addr, typetags, data, src):
         self.state.update()
         bundle = Bundle(oscprefix=self.oscprefix)
 
@@ -316,7 +306,7 @@ class SMi:
             bundle.append((a, [self.settings[a]]))
         self.server.sendBundle(bundle)
 
-    def dumpInfo(self, msg, src):
+    def dumpInfo(self, addr, typetags, data, src):
         print "setting: ", self.settings
         print "state  : ", self.state.__dict__
         if self.streamer is not None:

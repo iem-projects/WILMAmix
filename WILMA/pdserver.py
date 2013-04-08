@@ -100,7 +100,7 @@ class pdserver:
                 msg+=[',T', True]
             else:
                 msg+=[',F', False]
-            self.stateCb(msg, None)
+            self.stateCb([msg[0], msg[0]], msg[1], [msg[2]], None)
 
     def add(self, callback, oscAddress):
         if oscAddress is None:
@@ -120,9 +120,8 @@ if __name__ == '__main__':
     class PingPong:
         def __init__(self, pd):
             self.pd=pd
-        def callback(self, message, source):
-            print "received: ",message
-            print "  source: ", source
+        def callback(self, addr, typetag, data, source):
+            print "received: ",(addr, typetag, data, source)
             self.pd.send("/pong")
     print "Pd-Server..."
     import gobject

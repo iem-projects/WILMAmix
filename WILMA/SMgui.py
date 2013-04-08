@@ -228,71 +228,67 @@ class SMgui:
         self.running=state
         self.connection.send(bundle)
 
-    def _smiUser(self, msg, src):
-        self.settings['/user']=msg[2]
-    def _smiFader(self, msg, src):
-        self.config.setFader(msg[2])
-    def _smiLevel(self, msg, src):
+    def _smiUser(self, addr, typetags, data, source):
+        self.settings['/user']=data[0]
+    def _smiFader(self, addr, typetags, data, source):
+        self.config.setFader(data[0])
+    def _smiLevel(self, addr, typetags, data, source):
         self.alive(True)
-        levels=msg[2:]
+        levels=data
         self.channels.setLevels(levels)
         self.config.setLevels  (levels)
-    def _smiTimestamp(self, msg, src):
-        self.timestamp=msg[2]
+    def _smiTimestamp(self, addr, typetags, data, source):
+        self.timestamp=data[0]
         self.config.setTimestamp(self.timestamp)
-    def _smiOutpath(self, msg, src):
-        self.settings['/path/out']=msg[2]
-    def _smiInpath (self, msg, src):
-        self.settings['/path/in']=msg[2]
-    def _smiStreamURI(self, msg, src):
+    def _smiOutpath(self, addr, typetags, data, source):
+        self.settings['/path/out']=data[0]
+    def _smiInpath (self, addr, typetags, data, source):
+        self.settings['/path/in']=data[0]
+    def _smiStreamURI(self, addr, typetags, data, source):
         print "FIXME: smiURI"
-    def _smiState(self, msg, src):
-        print "FIXME STATE:", msg[2]
-    def _smiStateCpu(self, msg, src):
-        value=msg[2]
+    def _smiState(self, addr, typetags, data, source):
+        print "FIXME STATE:", data[0]
+    def _smiStateCpu(self, addr, typetags, data, source):
+        value=data[0]
         index=0
         self.config.setState(index, value)
         self.critical[index]=value>0.9
-    def _smiStateMem(self, msg, src):
-        value=msg[2]
+    def _smiStateMem(self, addr, typetags, data, source):
+        value=data[0]
         index=1
         self.config.setState(index, value)
         self.critical[index]=value>0.9
-    def _smiStateDisk(self, msg, src):
-        value=msg[2]
+    def _smiStateDisk(self, addr, typetags, data, source):
+        value=data[0]
         index=2
         self.config.setState(index, value)
         self.critical[index]=value>0.9
-    def _smiStateBatt(self, msg, src):
-        value=msg[2]
+    def _smiStateBatt(self, addr, typetags, data, source):
+        value=data[0]
         index=3
         self.config.setState(index, value)
         self.critical[index]=value<0.1
-    def _smiStateRuntime(self, msg, src):
-        value=msg[2]
+    def _smiStateRuntime(self, addr, typetags, data, source):
+        value=data[0]
         index=4
         self.config.setState(index, value)
         self.critical[index]=value<10
-    def _smiStateSync(self, msg, src):
-        value=msg[2]
+    def _smiStateSync(self, addr, typetags, data, source):
+        value=data[0]
         self.config.setSync(value)
         self.critical[5]=not value
-    def _smiStateLock(self, msg, src):
-        value=msg[2]
+    def _smiStateLock(self, addr, typetags, data, source):
+        value=data[0]
         self.config.setSyncLock(value)
         self.critical[6]=not value
-    def _smiProcess(self, msg, src):
-        self.mixer.sendProxy(msg[0], msg[2:])
+    def _smiProcess(self, addr, typetags, data, source):
+        self.mixer.sendProxy(addr[1], data)
         pass
 
-    def _proxyCallback(self, msg, src):
+    def _proxyCallback(self, addr, typetags, data, source):
         if not self.selected():
             return
-        addr=msg[0].split('/')
-        data=msg[2:]
-        addr[1]='process'
-        newaddr='/'.join(addr)
-        self.send(newaddr, data)
+        self.send('/process'+addr[0], data)
 
     def addProxy(self, proxy):
         subtree=self.oscprefix+'/'
