@@ -1,13 +1,13 @@
-#N canvas 559 447 450 300 10;
-#N canvas 13 49 450 300 reblock 0;
+#N canvas 165 418 450 300 10;
+#N canvas 17 49 450 300 reblock 0;
 #X obj 50 147 outlet;
 #X obj 50 45 inlet~;
 #X obj 73 65 inlet~;
 #X obj 100 85 inlet~;
 #X obj 123 105 inlet~;
 #X obj 215 60 inlet control;
-#X obj 50 125 \$2\$3pay~ \$4;
-#X obj 267 197 block~ \$5;
+#X obj 50 125 rtp\$3pay~ \$2;
+#X obj 267 197 block~ \$4;
 #X connect 1 0 6 0;
 #X connect 2 0 6 1;
 #X connect 3 0 6 2;
@@ -21,8 +21,7 @@
 #X obj 102 143 r~ \$1-4;
 #X obj 52 197 outlet;
 #X obj 209 145 inlet control;
-#X text 35 27 1:<prefix> 2:<protocol> 3:<profile> 4:<channels> 5:<blocksize>
-;
+#X text 35 27 1:<prefix> 2:channels 3:<profile> 4:<blocksize>;
 #X connect 0 0 5 0;
 #X connect 1 0 0 0;
 #X connect 2 0 0 1;
