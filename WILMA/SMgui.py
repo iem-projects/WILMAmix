@@ -285,14 +285,14 @@ class SMgui:
         self.mixer.sendProxy(addr[1], data)
         pass
 
-    def _proxyCallback(self, addr, typetags, data, source):
+    def _processProxyCallback(self, addr, typetags, data, source):
         if not self.selected():
             return
         self.send('/process'+addr[0], data)
 
-    def addProxy(self, proxy):
+    def addProcessProxy(self, proxy):
         subtree=self.oscprefix+'/'
-        proxy.add(self._proxyCallback, subtree)
+        proxy.add(self._processProxyCallback, subtree)
 
 
 ######################################################################
