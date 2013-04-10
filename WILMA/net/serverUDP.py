@@ -122,7 +122,7 @@ class _TestServer:
         self.serv.shutdown()
 
 if __name__ == '__main__':
-    n = _TestServer(port=7777)
+    n = _TestServer(port=8777)
     gobject.threads_init()
 
     try:
