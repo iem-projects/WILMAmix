@@ -285,12 +285,17 @@ class SMgui:
         self.mixer.sendProxy(addr[1], data)
         pass
 
-    def _processProxyCallback(self, addr, typetags, data, source):
+    def proxyForward(self, addr, data=None, prefix=''):
+        """forward the OSC-message (possibly prefixed with 'prefix') to the SMi, if currently active"""
         if not self.selected():
             return
-        self.send('/process'+addr[0], data)
+        self.send(prefix+addr, data)
+
+    def _processProxyCallback(self, addr, typetags, data, source):
+        self.proxyForward(addr[0], data, '/process')
 
     def addProcessProxy(self, proxy):
+        """register a callback in the proxy, that will automatically forward any important data in the proxy to the SMi"""
         subtree=self.oscprefix+'/'
         proxy.add(self._processProxyCallback, subtree)
 
