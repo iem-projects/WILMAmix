@@ -342,7 +342,8 @@ class CallbackManager:
             if self.prefix is not None:
                 if not self.matchSubtree(subtree, self.prefix):
                     return # prefix match failed
-                address='/'+'/'.join(subtree[len(self.prefix):])
+                subtree=subtree[len(self.prefix):]
+                address='/'+'/'.join(subtree)
 
             ## try direct matching
             if self.isWildcard(address):
