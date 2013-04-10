@@ -23,6 +23,8 @@ import SMgui
 import net
 from gui import SMmixer, MIXctl, MIXconfig
 
+import sys
+
 class MIXgui:
     def __init__(self, parent=None):
         self.settings=configuration.getMIX()
@@ -51,6 +53,8 @@ class MIXgui:
 
     def widget(self):
         return self.smmixer
+    def quit(self):
+        sys.exit(0)
 
     def _config(self):
         self.mixconfig.show()

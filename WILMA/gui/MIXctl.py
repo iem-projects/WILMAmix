@@ -20,7 +20,6 @@
 
 from PySide import QtCore, QtGui
 
-import sys
 import MIXctl_ui
 import DirChooser
 
@@ -98,7 +97,7 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
     def _do_launch(self): ## launchButton callback, toggles the launch state
         self._launch(self.launchButton.isChecked())
     def _quit(self):
-        sys.exit(0)
+        self.mixer.quit()
     def _scan(self):
         self.mixer.scanSM()
 
