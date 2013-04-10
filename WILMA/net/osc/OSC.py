@@ -476,7 +476,7 @@ class CallbackManager:
     def matchSubtree(pattern, key):
         """
         like matchWildcards, but pattern&keys are decomposed into elements,
-        and even if pattern is longer than key
+        and matches even if pattern is longer than key
         """
         if len(key)>len(pattern): ## can never match, since the registered address is longer than the address we received
             return False
@@ -647,4 +647,4 @@ if __name__ == "__main__":
     msg.append("SUBTREE")
     print "sending a message to the callback manager (should NOT print, but match subtree: /path/subpath/)"
     c.handle(msg.getBinary())
-    
+
