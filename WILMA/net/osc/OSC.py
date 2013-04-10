@@ -375,8 +375,8 @@ class CallbackManager:
 
             # address not found
             if not found:
-                if None in self.callbacks:
-                    self.callbacks[None]([address, message[0]], message[1], message[2:], source)
+                if self.catchall is not None:
+                    self.catchall([address, message[0]], message[1], message[2:], source)
                 else:
                     print '\tOSC-address %s not found in callback manager:' % address
                     pprint.pprint(message)
@@ -394,19 +394,30 @@ class CallbackManager:
         or removes the callback with name if callback is None.
         wildcard patterns are NOT supported.
         """
-        if (name is None) or (type(name) is str):
+        if (callback is not None) and not callable(callback):
+            raise OSCException("callback needs to be callable: "+str(callback))
+        if name is None:
+            self.catchall = callback
+        elif type(name) is str:
             if '#bundle' == name:
                 self.bundlecallback=callback
                 return
+            if not name.startswith('/'):
+                raise OSCException("name is not a valid OSC-address: "+str(name))
+
             if callback == None:
-                del self.callbacks[name]
-            elif callable(callback):
-                if (name is not None) and name.endswith('/'):
+                if name.endswith('/'):
+                    raise OSCException("removing subtree match not yet implemented: "+str(name))
+                else:
+                    try:
+                        del self.callbacks[name]
+                    except KeyError:
+                        pass
+            else:
+                if name.endswith('/'):
                     self.subtreecallbacks+=[[name.split('/')[1:-1], callback]]
                 else:
                     self.callbacks[name] = callback
-            else:
-                raise OSCException("callback needs to be callable: "+str(callback))
         else:
             raise OSCException("name needs to be a string: "+str(name))
 
@@ -417,6 +428,8 @@ class CallbackManager:
         """Removes all callbacks"""
         self.callbacks={}
         self.subtreecallbacks = []
+        self.catchall = None
+        self.bundlecallback=None
 
     def unbundler(self, messages, source):
         """Dispatch the messages in a decoded bundle."""
@@ -468,9 +481,13 @@ class CallbackManager:
                     )+'$')
         try:
             r = re.compile(rpattern)
-            return filter(r.match, keys)
         except:
             raise OSCException("invalid character in pattern '"+pattern+"' -> "+rpattern)
+        try:
+            return filter(r.match, keys)
+        except TypeError as e:
+            print "error matching ", (pattern, keys)
+            raise OSCException(str(e))
 
     @staticmethod
     def matchSubtree(pattern, key):
