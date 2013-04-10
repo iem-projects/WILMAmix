@@ -334,6 +334,7 @@ class CallbackManager:
             # got a single message
             found=False
             cb=None
+            subtree=address.split('/')[1:]
             ## try direct matching
             if self.isWildcard(address):
                 for a in self.matchWildcards(address, self.callbacks.keys()):
@@ -355,7 +356,6 @@ class CallbackManager:
                     found=True
 
             ## try subtree matching
-            subtree=address.split('/')[1:]
             subtreefound=False
             for st, cb in self.subtreecallbacks:
                 if self.matchSubtree(subtree, st):
