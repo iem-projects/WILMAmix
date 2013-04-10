@@ -255,11 +255,17 @@ class SMi:
             host=src[0]
         port=o.port
         self.settings['/stream/destination']=[host, port]
-        #self.pd.send("/stream/destination", self.settings['/stream/destination'])
 
+        bundle = Bundle()
         if restart:
-            print "reload"
+            bundle.append(('/stream/transport/protocol', self.settings['/stream/transport/protocol']))
+            bundle.append(('/stream/transport/port', self.settings['/stream/transport/port']))
+            bundle.append(('/stream/protocol', self.settings['/stream/protocol']))
+            bundle.append(('/stream/profile', self.settings['/stream/profile']))
             #self._reloadStream()
+
+        bundle.append(('/stream/destination', self.settings['/stream/destination']))
+        self.pd.send(bundle)
 
     def _stream(self, addr, typetags, data, src):
         state=data[0]
