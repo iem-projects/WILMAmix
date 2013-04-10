@@ -407,7 +407,9 @@ class CallbackManager:
 
             if callback == None:
                 if name.endswith('/'):
-                    raise OSCException("removing subtree match not yet implemented: "+str(name))
+                    stree=name.split('/')[1:-1]
+                    newsubtrees = [ x for x in self.subtreecallbacks if x[0] != stree]
+                    self.subtreecallbacks=newsubtrees
                 else:
                     try:
                         del self.callbacks[name]
@@ -665,3 +667,16 @@ if __name__ == "__main__":
     print "sending a message to the callback manager (should NOT print, but match subtree: /path/subpath/)"
     c.handle(msg.getBinary())
 
+    print "removing callbacks"
+    print "old callbacks", c.callbacks
+    c.add(None, "/print")
+    c.remove('/path/print')
+    c.add(None, "/run")
+    print "new callbacks", c.callbacks
+    print "old subtreecallbacks", c.subtreecallbacks
+    c.remove("/print")
+    c.remove("/foo/")
+    c.remove("/kug/")
+    c.remove("/path/subpath/")
+    print "new subtreecallbacks", c.subtreecallbacks
+    c.removeAll()
