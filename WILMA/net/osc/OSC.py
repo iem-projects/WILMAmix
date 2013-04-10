@@ -367,7 +367,7 @@ class CallbackManager:
             # address not found
             if not found:
                 if None in self.callbacks:
-                    self.callbacks[None]([message[0], message[0]], message[1], message[2:], source)
+                    self.callbacks[None]([address, message[0]], message[1], message[2:], source)
                 else:
                     print '\tOSC-address %s not found in callback manager:' % address
                     pprint.pprint(message)
