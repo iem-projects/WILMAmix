@@ -282,7 +282,7 @@ def decodeOSC(data):
         typetags, rest = readString(rest)
         decoded.append(address)
         decoded.append(typetags)
-        if typetags[0] == ",":
+        if len(typetags)>0 and typetags[0] == ",":
             for tag in typetags[1:]:
                 try:
                     value, rest = table[tag](rest)
