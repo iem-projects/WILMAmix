@@ -33,6 +33,8 @@ class _Form(QDialog):
         # Set dialog layout
         self.setLayout(layout)
 if __name__ == '__main__':
+    import gobject
+    gobject.threads_init()
     # Create the Qt Application
     app = QApplication(sys.argv)
     #translator = Translator(app)
