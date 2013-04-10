@@ -25,6 +25,24 @@ from gui import SMmixer, MIXctl, MIXconfig
 
 import sys
 
+class StreamReceiver:
+    def __init__(self, parent):
+        self.parent=parent
+        self.settings=parent.settings
+        import pdserver
+        self.server = pdserver.pdserver(mainpatch='_WILMAmix.pd',
+                                        workingdir=self.settings['/path/out']
+                                        )
+        self.server.add(self._nullCallback, None)
+        self.server.start()
+    def _nullCallback(self, addr, typetags, data, source):
+        pass
+    def stop(self):
+        self.server.stop()
+    def send(self, addr, data=None):
+        self.server.send(addr,data)
+
+
 class MIXgui:
     def __init__(self, parent=None):
         self.settings=configuration.getMIX()
@@ -48,12 +66,15 @@ class MIXgui:
         self.scanSM()
         self.smmixer.show()
 
+        self.streamreceiver = StreamReceiver(self)
+
         self._proxyServer()
         self._proxyClient()
 
     def widget(self):
         return self.smmixer
     def quit(self):
+        self.streamreceiver.stop()
         sys.exit(0)
 
     def _config(self):
