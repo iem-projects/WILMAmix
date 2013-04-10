@@ -1,4 +1,4 @@
-#N canvas 68 106 889 461 10;
+#N canvas 73 86 889 461 10;
 #N canvas 96 102 749 755 createreceivers 0;
 #X obj 89 187 t a b;
 #X msg 324 548 clear;
@@ -194,7 +194,7 @@
 #X obj 271 51 inlet ctrl;
 #X msg 187 165 vis 1;
 #X text 51 42 args: none;
-#X obj 297 380 outlet ->MINTmix;
+#X obj 561 386 outlet ->MINTmix;
 #X obj 50 188 sandbox \$0-receivers;
 #X obj 544 119 symbol \$0-;
 #X symbolatom 544 141 10 0 0 0 - - -;
@@ -204,7 +204,7 @@
 #X msg 563 276 /foo/port 9876;
 #X msg 573 246 /foo/port 9777;
 #X obj 271 113 route /create;
-#N canvas 5 49 824 337 stream 0;
+#N canvas 10 49 824 337 stream 0;
 #X obj 80 37 inlet;
 #X obj 80 221 s \$0-transport:protocol;
 #X obj 156 199 s \$0-transport:port;
@@ -225,15 +225,15 @@
 #X connect 5 6 8 0;
 #X restore 359 142 pd stream;
 #X obj 271 73 routeOSC /stream;
-#N canvas 7 49 450 300 receivers 0;
+#N canvas 9 49 450 300 receivers 0;
 #X obj 114 39 inlet;
 #X obj 114 65 s WILMix->\$0;
 #X text 85 94 we don't know whether everybody rejected this!;
 #X connect 0 0 1 0;
 #X restore 359 164 pd receivers;
-#X obj 564 345 r \$0->WILMix;
-#X obj 569 395 print ->WILMix;
-#X obj 702 380 oscprefix /stream;
+#X obj 561 339 r \$0->WILMix;
+#X obj 561 361 list trim;
+#X obj 583 412 sprint ->WILMix;
 #X connect 1 0 0 1;
 #X connect 2 0 16 0;
 #X connect 3 0 6 1;
@@ -246,5 +246,5 @@
 #X connect 14 1 15 0;
 #X connect 15 0 17 0;
 #X connect 16 0 14 0;
-#X connect 18 0 20 0;
-#X connect 20 0 19 0;
+#X connect 18 0 19 0;
+#X connect 19 0 5 0;
