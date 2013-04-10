@@ -337,21 +337,22 @@ class CallbackManager:
             ## try direct matching
             if self.isWildcard(address):
                 for a in self.matchWildcards(address, self.callbacks.keys()):
+                    cb=None
                     try:
-                        cb=self.callbacks[a]([a, message[0]], message[1], message[2:], source)
-                        found=True
+                        cb=self.callbacks[a]
                     except KeyError, e:
                         cb=None
                     if cb is not None:
-                        cb(message, source)
+                        cb([a, message[0]], message[1], message[2:], source)
+                        found=True
             else:
                 try:
                     cb=self.callbacks[address]
-                    found=True
                 except KeyError, e:
                     cb=None
                 if cb is not None:
                     cb([address, message[0]], message[1], message[2:], source)
+                    found=True
 
             ## try subtree matching
             subtree=address.split('/')[1:]
