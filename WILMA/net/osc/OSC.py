@@ -302,12 +302,15 @@ class CallbackManager:
     of decoded OSC arguments, including the address and
     the typetags as the first two arguments."""
 
-    def __init__(self, verbose=False):
+    def __init__(self, prefix=None, verbose=False):
         self.verbose=verbose
         self.callbacks = {}
         self.subtreecallbacks = []
         self.bundlecallback = None
         self.bundledepth    = 0
+        self.prefix=None
+        if prefix is not None:
+            self.prefix=prefix.split('/')[1:]
         self.removeAll()
 
     def handle(self, data, source = None):
@@ -330,11 +333,17 @@ class CallbackManager:
             if '#bundle' == address:
                 self.unbundler(message, source)
                 return
-
             # got a single message
             found=False
             cb=None
             subtree=address.split('/')[1:]
+
+            # first check whether it matches our prefix (if any)
+            if self.prefix is not None:
+                if not self.matchSubtree(subtree, self.prefix):
+                    return # prefix match failed
+                address='/'+'/'.join(subtree[len(self.prefix):])
+
             ## try direct matching
             if self.isWildcard(address):
                 for a in self.matchWildcards(address, self.callbacks.keys()):
