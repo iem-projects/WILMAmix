@@ -291,13 +291,25 @@ class SMgui:
         self.send(prefix+addr, data)
 
     def _processProxyCallback(self, addr, typetags, data, source):
-        """proxyreceiver, forward to SMi"""
+        """proxyreceiver -> SMi (for /process data)"""
         self.proxyForward(addr[0], data, '/process')
+
+    def _proxyCallback(self, addr, typetags, data, source):
+        """proxyreceiver -> SMi (for trusted data)"""
+        self.proxyForward(addr[0], data)
 
     def addProcessProxy(self, proxy):
         """register a callback in the process-proxy, that will automatically forward any important data in the proxy to the SMi"""
         subtree=self.oscprefix+'/'
         proxy.add(self._processProxyCallback, subtree)
+
+    def addProxy(self, proxy):
+        """add a callback for our SMi in the proxy.
+        whenever the proxy receives data for us, it will then call our callback
+        (so we can forward it to the SMi.
+        we trust the sender to use the correct prefix"""
+        subtree=self.oscprefix+'/'
+        proxy.add(self._proxyCallback, subtree)
 
 
 ######################################################################
