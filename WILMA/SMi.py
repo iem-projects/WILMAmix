@@ -101,7 +101,7 @@ class PdCommunicator:
         self.smi.server.sendMsg(addr[0], data)
         print "got message: ", (addr, typetags, data, source)
     def _forward(self, addr, typetags, data, source):
-        self.smi.server.sendMsg(addr[0], data)
+        self.smi.server.sendMsg(addr[1], data)
 
     def stop(self):
         print "PdCommunicator: stop"
@@ -297,7 +297,7 @@ class SMi:
         else:
             self.pd.send("/process/stop")
     def _processProxy(self, addr, typetags, data, src):
-        self.pd.send(addr[0], data)
+        self.pd.send('/process'+addr[0], data)
 
     def ping(self, addr, typetags, data, src):
         self.state.update()

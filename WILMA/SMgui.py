@@ -282,20 +282,20 @@ class SMgui:
         self.config.setSyncLock(value)
         self.critical[6]=not value
     def _smiProcess(self, addr, typetags, data, source):
-        self.mixer.sendProxy(addr[1], data)
-        pass
+        self.mixer.sendProxy(self.oscprefix+addr[0], data)
 
     def proxyForward(self, addr, data=None, prefix=''):
-        """forward the OSC-message (possibly prefixed with 'prefix') to the SMi, if currently active"""
+        """proxy->SMi"""
         if not self.selected():
             return
         self.send(prefix+addr, data)
 
     def _processProxyCallback(self, addr, typetags, data, source):
+        """proxyreceiver, forward to SMi"""
         self.proxyForward(addr[0], data, '/process')
 
     def addProcessProxy(self, proxy):
-        """register a callback in the proxy, that will automatically forward any important data in the proxy to the SMi"""
+        """register a callback in the process-proxy, that will automatically forward any important data in the proxy to the SMi"""
         subtree=self.oscprefix+'/'
         proxy.add(self._processProxyCallback, subtree)
 

@@ -78,9 +78,8 @@ class MIXgui:
         ###  should translate to
         ###        '/SM1/process/foo/bar'
         ###        '/SM2/process/foo/bar'
-        addr='/process'+addr[1]
-
-        self.send(addr, data)
+        newaddr='/process'+addr[1]
+        self.send(newaddr, data)
         pass
 
     def sendProxy(self, addr, msg=None):
