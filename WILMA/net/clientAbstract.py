@@ -26,8 +26,8 @@ class clientAbstract(object):
     receives OSC-messages from server (and passes them on)
     """
 
-    def __init__(self, oscprefix='', verbose=False):
-        self.addressManager = osc.CallbackManager(verbose=verbose)
+    def __init__(self, oscprefix=None, verbose=False):
+        self.addressManager = osc.CallbackManager(prefix=oscprefix, verbose=verbose)
         if oscprefix is None:
             self.oscPrefix=''
         else:
@@ -54,10 +54,6 @@ class clientAbstract(object):
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
         if self.addressManager is not None:
-            if oscAddress is None:
-                if self.oscPrefix is not '': oscAddress = self.oscPrefix+'/'
-            else:
-                oscAddress=self.oscPrefix+oscAddress
             self.addressManager.add(callback, oscAddress)
 
     def _send(self, data):

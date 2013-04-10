@@ -36,7 +36,7 @@ class serverAbstract(object):
 
         self.remote = None # tuple describing the remote-side (host, port)
         self.port   = port # local listening port
-        self.addressManager = osc.CallbackManager(verbose=verbose)
+        self.addressManager = osc.CallbackManager(prefix=oscprefix, verbose=verbose)
         self.publisher=None
         publishname=oscprefix
         if publishname is not None:
@@ -62,10 +62,6 @@ class serverAbstract(object):
     def add(self, callback, oscAddress):
         """add a callback for oscAddress"""
         if self.addressManager is not None:
-            if oscAddress is None:
-                if self.oscPrefix is not '': oscAddress = self.oscPrefix+'/'
-            else:
-                oscAddress=self.oscPrefix+oscAddress
             self.addressManager.add(callback, oscAddress)
 
     def _send(self, data):
