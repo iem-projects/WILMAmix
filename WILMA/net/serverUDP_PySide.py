@@ -76,6 +76,10 @@ class serverUDP(serverAbstract.serverAbstract):
                 print "sending '", data, "' to ", self.remote
             self.socket.writeDatagram(data, QHostAddress(self.remote[0]), self.remote[1])
 
+    def getPort(self):
+        return self.socket.localPort()
+
+
 ######################################################################
 
 def _callback(addr, typetags, message, source):
