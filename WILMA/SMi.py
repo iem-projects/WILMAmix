@@ -104,9 +104,7 @@ class PdCommunicator:
         self.smi.server.sendMsg(addr[1], data)
 
     def stop(self):
-        print "PdCommunicator: stop"
         self.server.stop()
-        print "PdCommunicator: stopped"
 
     def send(self, addr, data=None):
         self.server.send(addr, data)
@@ -145,6 +143,8 @@ class SMi:
         self.server.add(self._recordFilename, '/record/filename')
 
         self.server.add(self.dumpInfo, '/dump') ## debugging
+        self.server.add(self._catchall, None) ## debugging
+
         self.mixer = self.state.mixer
         self.pd = PdCommunicator(self)
 
@@ -319,6 +319,9 @@ class SMi:
         print "state  : ", self.state.__dict__
         if self.streamer is not None:
             self.streamer.dumpInfo()
+    def _catchall(self, addr, typetags, data, src):
+        print "SMi:catchall", (self, addr, typetags, data, src)
+        print "OSC-callbacks", self.server.addressManager.__dict__
 
 if __name__ == '__main__':
     print "SMi..."
