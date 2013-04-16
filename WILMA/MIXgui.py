@@ -31,7 +31,8 @@ class StreamReceiver:
         self.settings=parent.settings
         import pdserver
         self.server = pdserver.pdserver(mainpatch='_WILMAmix.pd',
-                                        workingdir=self.settings['/path/out']
+                                        workingdir=self.settings['/path/out'],
+                                        backend='gui'
                                         )
         self.server.add(self._nullCallback, None)
         self.server.start()

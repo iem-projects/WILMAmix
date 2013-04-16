@@ -83,7 +83,7 @@ class _pdprocess:
         self.pd=None
 
 class pdserver:
-    def __init__(self, mainpatch='MAIN.pd', workingdir=None, patchdir=None):
+    def __init__(self, mainpatch='MAIN.pd', workingdir=None, patchdir=None, backend=None):
         self.server = NetServer(transport='udp')
         self.pd=_pdprocess(self.server.getPort(), patch=mainpatch, cwd=workingdir, cpd=patchdir, runningCb=self._runningCb)
         self.stateCb = None
