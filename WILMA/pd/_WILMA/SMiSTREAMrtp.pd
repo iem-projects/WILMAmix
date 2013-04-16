@@ -1,4 +1,4 @@
-#N canvas 266 478 814 452 10;
+#N canvas 462 198 814 452 10;
 #X obj 187 35 inlet control;
 #X obj 503 391 outlet control;
 #X text 40 15 1:prefix 2:channels 3:transport 4:transPort 5:profile
@@ -192,7 +192,7 @@
 #X obj 329 326 s \$0-control2sender;
 #X obj 512 133 loadbang;
 #X obj 512 213 sandbox \$0-stream;
-#N canvas 370 288 450 300 proxy 1;
+#N canvas 371 284 450 300 proxy 0;
 #X obj 58 41 r _pcmtimestamp;
 #X msg 58 63 timestamp \$1 \$2;
 #X obj 58 85 s \$0-payloadcontrol;
@@ -209,16 +209,20 @@
 #X restore 146 368 pd proxy;
 #X obj 187 175 s \$0-payloader:start;
 #X obj 220 133 t b;
-#X obj 329 250 list prepend localhost 0;
 #X obj 329 224 t b a;
+#X obj 401 41 print streamconfig;
+#X obj 329 250 list prepend localhost 0;
+#X msg 384 183 localhost \$1;
+#X floatatom 384 165 5 0 0 0 - - -;
 #X connect 0 0 3 0;
+#X connect 0 0 21 0;
 #X connect 3 0 7 0;
 #X connect 4 0 6 0;
 #X connect 5 0 6 0;
 #X connect 6 0 14 0;
 #X connect 7 0 8 0;
 #X connect 7 1 19 0;
-#X connect 7 2 21 0;
+#X connect 7 2 20 0;
 #X connect 8 0 9 0;
 #X connect 9 0 18 0;
 #X connect 10 0 18 0;
@@ -226,6 +230,8 @@
 #X connect 13 0 11 0;
 #X connect 15 0 13 0;
 #X connect 19 0 10 0;
-#X connect 20 0 4 0;
-#X connect 21 0 20 0;
-#X connect 21 1 20 1;
+#X connect 20 0 22 0;
+#X connect 20 1 22 1;
+#X connect 22 0 4 0;
+#X connect 23 0 20 0;
+#X connect 24 0 23 0;
