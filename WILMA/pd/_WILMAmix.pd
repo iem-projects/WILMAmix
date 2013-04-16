@@ -1,20 +1,19 @@
-#N canvas 103 537 648 375 10;
+#N canvas 247 574 648 375 10;
 #X text 39 26 stream-receiver (HG-side);
 #X obj 101 161 _WILMA/STREAMRECVR;
-#N canvas 8 49 666 559 OSCinTEST 0;
-#X msg 92 176 /stream/create /fo1 /bar /baz;
-#X msg 237 204 /stream/protocol rtp \, /stream/profile L16;
-#X msg 57 123 /stream/protocol rtsp \, /stream/profile L20 \, /stream/create
-/foo;
+#N canvas 610 49 666 559 OSCinTEST 0;
 #X msg 236 264 /stream/fo1/protocol rtp \, /stream/fo1/profile L16
 \, /stream/fo1/transport/protocol udp;
 #X obj 70 322 s \$0-OSCin;
-#X msg 238 359 /stream/create /porsche;
-#X connect 0 0 4 0;
-#X connect 1 0 4 0;
-#X connect 2 0 4 0;
-#X connect 3 0 4 0;
-#X connect 5 0 4 0;
+#X msg 46 53 /stream/protocol rtp \, /stream/profile L16 \, /stream/transport/port
+46069;
+#X msg 92 176 /create porsche;
+#X msg 57 123 /stream/protocol rtsp \, /stream/profile L20 \, /create
+foo;
+#X connect 0 0 1 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 0;
 #X restore 229 26 pd OSCinTEST;
 #X obj 101 138 r \$0-OSCin;
 #X obj 101 183 packOSC;
@@ -58,6 +57,25 @@
 #X text 45 205 /*/stream/uri (stream-target if applicable \; sender
 should RESTART stream to this URI);
 #X restore 100 52 pd OSCdoc;
+#N canvas 5 49 450 300 init 0;
+#X obj 126 77 loadbang;
+#X obj 126 99 delay 1000;
+#X msg 235 139 \; pd dsp 1;
+#X obj 126 121 t b b;
+#X msg 126 175 /ping;
+#X obj 126 197 packOSC;
+#X obj 126 219 s \$0-OSCrawout;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 1 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X restore 371 43 pd init;
+#X msg 458 28 bang;
+#X obj 101 100 _WILMA/STREAMrtpreceiver 1018 udp 46069 L16 32768 4
+0;
+#X obj 458 50 print _WILMAmix;
 #X connect 1 0 4 0;
 #X connect 3 0 1 0;
 #X connect 4 0 5 0;
@@ -68,3 +86,4 @@ should RESTART stream to this URI);
 #X connect 12 0 13 0;
 #X connect 13 0 14 0;
 #X connect 15 0 13 1;
+#X connect 19 0 21 0;
