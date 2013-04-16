@@ -47,6 +47,9 @@ class StreamReceiver:
         self.server.server.removeAll()
     def add(self, callback, oscAddress):
         self.server.add(callback, oscAddress)
+    def ping(self):
+        self.server.ping()
+
 
 class MIXgui:
     def __init__(self, parent=None):
@@ -162,6 +165,7 @@ class MIXgui:
     def ping(self):
         for sm in self.sm:
             sm.ping()
+        self.streamreceiver.ping()
 
     def selected(self):
         # FIXME: i'm sure this can be done very elegant with some lambda function

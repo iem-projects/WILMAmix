@@ -112,6 +112,8 @@ class pdserver:
         self.server.add(callback, oscAddress)
     def send(self, addr, data=None):
         self.server.send(addr, data)
+    def ping(self):
+        self.server.send('/ping', [])
 
 if __name__ == '__main__':
     class PingPong:

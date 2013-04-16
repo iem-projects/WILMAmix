@@ -108,6 +108,8 @@ class PdCommunicator:
 
     def send(self, addr, data=None):
         self.server.send(addr, data)
+    def ping(self):
+        self.server.send('/ping', [])
 
 
 class SMi:
@@ -313,6 +315,7 @@ class SMi:
         for a in ['/user', '/path/in', '/path/out' ]:
             bundle.append((a, [self.settings[a]]))
         self.server.sendBundle(bundle)
+        self.pd.ping()
 
     def dumpInfo(self, addr, typetags, data, src):
         print "setting: ", self.settings
