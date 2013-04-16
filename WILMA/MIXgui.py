@@ -43,6 +43,10 @@ class StreamReceiver:
     def send(self, addr, data=None):
         self.server.send(addr,data)
 
+    def removeAll(self):
+        self.server.server.removeAll()
+    def add(self, callback, oscAddress):
+        self.server.add(callback, oscAddress)
 
 class MIXgui:
     def __init__(self, parent=None):
@@ -56,6 +60,7 @@ class MIXgui:
 
         self.proxyserver = None
         self.proxyclient = None
+        self.streamreceiver = StreamReceiver(self)
 
         self.mixconfig = MIXconfig.MIXconfig(self, guiparent=parent, settings=self.settings)
         self.mixctl = MIXctl.MIXctl(self, guiparent=parent, settings=self.settings)
@@ -67,10 +72,9 @@ class MIXgui:
         self.scanSM()
         self.smmixer.show()
 
-        self.streamreceiver = StreamReceiver(self)
-
         self._proxyServer()
         self._proxyClient()
+        self.registerProxy(self.streamreceiver.server.server)
 
     def widget(self):
         return self.smmixer
@@ -132,6 +136,9 @@ class MIXgui:
             self.sm+=[smi]
         self.smmixer.setSM(self.sm)
         self.registerProcessProxies()
+        self.registerProxy(self.streamreceiver.server.server)
+        self.streamreceiver.send('/create', sorted(self.dict.keys()))
+
     def registerProcessProxies(self, proxies=None):
         """register the proxy callbacks for the various SMis"""
         if proxies is None:
@@ -143,6 +150,11 @@ class MIXgui:
             for sm in self.sm:
                 sm.addProcessProxy(p)
             p.add(self._nullCallback, None)
+    def registerProxy(self, proxy):
+        proxy.removeAll()
+        for sm in self.sm:
+            sm.addProxy(proxy)
+
 
     def printIt(self):
         print self.dict
