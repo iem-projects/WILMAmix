@@ -1,3 +1,8 @@
+recovery:
+   Q: when Pd-crashes, we should recover the last state (if possible)
+      (and if not possible and this was the SMi-Pd, turn off the "play" button)
+
+
 pd.SMi:
   Q: rethink architecture
      1-wrapper abs per mode:
@@ -7,15 +12,8 @@ pd.SMi:
       streamer:
       	_WILMA/STREAMERrtp.pd transport:udp transPort:0 profile:L16 channels:4
 				bufsize:0 dacoffset:0
-
 	abstraction: adc2send (multichannel)
 
-
-RTPclient:
-  Q: implement RTP-receiver (in Pd)
-
-RTPclient.communication:
-  Q: tell RTP-server where to send data to
 
 BUG:WILMAsm:
   Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
@@ -57,6 +55,14 @@ process:
 OSC:
   Q: sub-tree patterns (e.g. '/foo/' matches '/foo/bar/baz')
   A: done
+
+RTPclient:
+  Q: implement RTP-receiver (in Pd)
+  A: implemented
+
+RTPclient.communication:
+  Q: tell RTP-server where to send data to
+  A: implemented
 
 RTSPserver:
   Q: if the server shuts down and a client is still listening, the server
