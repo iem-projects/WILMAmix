@@ -51,7 +51,9 @@ Dependencies (WILMAsm)
 + python
 + python-avahi
 + python-pyalsa
-+ python-gst0.10
-+ python-gst0.10-rtsp
+= python-smbus 
+= python-psutil
+//+ python-gst0.10
+//+ python-gst0.10-rtsp
 + avahi-daemon
 - gstreamer0.10-alsa
