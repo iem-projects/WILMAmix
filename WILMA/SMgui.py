@@ -231,7 +231,8 @@ class SMgui:
     def _smiUser(self, addr, typetags, data, source):
         self.settings['/user']=data[0]
     def _smiFader(self, addr, typetags, data, source):
-        self.config.setFader(data[0])
+        if len(data)>0:
+          self.config.setFader(data[0])
     def _smiLevel(self, addr, typetags, data, source):
         self.alive(True)
         levels=data
