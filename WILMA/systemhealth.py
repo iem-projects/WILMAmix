@@ -197,19 +197,23 @@ class systemhealth:
 if __name__ == '__main__':
     print "systemhealth..."
     s=systemhealth()
-    try:
+    def printValues(s):
         print "CPU: ", s.cpu
         print "MEM: ", s.mem
         print "DISK: ", s.disk
         print "BAT: ", s.battery
         print "runtime: ",s.runtime
+        print "sync: ", s.battery
+        print "lock: ", s.battery
+        print "temperature: ", s.battery
+        print "packetRatio: ", s.battery
+        print "RSSI: ", s.battery
+        
+    try:
+        printValues(s)
         time.sleep(5)
         s.update()
-        print "CPU: ", s.cpu
-        print "MEM: ", s.mem
-        print "DISK: ", s.disk
-        print "BAT: ", s.battery
-        print "runtime: ",s.runtime
+        printValues(s)
     except KeyboardInterrupt:
         print "shutting down"
     s.stop()
