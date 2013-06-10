@@ -36,6 +36,12 @@ class systemhealth:
         SMBUS_cmdRunTimeToEmpty        = 0x11
         SMBUS_cmdAverageTimeToEmpty    = 0x13
         SMBUS_cmdBatteryStatus         = 0x16
+        
+        SMBUS_cmdTemperature           = 0xbb
+        SMBUS_cmdSyncStatus            = 0xcc
+        SMBUS_cmdGetRSSI               = 0xaa
+        SMBUS_cmdGetPacketLoss         = 0xdd
+        
 
         def __init__(self, interval=1.0, path=None):
             Thread.__init__(self)
@@ -98,13 +104,16 @@ class systemhealth:
                 if self.smbus is not None:
                     charge=0.
                     runtime=0.
-                    synched=False
+                    synced=False
                     locked=False
 
                     try:
-                        charge  = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr, systemhealth.SystemHealthThread.SMBUS_cmdRelativeStateOfCharge)
-                        runtime = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr, systemhealth.SystemHealthThread.SMBUS_cmdRunTimeToEmpty)
-                        state   = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr, systemhealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
+                        charge  = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr,
+                                                            systemhealth.SystemHealthThread.SMBUS_cmdRelativeStateOfCharge)
+                        runtime = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr,
+                                                            systemhealth.SystemHealthThread.SMBUS_cmdRunTimeToEmpty)
+                        state   = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr,
+                                                            systemhealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
                         # FIXXME: sync
                         # FIXXME: lock
                     except IOError:
