@@ -110,7 +110,7 @@ class systemhealth:
                     sync_external=False
                     sync_internal=False
                     temperature=0
-                    rssi=0
+                    rssi=0.
                     packetlost=0
 
 
@@ -234,7 +234,7 @@ if __name__ == '__main__':
         print "syncX: ", s.sync_external
         print "temperature: ", s.temperature
         print "packetRatio: ", s.packetRatio
-        print "RSSI: ", s.battery
+        print "RSSI: ", s.rssi
 
     try:
         printValues(s)
