@@ -126,16 +126,16 @@ class systemhealth:
                         pass # hopefully a temporary error...
 
                     try:
-                        temperature = self.smbus.read_bytedata(systemhealth.SystemHealthThread.SMBUS_picAddr,
+                        temperature = self.smbus.read_byte_data(systemhealth.SystemHealthThread.SMBUS_picAddr,
                                                                systemhealth.SystemHealthThread.SMBUS_cmdTemperature)
 
-                        packetlost = self.smbus.read_bytedata(systemhealth.SystemHealthThread.SMBUS_picAddr,
+                        packetlost = self.smbus.read_byte_data(systemhealth.SystemHealthThread.SMBUS_picAddr,
                                                               systemhealth.SystemHealthThread.SMBUS_cmdGetPacketLoss)
 
-                        rssi = self.smbus.read_bytedata(systemhealth.SystemHealthThread.SMBUS_picAddr,
+                        rssi = self.smbus.read_byte_data(systemhealth.SystemHealthThread.SMBUS_picAddr,
                                                         systemhealth.SystemHealthThread.SMBUS_cmdGetRSSI)
 
-                        syncstatus = self.smbus.read_bytedata(systemhealth.SystemHealthThread.SMBUS_picAddr,
+                        syncstatus = self.smbus.read_byte_data(systemhealth.SystemHealthThread.SMBUS_picAddr,
                                                         systemhealth.SystemHealthThread.SMBUS_cmdSyncStatus)
                         if(0x01==syncstatus): # syncing
                             sync_external=True
