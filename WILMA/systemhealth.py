@@ -134,7 +134,7 @@ class systemhealth:
                     self.synced = synced
                     self.locked = locked
                     self.temperature = (temp/2.0) - 10.0
-                    self.packetRatio = 100./packetRatio
+                    self.packetRatio = 100./packetratio
                     self.rssi   = rssi - 107.
 
                 deltime = self.interval - (time.time()-now)
