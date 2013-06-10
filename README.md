@@ -57,3 +57,10 @@ Dependencies (WILMAsm)
 //+ python-gst0.10-rtsp
 + avahi-daemon
 - gstreamer0.10-alsa
++ puredata
+
+
+Installation
+------------
+a patched version of 'puredata' (as found on
+http://github.com/umlaeute/pd-vanilla#beaglebone) must be available as 'pd'.
