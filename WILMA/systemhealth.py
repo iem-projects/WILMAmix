@@ -107,11 +107,11 @@ class systemhealth:
                 if self.smbus is not None:
                     charge=0.
                     runtime=0.
-                    synced=False
-                    locked=False
-                    temp=0
+                    sync_external=False
+                    sync_internal=False
+                    temperature=0
                     rssi=0
-                    packetratio=0
+                    packetlost=0
 
 
                     try:
@@ -121,23 +121,45 @@ class systemhealth:
                                                             systemhealth.SystemHealthThread.SMBUS_cmdRunTimeToEmpty)
                         state   = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr,
                                                             systemhealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
-                        # FIXXME: sync
-                        # FIXXME: lock
-                        #self.smbus.write_byte(systemhealth.SystemHealthThread.SMBUS_picAddr,
-                        #                      systemhealth.SystemHealthThread.SMBUS_cmdTemperature)
-                        #time.sleep(0.1)
-                        #temp    = self.smbus.read_byte(systemhealth.SystemHealthThread.SMBUS_picAddr)
                     except IOError as e:
-                        print "error:", e
+                        print "errorGAUGE:", e
+                        pass # hopefully a temporary error...
+
+                    try:
+                        temperature = self.smbus.read_bytedata(systemhealth.SystemHealthThread.SMBUS_picAddr,
+                                                               systemhealth.SystemHealthThread.SMBUS_cmdTemperature)
+
+                        packetlost = self.smbus.read_bytedata(systemhealth.SystemHealthThread.SMBUS_picAddr,
+                                                              systemhealth.SystemHealthThread.SMBUS_cmdGetPacketLoss)
+
+                        rssi = self.smbus.read_bytedata(systemhealth.SystemHealthThread.SMBUS_picAddr,
+                                                        systemhealth.SystemHealthThread.SMBUS_cmdGetRSSI)
+
+                        syncstatus = self.smbus.read_bytedata(systemhealth.SystemHealthThread.SMBUS_picAddr,
+                                                        systemhealth.SystemHealthThread.SMBUS_cmdSyncStatus)
+                        if(0x01==syncstatus): # syncing
+                            sync_external=True
+                            sync_internal=False
+                        elif(0x02==syncstatus): # freerunning
+                            sync_external=False
+                            sync_internal=True
+                        elif(0x03==syncstatus): # synced
+                            sync_external=True
+                            sync_internal=True
+                        else: ## ouch
+                            sync_external=False
+                            sync_internal=False
+                    except IOError as e:
+                        print "errorPIC :", e
                         pass # hopefully a temporary error...
 
                     self.battery = charge/100.
                     self.runtime = runtime
-                    self.synced = synced
-                    self.locked = locked
-                    self.temperature = (temp/2.0) - 10.0
-                    if packetratio != 0:
-                        self.packetRatio = 100./packetratio
+                    self.sync_external = sync_external
+                    self.sync_internal = sync_internal
+                    self.temperature = (temperature/2.0) - 10.0
+                    if packetlost != 0:
+                        self.packetRatio = 100./packetlost
                     else:
                         self.packetRatio = 0.
                     self.rssi   = rssi - 107.
