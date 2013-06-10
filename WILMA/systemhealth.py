@@ -36,12 +36,12 @@ class systemhealth:
         SMBUS_cmdRunTimeToEmpty        = 0x11
         SMBUS_cmdAverageTimeToEmpty    = 0x13
         SMBUS_cmdBatteryStatus         = 0x16
-        
+
+        SMBUS_picAddr                  = 0x0e
         SMBUS_cmdTemperature           = 0xbb
         SMBUS_cmdSyncStatus            = 0xcc
         SMBUS_cmdGetRSSI               = 0xaa
         SMBUS_cmdGetPacketLoss         = 0xdd
-        
 
         def __init__(self, interval=1.0, path=None):
             Thread.__init__(self)
