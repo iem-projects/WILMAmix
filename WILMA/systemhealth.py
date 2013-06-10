@@ -75,6 +75,9 @@ class systemhealth:
             self.last=0
             self.synced = True # just for testing
             self.locked  = False
+            self.temperature = 0.
+            self.packetRatio = 0.
+            self.rssi = 0.
 
             self.keepRunning=True
             self.isRunning=False
@@ -141,6 +144,9 @@ class systemhealth:
         self.runtime = 0
         self.synced = False
         self.locked = False
+        self.temperature = 0.
+        self.packetRatio = 0.
+        self.rssi = 0.
         self.thread.start()
         while not (self.thread.keepRunning and self.thread.isRunning):
             time.sleep(0.1)
@@ -161,6 +167,9 @@ class systemhealth:
             self.runtime = self.thread.runtime
             self.synced = self.thread.synced
             self.locked = self.thread.locked
+            self.temperature = self.thread.temperature
+            self.packetRatio = self.thread.packetRatio
+            self.rssi = self.thread.rssi
         else:
             self.cpu = 1.
             self.mem = 1.
@@ -169,6 +178,10 @@ class systemhealth:
             self.runtime = 0
             self.synced = True
             self.locked = False
+            self.temperature = 0.
+            self.packetRatio = 0.
+            self.rssi = 0.
+
 
 ######################################################################
 
