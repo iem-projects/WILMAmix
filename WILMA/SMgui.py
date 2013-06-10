@@ -276,11 +276,11 @@ class SMgui:
         self.critical[index]=value<10
     def _smiStateSyncExternal(self, addr, typetags, data, source):
         value=data[0]
-        self.config.setSyncInternal(value)
+        self.config.setSyncExternal(value)
         self.critical[5]=not value
     def _smiStateSyncInternal(self, addr, typetags, data, source):
         value=data[0]
-        self.config.setSyncSyncExternal(value)
+        self.config.setSyncInternal(value)
         self.critical[6]=not value
     def _smiProcess(self, addr, typetags, data, source):
         self.mixer.sendProxy(self.oscprefix+addr[0], data)
