@@ -109,6 +109,10 @@ class systemhealth:
                     runtime=0.
                     synced=False
                     locked=False
+                    temp=0
+                    rssi=0
+                    packetratio=0
+
 
                     try:
                         charge  = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr,
@@ -127,6 +131,9 @@ class systemhealth:
                     self.runtime = runtime
                     self.synced = synced
                     self.locked = locked
+                    self.temperature = (temp/2.0) - 10.0
+                    self.packetRatio = 100./packetRatio
+                    self.rssi   = rssi - 107.
 
                 deltime = self.interval - (time.time()-now)
                 if deltime > 0.:
