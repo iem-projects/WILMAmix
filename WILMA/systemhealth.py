@@ -116,7 +116,8 @@ class systemhealth:
                                                             systemhealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
                         # FIXXME: sync
                         # FIXXME: lock
-                    except IOError:
+                    except IOError as e:
+                        print "error:", e
                         pass # hopefully a temporary error...
 
                     self.battery = charge/100.
