@@ -73,8 +73,8 @@ class systemhealth:
             self.battery = 1.
             self.runtime = 0
             self.last=0
-            self.synced = True # just for testing
-            self.locked  = False
+            self.sync_external = True # just for testing
+            self.sync_internal  = False
             self.temperature = 0.
             self.packetRatio = 0.
             self.rssi = 0.
@@ -156,8 +156,8 @@ class systemhealth:
         self.disk= 1.
         self.battery = 1.
         self.runtime = 0
-        self.synced = False
-        self.locked = False
+        self.sync_external = False
+        self.sync_internal = False
         self.temperature = 0.
         self.packetRatio = 0.
         self.rssi = 0.
@@ -179,8 +179,8 @@ class systemhealth:
             self.disk = self.thread.disk
             self.battery = self.thread.battery
             self.runtime = self.thread.runtime
-            self.synced = self.thread.synced
-            self.locked = self.thread.locked
+            self.sync_external = self.thread.sync_external
+            self.sync_internal = self.thread.sync_internal
             self.temperature = self.thread.temperature
             self.packetRatio = self.thread.packetRatio
             self.rssi = self.thread.rssi
@@ -190,8 +190,8 @@ class systemhealth:
             self.disk= 1.
             self.battery = 1.
             self.runtime = 0
-            self.synced = True
-            self.locked = False
+            self.sync_external = True
+            self.sync_internal = False
             self.temperature = 0.
             self.packetRatio = 0.
             self.rssi = 0.
@@ -208,12 +208,12 @@ if __name__ == '__main__':
         print "DISK: ", s.disk
         print "BAT: ", s.battery
         print "runtime: ",s.runtime
-        print "sync: ", s.battery
-        print "lock: ", s.battery
-        print "temperature: ", s.battery
-        print "packetRatio: ", s.battery
+        print "syncI: ", s.sync_internal
+        print "syncX: ", s.sync_external
+        print "temperature: ", s.temperature
+        print "packetRatio: ", s.packetRatio
         print "RSSI: ", s.battery
-        
+
     try:
         printValues(s)
         time.sleep(5)
