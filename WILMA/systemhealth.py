@@ -123,6 +123,8 @@ class systemhealth:
                                                             systemhealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
                         # FIXXME: sync
                         # FIXXME: lock
+                        temp    = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_picAddr,
+                                                            systemhealth.SystemHealthThread.SMBUS_cmdTemperature)
                     except IOError as e:
                         print "error:", e
                         pass # hopefully a temporary error...
