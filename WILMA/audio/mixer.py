@@ -67,7 +67,7 @@ class AudioMixer:
         try:
             gainsi = [WILMA.utils.SCALE(i, self.info.min, self.info.max, 0., 1., True) for i in gains]
         except TypeError: ## never try to catch _all_ errors
-            print "caught TypeError (try adjusting 'SMi/gain control/' in WILMix.conf)"
+            print "caught TypeError (try adjusting 'SMi/gain_control/' in WILMix.conf)"
             print "\tOUCH: ", gains
             print "\tmixer: ", self.info.name
             gainsi=[0]
