@@ -178,12 +178,12 @@
            <widget class="QWidget" name="frameSync" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
-              <widget class="QCheckBox" name="stateSync">
+              <widget class="QCheckBox" name="stateSyncExt">
                <property name="enabled">
                 <bool>false</bool>
                </property>
                <property name="text">
-                <string>Sync</string>
+                <string>Sync(Ext)</string>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -194,12 +194,12 @@
               </widget>
              </item>
              <item>
-              <widget class="QCheckBox" name="stateLock">
+              <widget class="QCheckBox" name="stateSyncInt">
                <property name="enabled">
                 <bool>false</bool>
                </property>
                <property name="text">
-                <string>Lock</string>
+                <string>Sync(Int)</string>
                </property>
                <property name="checkable">
                 <bool>true</bool>
