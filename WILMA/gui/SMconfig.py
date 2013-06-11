@@ -195,10 +195,10 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.statemeter.setValue(index, value)
     def setTimestamp(self, value):
         self.timestamp.setText(str(value))
-    def setSync(self, value):
-        self.stateSync.setChecked(value)
-    def setSyncLock(self, value):
-        self.stateLock.setChecked(value)
+    def setSyncExternal(self, value):
+        self.stateSyncExt.setChecked(value)
+    def setSyncInternal(self, value):
+        self.stateSyncInt.setChecked(value)
 
 ######################################################################
 if __name__ == '__main__':

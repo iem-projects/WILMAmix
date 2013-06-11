@@ -89,8 +89,8 @@ class SMgui:
         self.connection.add(self._smiStateDisk, '/state/disk')
         self.connection.add(self._smiStateBatt, '/state/battery')
         self.connection.add(self._smiStateRuntime,'/state/runtime')
-        self.connection.add(self._smiStateSync, '/state/sync')
-        self.connection.add(self._smiStateLock, '/state/lock')
+        self.connection.add(self._smiStateSyncExternal, '/state/sync/external')
+        self.connection.add(self._smiStateSyncInternal, '/state/sync/internal')
 
         self.connection.add(self._smiProcess, '/process/')
 
@@ -274,13 +274,13 @@ class SMgui:
         index=4
         self.config.setState(index, value)
         self.critical[index]=value<10
-    def _smiStateSync(self, addr, typetags, data, source):
+    def _smiStateSyncExternal(self, addr, typetags, data, source):
         value=data[0]
-        self.config.setSync(value)
+        self.config.setSyncExternal(value)
         self.critical[5]=not value
-    def _smiStateLock(self, addr, typetags, data, source):
+    def _smiStateSyncInternal(self, addr, typetags, data, source):
         value=data[0]
-        self.config.setSyncLock(value)
+        self.config.setSyncInternal(value)
         self.critical[6]=not value
     def _smiProcess(self, addr, typetags, data, source):
         self.mixer.sendProxy(self.oscprefix+addr[0], data)

@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'SMconfig.ui'
 #
-# Created: Wed Apr  3 13:18:25 2013
-#      by: pyside-uic 0.2.13 running on PySide 1.1.1
+# Created: Mon Jun 10 16:29:26 2013
+#      by: pyside-uic 0.2.14 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -77,17 +77,17 @@ class Ui_SMconfig(object):
         self.horizontalLayout = QtGui.QHBoxLayout(self.frameSync)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.stateSync = QtGui.QCheckBox(self.frameSync)
-        self.stateSync.setEnabled(False)
-        self.stateSync.setCheckable(True)
-        self.stateSync.setChecked(False)
-        self.stateSync.setObjectName("stateSync")
-        self.horizontalLayout.addWidget(self.stateSync)
-        self.stateLock = QtGui.QCheckBox(self.frameSync)
-        self.stateLock.setEnabled(False)
-        self.stateLock.setCheckable(True)
-        self.stateLock.setObjectName("stateLock")
-        self.horizontalLayout.addWidget(self.stateLock)
+        self.stateSyncExt = QtGui.QCheckBox(self.frameSync)
+        self.stateSyncExt.setEnabled(False)
+        self.stateSyncExt.setCheckable(True)
+        self.stateSyncExt.setChecked(False)
+        self.stateSyncExt.setObjectName("stateSyncExt")
+        self.horizontalLayout.addWidget(self.stateSyncExt)
+        self.stateSyncInt = QtGui.QCheckBox(self.frameSync)
+        self.stateSyncInt.setEnabled(False)
+        self.stateSyncInt.setCheckable(True)
+        self.stateSyncInt.setObjectName("stateSyncInt")
+        self.horizontalLayout.addWidget(self.stateSyncInt)
         self.verticalLayout.addWidget(self.frameSync)
         self.frameTimestamp = QtGui.QWidget(self.frameState)
         self.frameTimestamp.setObjectName("frameTimestamp")
@@ -200,8 +200,8 @@ class Ui_SMconfig(object):
         self.networkInterface.setItemText(1, QtGui.QApplication.translate("SMconfig", "wlan0", None, QtGui.QApplication.UnicodeUTF8))
         self.label_networkInterface.setText(QtGui.QApplication.translate("SMconfig", "Interface", None, QtGui.QApplication.UnicodeUTF8))
         self.frameState.setTitle(QtGui.QApplication.translate("SMconfig", "System Health", None, QtGui.QApplication.UnicodeUTF8))
-        self.stateSync.setText(QtGui.QApplication.translate("SMconfig", "Sync", None, QtGui.QApplication.UnicodeUTF8))
-        self.stateLock.setText(QtGui.QApplication.translate("SMconfig", "Lock", None, QtGui.QApplication.UnicodeUTF8))
+        self.stateSyncExt.setText(QtGui.QApplication.translate("SMconfig", "Sync(Ext)", None, QtGui.QApplication.UnicodeUTF8))
+        self.stateSyncInt.setText(QtGui.QApplication.translate("SMconfig", "Sync(Int)", None, QtGui.QApplication.UnicodeUTF8))
         self.label_timestamp.setText(QtGui.QApplication.translate("SMconfig", "TimeStamp", None, QtGui.QApplication.UnicodeUTF8))
         self.frameFileSync.setTitle(QtGui.QApplication.translate("SMconfig", "FileSync", None, QtGui.QApplication.UnicodeUTF8))
         self.pullButton.setText(QtGui.QApplication.translate("SMconfig", "Pull data from SMi", None, QtGui.QApplication.UnicodeUTF8))
