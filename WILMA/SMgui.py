@@ -183,7 +183,7 @@ class SMgui:
         if path is None:
             return
         source=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/out']+'/' #remote
-        target=os.path.join(path, self.name) #local
+        target=os.path.join(path, self.name, '') #local
         self.config.pullEnable(False)
         self.pullCb=fun
         f=filesync.filesync(source, target,
@@ -199,7 +199,7 @@ class SMgui:
     def push(self, path, fun=None):
         if path is None:
             return
-        source=path #local
+        source=os.path.join(path, '') #local
         target=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/in']+'/' #remote
         self.config.pushEnable(False)
         self.pushCb=fun
