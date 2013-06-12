@@ -77,7 +77,7 @@ class MIXgui:
 
         self._proxyServer()
         self._proxyClient()
-        self.registerProxy(self.streamreceiver.server.server)
+        self.registerProxy(self.streamreceiver.server)
 
     def widget(self):
         return self.smmixer
@@ -139,7 +139,8 @@ class MIXgui:
             self.sm+=[smi]
         self.smmixer.setSM(self.sm)
         self.registerProcessProxies()
-        self.registerProxy(self.streamreceiver.server.server)
+
+        self.registerProxy(self.streamreceiver.server)
         self.streamreceiver.send('/create', sorted(self.dict.keys()))
 
     def registerProcessProxies(self, proxies=None):
