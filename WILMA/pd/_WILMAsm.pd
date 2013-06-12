@@ -1,4 +1,4 @@
-#N canvas 790 133 844 588 10;
+#N canvas 432 128 844 588 10;
 #X obj 47 182 _WILMA/loader;
 #X obj 47 232 packOSC;
 #X obj 47 129 r \$0-OSCin;
@@ -151,7 +151,7 @@ at TS32;
 #X text 538 78 /stream/profile L16;
 #X text 540 94 /stream/channels 4;
 #X restore 98 24 pd OSCdoc;
-#N canvas 69 442 450 300 OSCout 0;
+#N canvas 70 416 450 300 OSCout 0;
 #X obj 85 105 r \$0-OSCout;
 #X obj 85 127 packOSC;
 #X obj 85 149 s \$0-OSCrawout;
@@ -165,12 +165,12 @@ at TS32;
 #X obj 636 201 r \$0-OSCin;
 #X obj 636 223 spigot;
 #X obj 636 243 print OSCin;
-#X obj 691 223 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 691 223 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj 305 125 loadbang;
 #X obj 305 147 delay 1000;
 #X msg 305 169 \; pd dsp 1;
-#X obj 198 125 _WILMA/meter \$0;
+#X obj 168 125 _WILMA/meter \$0;
 #X obj 48 314 _WILMA/pdserver_client \$0 udp;
 #X obj 521 209 spigot;
 #X obj 521 231 unpackOSC;

@@ -44,6 +44,7 @@ class StreamReceiver:
         self.server.send(addr,data)
 
     def removeAll(self):
+        ## FIXXME: this removes self.server-internal hooks like /ping
         self.server.server.removeAll()
     def add(self, callback, oscAddress):
         self.server.add(callback, oscAddress)

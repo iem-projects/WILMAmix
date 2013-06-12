@@ -85,6 +85,7 @@ class _pdprocess:
 class pdserver:
     def __init__(self, mainpatch='MAIN.pd', workingdir=None, patchdir=None, backend=None):
         self.server = NetServer(transport='udp')
+        self.server.add(self._ping, '/ping')
         self.pd=_pdprocess(self.server.getPort(), patch=mainpatch, cwd=workingdir, cpd=patchdir, runningCb=self._runningCb)
         self.stateCb = None
     def __del__(self):
@@ -114,6 +115,8 @@ class pdserver:
         self.server.send(addr, data)
     def ping(self):
         self.server.send('/ping', [])
+    def _ping(self, addr, typetags, data, source):
+        self.server.sendMsg('/pong', data)        
 
 if __name__ == '__main__':
     class PingPong:
