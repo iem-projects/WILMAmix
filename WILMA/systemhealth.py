@@ -113,7 +113,7 @@ class systemhealth:
                     rssi=0.
                     packetlost=0
 
-
+                    exception=None
                     try:
                         charge  = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr,
                                                             systemhealth.SystemHealthThread.SMBUS_cmdRelativeStateOfCharge)
@@ -122,9 +122,14 @@ class systemhealth:
                         state   = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr,
                                                             systemhealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
                     except IOError as e:
-                        print "errorGAUGE:", e
+                        exception=e
                         pass # hopefully a temporary error...
+                    if (exception is None):
+                        print "GAUGE read: OK"
+                    else:
+                        print "GAUGE read:",e
 
+                    exception=None
                     try:
                         temperature = self.smbus.read_byte_data(systemhealth.SystemHealthThread.SMBUS_picAddr,
                                                                systemhealth.SystemHealthThread.SMBUS_cmdTemperature)
@@ -150,8 +155,14 @@ class systemhealth:
                             sync_external=False
                             sync_internal=False
                     except IOError as e:
-                        print "errorPIC :", e
+                        exception=e
                         pass # hopefully a temporary error...
+
+                    if (exception is None):
+                        print "PIC read: OK"
+                    else:
+                        print "PIC read:",e
+
 
                     self.battery = charge/100.
                     self.runtime = runtime
