@@ -14,6 +14,8 @@ pd.SMi:
 				bufsize:0 dacoffset:0
 	abstraction: adc2send (multichannel)
 
+BUG:udpclient
+  Q: sometimes iemnet's [udpclient] does not receive any data
 
 BUG:WILMAsm:
   Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
