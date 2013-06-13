@@ -203,13 +203,11 @@ class SMgui:
     def launch(self, state, ts=None):
         bundle = Bundle(oscprefix=self.oscprefix)
         mode=self.settings['/mode']
-        uri ='rtp://localhost:8787' ## FIXXXXME!
         starttime=0
         if ts is not None: ## (TSmax, TSmin)
             starttime=ts[1]+10000
         bundle.append(('/record/timestamp', [starttime]))
         bundle.append(('/record/filename',  [_datetime.datetime.now().strftime('%Y%m%d-%H%M')]))
-        bundle.append(('/stream/uri', [uri]))
         bundle.append(('/process', [state]))
         self.running=state
         self.channels.setLaunched(self.running)
