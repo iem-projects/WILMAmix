@@ -130,9 +130,7 @@ class SMi:
 
         self.server.add(self._process, '/process')
         self.server.add(self._processProxy, '/process/')
-        self.server.add(self._record, '/record')
 
-        self.server.add(self._stream, '/stream')
         self.server.add(self._streamTransport, '/stream/transport/protocol')
         self.server.add(self._streamTransportPort, '/stream/transport/port')
         self.server.add(self._streamProtocol, '/stream/protocol')
@@ -268,12 +266,6 @@ class SMi:
         bundle.append(('/stream/destination', self.settings['/stream/destination']))
         self.pd.send(bundle)
 
-    def _stream(self, addr, typetags, data, src):
-        state=data[0]
-        if state is not None and int(state) > 0:
-            self.startStream()
-        else:
-            self.stopStream()
     def streamStarted(self, uri):
         self.server.sendMsg('/stream/uri', uri)
     def startStream(self):
@@ -287,22 +279,26 @@ class SMi:
     def _recordTimestamp(self, addr, typetags, data, src):
         self.settings['/record/timestamp' ] = int(data[0])
 
-    def _record(self, addr, typetags, data, src):
+    def _process(self, addr, typetags, data, src):
+        print "++++++++++++++++++++++++ _process +++++++++++++++++++++"
         state=data[0]
+
+        ## hacks for specific modes: RECORD
         filename=self.settings['/record/filename']
         timestamp=int(self.settings['/record/timestamp'])
         TShi=(timestamp>>16)&0xFFFF
         TSlo=(timestamp>> 0)&0xFFFF
+        self.pd.send('/record/filename', [filename])
+        self.pd.send('/record/timestamp', [TSlo, TShi])
+        ## hacks for specific modes: STREAM
+        self.pd.send("/stream/destination", self.settings['/stream/destination'])
+
+        ## ready, steady, GO!
         if state is not None and int(state) > 0:
-            self.pd.send("/record/start", [filename, TSlo, TShi])
+            self.pd.send("/start")
         else:
-            self.pd.send("/record/stop")
-    def _process(self, addr, typetags, data, src):
-        state=data[0]
-        if state is not None and int(state) > 0:
-            self.pd.send("/process/start")
-        else:
-            self.pd.send("/process/stop")
+            self.pd.send("/stop")
+
     def _processProxy(self, addr, typetags, data, src):
         self.pd.send('/process'+addr[0], data)
 

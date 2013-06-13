@@ -224,7 +224,7 @@ class SMgui:
         bundle.append(('/record/timestamp', [starttime]))
         bundle.append(('/record/filename',  [_datetime.datetime.now().strftime('%Y%m%d-%H%M')]))
         bundle.append(('/stream/uri', [uri]))
-        bundle.append(('/'+mode, [state]))
+        bundle.append(('/process', [state]))
         self.running=state
         self.connection.send(bundle)
 
