@@ -235,7 +235,10 @@ class SMgui:
     def _smiStreamURI(self, addr, typetags, data, source):
         print "FIXME: smiURI"
     def _smiState(self, addr, typetags, data, source):
-        print "FIXME STATE:", data[0]
+        ## indicates whether the remote processing unit (aka Pd) has started/stopped working
+        state=data[0]
+        print "FIXME STATE:", state
+        self.launch(False)
     def _smiStateCpu(self, addr, typetags, data, source):
         value=data[0]
         index=0
