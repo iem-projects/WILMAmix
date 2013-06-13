@@ -237,7 +237,8 @@ class SMgui:
     def _smiState(self, addr, typetags, data, source):
         ## indicates whether the remote processing unit (aka Pd) has started/stopped working
         state=data[0]
-        print "FIXME STATE:", state
+        #print "FIXME STATE:", state
+        ## in any case a state-change is bad, so we stop processing
         self.launch(False)
     def _smiStateCpu(self, addr, typetags, data, source):
         value=data[0]
