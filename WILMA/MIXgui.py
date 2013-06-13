@@ -135,7 +135,7 @@ class MIXgui:
 
         for sm in sorted(self.dict.keys()):
             d=self.dict[sm]
-            smi=SMgui.SMgui(mixer=self, guiparent=self.smmixer, name=sm, confs=d)
+            smi=SMgui.SMgui(mixer=self, guiparent=self.smmixer, name=sm, netconfs=d)
             self.sm+=[smi]
         self.smmixer.setSM(self.sm)
         self.registerProcessProxies()

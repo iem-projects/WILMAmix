@@ -28,18 +28,18 @@ import os
 import datetime as _datetime
 
 class SMgui:
-    def __init__(self, mixer=None, guiparent=None, name="SMi", confs=None, maxwidth=None):
+    def __init__(self, mixer=None, guiparent=None, name="SMi", netconfs=None, maxwidth=None):
         oscprefix=name
         while oscprefix.startswith('/'):
             oscprefix=oscprefix[1:]
         interfaces=[]
-        if confs is not None:
-            interfaces=sorted(confs.keys())
+        if netconfs is not None:
+            interfaces=sorted(netconfs.keys())
 
         self.settings=configuration.getSM(name)
         self._enabled = True
         self.running=False
-        self.confs=confs
+        self.netconfs=netconfs
         self.connection=None
         self.critical=[False]*7
         self.pingcounter=0
@@ -51,7 +51,7 @@ class SMgui:
 
         try:
             defaultconf=interfaces[0]
-            config = confs[defaultconf]
+            config = netconfs[defaultconf]
             self.settings['/host'] = config['address']
             self.connection = _NetClient(config['address'],
                                          config['port'],
@@ -66,8 +66,8 @@ class SMgui:
         self.name = name
 
         self.channels.launchButton.setText(self.settings['/mode'].upper())
-        if confs is not None:
-            print "FIXXME: confs not yet used in SMgui"
+        if netconfs is not None:
+            print "FIXXME: netconfs not yet used in SMgui", netconfs
 
     def __del__(self):
         self.shutdown()
