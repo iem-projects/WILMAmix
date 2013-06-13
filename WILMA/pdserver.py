@@ -118,8 +118,6 @@ class pdserver:
     def send(self, addr, data=None):
         self.server.send(addr, data)
     def removeAll(self):
-        ## FIXXME: this removes self.server-internal hooks like /ping
-        print "pdserver.removell", self
         self.server.removeAll()
         self.server.add(self._ping, '/ping')
         self.stateCb = None
