@@ -14,15 +14,19 @@ pd.SMi:
 				bufsize:0 dacoffset:0
 	abstraction: adc2send (multichannel)
 
-BUG:udpclient
-  Q: sometimes iemnet's [udpclient] does not receive any data
-
 BUG:WILMAsm:
   Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
 
 BUG:net.serverTCP:
   Q: quitting might result in: "socket.error: [Errno 104] Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
 
+BUG:udpclient
+  Q: sometimes iemnet's [udpclient] does not receive any data
+  A: probably fixed with iemnet#ce45ba70026adfe992ec11193a7edfbb2ee1c1ec
+
+BUG:udpclient
+  Q: every 2nd automatically assigned does not receive data
+  A: probably fixed with iemnet#ce45ba70026adfe992ec11193a7edfbb2ee1c1ec
 
 BUG:modeswitching
   Q: switching between modes will send a "/<newmode>/stop" message to the SMi before "/control/load/<newmode>"
