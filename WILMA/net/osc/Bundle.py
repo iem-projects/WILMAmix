@@ -54,3 +54,8 @@ class Bundle:
         return self.append(message)
     def data(self):
         return self.b.message
+if __name__ == "__main__":
+    b=Bundle()
+    b.append(('/foo', [True]))
+    b.append(('/bar', ['bla', 12]))
+    print "bundle", b
