@@ -212,6 +212,7 @@ class SMgui:
         bundle.append(('/stream/uri', [uri]))
         bundle.append(('/process', [state]))
         self.running=state
+        self.channels.setLaunched(self.running)
         self.connection.send(bundle)
 
     def _smiUser(self, addr, typetags, data, source):
