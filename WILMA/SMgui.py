@@ -21,7 +21,7 @@
 ## that's the main instance for SMi's GUI
 
 import configuration, filesync
-from gui import SMconfig, SMchannels, ThreadedInvoke
+from gui import SMconfig, SMchannel, ThreadedInvoke
 from net import client as _NetClient
 from net.osc import Bundle
 import os
@@ -61,7 +61,7 @@ class SMgui:
         except IndexError:
             print "no network configurations -> no connection"
 
-        self.channels=SMchannels.SMchannels(self, guiparent=guiparent, settings=self.settings, maxwidth=maxwidth)
+        self.channels=SMchannel.SMchannel(self, guiparent=guiparent, settings=self.settings, maxwidth=maxwidth)
         self.config=SMconfig.SMconfig(self, guiparent=guiparent, settings=self.settings, interfaces=interfaces)
         self.name = name
 
@@ -135,7 +135,7 @@ class SMgui:
         self.connection.send(msg, data)
 
 
-    ## callbacks from childs (SMchannels/SMconfig)
+    ## callbacks from childs (SMchannel/SMconfig)
     def showConfig(self):
         self.config.applySettings(self.settings)
         self.config.show()
