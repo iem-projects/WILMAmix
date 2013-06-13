@@ -141,6 +141,8 @@ class SMi:
         self.server.add(self._recordTimestamp, '/record/timestamp')
         self.server.add(self._recordFilename, '/record/filename')
 
+        self.server.add(self._network, '/network/')
+
         self.server.add(self.dumpInfo, '/dump') ## debugging
         self.server.add(self._catchall, None) ## debugging
 
@@ -320,6 +322,9 @@ class SMi:
     def _catchall(self, addr, typetags, data, src):
         print "SMi:catchall", (self, addr, typetags, data, src)
         print "OSC-callbacks", self.server.addressManager.__dict__
+    def _network(self, addr, typetags, data, src):
+        ## FIXXME changing network
+        print "SMi:_network", (addr, typetags, data)
 
 if __name__ == '__main__':
     print "SMi..."
