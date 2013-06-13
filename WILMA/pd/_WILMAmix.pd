@@ -1,7 +1,7 @@
-#N canvas 247 574 648 375 10;
+#N canvas 248 570 648 375 10;
 #X text 39 26 stream-receiver (HG-side);
 #X obj 101 161 _WILMA/STREAMRECVR;
-#N canvas 610 49 666 559 OSCinTEST 0;
+#N canvas 610 50 666 559 OSCinTEST 0;
 #X msg 236 264 /stream/fo1/protocol rtp \, /stream/fo1/profile L16
 \, /stream/fo1/transport/protocol udp;
 #X obj 70 322 s \$0-OSCin;
@@ -30,7 +30,7 @@ foo;
 #X obj 516 185 print OSCin;
 #X obj 568 164 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#N canvas 8 49 450 300 dummyreceivers 0;
+#N canvas 8 50 450 300 dummyreceivers 0;
 #X obj 123 83 r _WILMA_pwd;
 #X obj 122 60 r _WILMA_port;
 #X floatatom 223 62 5 0 0 0 - - -;
@@ -57,7 +57,7 @@ foo;
 #X text 45 205 /*/stream/uri (stream-target if applicable \; sender
 should RESTART stream to this URI);
 #X restore 100 52 pd OSCdoc;
-#N canvas 5 49 450 300 init 0;
+#N canvas 5 50 450 300 init 0;
 #X obj 126 77 loadbang;
 #X obj 126 99 delay 1000;
 #X msg 235 139 \; pd dsp 1;
@@ -73,8 +73,6 @@ should RESTART stream to this URI);
 #X connect 5 0 6 0;
 #X restore 371 43 pd init;
 #X msg 458 28 bang;
-#X obj 101 100 _WILMA/STREAMrtpreceiver 1018 udp 46069 L16 32768 4
-0;
 #X obj 458 50 print _WILMAmix;
 #X connect 1 0 4 0;
 #X connect 3 0 1 0;
@@ -86,4 +84,4 @@ should RESTART stream to this URI);
 #X connect 12 0 13 0;
 #X connect 13 0 14 0;
 #X connect 15 0 13 1;
-#X connect 19 0 21 0;
+#X connect 19 0 20 0;
