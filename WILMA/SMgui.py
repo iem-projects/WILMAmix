@@ -148,34 +148,20 @@ class SMgui:
         self.settings[key]=newsettings[key]
         return True
     def applySettings(self, settings):
-        print "FIXME: SMgui.applySettings", settings
-        # /network/interface
-        ## IGNORED FOR NOW
-        self._hasSettingChanged('/network/interface', settings)
+        changed=False
+        bundle = Bundle(oscprefix=self.oscprefix)
+        for s in settings:
+            changed|=self._hasSettingChanged(s, settings)
+            bundle.append((s, [self.settings[s]]))
 
-        # /stream
-        streamchanged=(self._hasSettingChanged('/stream/protocol', settings) or
-                       self._hasSettingChanged('/stream/profile' , settings) or
-                       self._hasSettingChanged('/stream/channels', settings))
-        # /mode
-        modechanged=self._hasSettingChanged('/mode', settings)
         self.channels.launchButton.setText(self.settings['/mode'].upper())
 
-        # if the mode has changed or the streaming settings have changed while we were streaming,
-        # stop it
-        if modechanged or (streamchanged and self.running and self.settings['/mode'] == 'stream'):
+        ## TODO: if things have changed significantly, stop processing
+        if changed:
             self.launch(False)
-        ## send new streamsettings
-        props=[]
-        if streamchanged:
-            props += ['/stream/protocol', '/stream/profile', '/stream/channels']
-        if modechanged:
-            props += ['/mode']
-        if len(props)>0:
-            bundle = Bundle(oscprefix=self.oscprefix)
-            for p in props:
-                bundle.append((p, [self.settings[p]]))
-            self.connection.send(bundle)
+
+        ## in any case, we just dump the entire configuration to the SMi
+        self.connection.send(bundle)
 
     def copySettings(self, settings):
         self.mixer.applySMiSettings(settings)
