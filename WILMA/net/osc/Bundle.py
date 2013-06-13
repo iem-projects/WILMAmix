@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
 
-from OSC import OSCMessage
+from OSC import OSCMessage, decodeOSC
 import socket
 import struct
 
@@ -54,6 +54,11 @@ class Bundle:
         return self.append(message)
     def data(self):
         return self.b.message
+
+    def __str__(self):
+        return str(decodeOSC(self.b.message))
+
+
 if __name__ == "__main__":
     b=Bundle()
     b.append(('/foo', [True]))
