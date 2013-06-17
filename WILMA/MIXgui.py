@@ -96,6 +96,8 @@ class MIXgui:
         self.mixconfig.show()
     def _configSynched(self, state):
         self.mixconfig.showSync(state)
+    def setSync(self, state):
+        self.streamreceiver.send('/stream/sync', [state])
 
     def _proxyServer(self):
         self.proxyserver = None
