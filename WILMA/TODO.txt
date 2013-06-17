@@ -14,6 +14,16 @@ pd.SMi:
 				bufsize:0 dacoffset:0
 	abstraction: adc2send (multichannel)
 
+RTP.recvr.sync:
+  Q: implement RTP-receiver synchronization
+
+GUI.recvr.sync:
+  Q: allow user to manually trigger a sync request (or receive streams without synch)
+     ideally, only 'selected' SMis would try to sync
+
+RTP.recvr.packetloss:
+  Q: request re-transmission of lost packets
+
 BUG:WILMAsm:
   Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
 
