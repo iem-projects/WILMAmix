@@ -45,10 +45,17 @@ class StreamReceiver:
 
     def removeAll(self):
         self.server.removeAll()
+        self.server.add(self._synched, '/stream/synched')
     def add(self, callback, oscAddress):
         self.server.add(callback, oscAddress)
     def ping(self):
         self.server.ping()
+    def _synched(self, addr, typetags, data, source):
+        state=data[0]
+        if type(state) is not int:
+            state = None
+        if self.parent is not None:
+            self.parent._configSynched(state)
 
 
 class MIXgui:
@@ -87,6 +94,8 @@ class MIXgui:
 
     def _config(self):
         self.mixconfig.show()
+    def _configSynched(self, state):
+        self.mixconfig.showSync(state)
 
     def _proxyServer(self):
         self.proxyserver = None
