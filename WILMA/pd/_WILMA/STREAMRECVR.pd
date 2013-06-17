@@ -1,8 +1,8 @@
-#N canvas 80 58 889 461 10;
+#N canvas 171 287 889 461 10;
 #N canvas 98 94 749 755 createreceivers 0;
 #X obj 89 187 t a b;
 #X msg 324 548 clear;
-#N canvas 5 49 450 300 serizalize 0;
+#N canvas 5 50 450 300 serizalize 0;
 #X obj 78 202 list split 1;
 #X obj 78 119 until;
 #X obj 78 157 list append;
@@ -39,7 +39,7 @@
 #X msg 57 652 loadbang;
 #X obj 324 35 inlet reset;
 #X obj 89 683 t a;
-#N canvas 8 49 450 300 transport 0;
+#N canvas 8 50 450 300 transport 0;
 #X obj 60 31 inlet bang;
 #X obj 60 135 outlet transport|port;
 #X obj 60 53 t b;
@@ -63,7 +63,7 @@
 #X connect 9 0 6 0;
 #X connect 10 0 3 1;
 #X restore 163 366 pd transport;
-#N canvas 8 49 645 300 stream 0;
+#N canvas 8 50 645 300 stream 0;
 #X obj 84 25 inlet;
 #X obj 84 47 t b b;
 #X obj 84 69 symbol rtp;
@@ -96,7 +96,7 @@
 #X connect 14 0 5 0;
 #X connect 14 1 6 2;
 #X restore 257 366 pd stream;
-#N canvas 6 49 450 300 channels 0;
+#N canvas 6 50 450 300 channels 0;
 #X obj 74 35 inlet;
 #X obj 74 57 t b;
 #X obj 74 79 i 4;
@@ -202,7 +202,7 @@
 #X obj 563 306 s WILMix->\$0;
 #X msg 563 276 /foo/port 9876;
 #X msg 573 246 /foo/port 9777;
-#N canvas 12 49 824 337 stream 0;
+#N canvas 15 50 824 337 stream 0;
 #X obj 80 37 inlet;
 #X obj 80 221 s \$0-transport:protocol;
 #X obj 156 199 s \$0-transport:port;
@@ -221,8 +221,8 @@
 #X connect 5 4 7 0;
 #X connect 5 5 6 0;
 #X connect 5 6 8 0;
-#X restore 271 219 pd stream;
-#N canvas 11 49 450 300 receivers 0;
+#X restore 271 129 pd stream;
+#N canvas 12 50 450 300 receivers 0;
 #X obj 114 39 inlet;
 #X obj 114 65 s WILMix->\$0;
 #X text 85 94 we don't know whether everybody rejected this!;
@@ -233,7 +233,9 @@
 #X obj 583 412 sprint ->WILMix;
 #X obj 271 73 routeOSC /stream /create;
 #X msg 360 193 foo bar baz;
-#X obj 155 351 STREAMRECVRsync \$0;
+#X obj 271 351 STREAMRECVRsync \$0;
+#X obj 271 151 route /sync;
+#X obj 394 322 r \$1-ping;
 #X connect 1 0 0 1;
 #X connect 2 0 18 0;
 #X connect 3 0 6 1;
@@ -241,9 +243,13 @@
 #X connect 9 0 7 0;
 #X connect 11 0 10 0;
 #X connect 12 0 10 0;
+#X connect 13 0 21 0;
 #X connect 15 0 16 0;
 #X connect 16 0 5 0;
 #X connect 18 0 13 0;
 #X connect 18 1 0 0;
 #X connect 18 2 14 0;
 #X connect 19 0 0 0;
+#X connect 20 0 5 0;
+#X connect 21 0 20 0;
+#X connect 22 0 20 1;
