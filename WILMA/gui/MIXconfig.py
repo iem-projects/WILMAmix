@@ -57,6 +57,7 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
     def _connect(self):
         self.closeButtons.accepted.connect(self._do_accept)
         self.closeButtons.rejected.connect(self._do_reject)
+        self.syncButton.clicked.connect(self._sync)
 
     def _do_accept(self):
         self.hide()
@@ -91,6 +92,10 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         else:
             self.label_sync.setText("freewheeling")
             self.label_syncTS.setText("")
+    def _sync(self):
+        state=self.syncButton.isChecked()
+        #self.syncButton.setChecked(state)
+        self.mixer.setSync(state)
 
 ######################################################################
 if __name__ == '__main__':
