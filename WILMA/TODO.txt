@@ -14,13 +14,6 @@ pd.SMi:
 				bufsize:0 dacoffset:0
 	abstraction: adc2send (multichannel)
 
-RTP.recvr.sync:
-  Q: implement RTP-receiver synchronization
-
-GUI.recvr.sync:
-  Q: allow user to manually trigger a sync request (or receive streams without synch)
-     ideally, only 'selected' SMis would try to sync
-
 RTP.recvr.packetloss:
   Q: request re-transmission of lost packets
 
@@ -29,10 +22,6 @@ BUG:WILMAsm:
 
 BUG:net.serverTCP:
   Q: quitting might result in: "socket.error: [Errno 104] Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
-
-BUG:modeswitching
-  Q: switching between modes will send a "/<newmode>/stop" message to the SMi before "/control/load/<newmode>"
-     it really should send "/<oldmode>/stop"!
 
 ------------------------------------
 
@@ -92,4 +81,18 @@ BUG:udpclient
 BUG:udpclient
   Q: every 2nd automatically assigned does not receive data
   A: probably fixed with iemnet#ce45ba70026adfe992ec11193a7edfbb2ee1c1ec
+
+BUG:modeswitching
+  Q: switching between modes will send a "/<newmode>/stop" message to the SMi before "/control/load/<newmode>"
+     it really should send "/<oldmode>/stop"!
+  A: we only send "/stop" which will stop everything
+
+RTP.recvr.sync:
+  Q: implement RTP-receiver synchronization
+  A: done
+
+GUI.recvr.sync:
+  Q: allow user to manually trigger a sync request (or receive streams without sync)
+     ideally, only 'selected' SMis would try to sync
+  A: sync-all is implemented
 
