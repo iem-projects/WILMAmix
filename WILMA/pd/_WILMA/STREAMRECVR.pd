@@ -233,6 +233,7 @@
 #X obj 583 412 sprint ->WILMix;
 #X obj 271 73 routeOSC /stream /create;
 #X msg 360 193 foo bar baz;
+#X obj 155 351 STREAMRECVRsync \$0;
 #X connect 1 0 0 1;
 #X connect 2 0 18 0;
 #X connect 3 0 6 1;
