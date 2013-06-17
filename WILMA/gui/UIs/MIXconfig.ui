@@ -137,6 +137,9 @@
     <property name="text">
      <string>Sync</string>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="label_sync">
     <property name="geometry">
@@ -157,7 +160,7 @@
       <x>60</x>
       <y>20</y>
       <width>101</width>
-      <height>16</height>
+      <height>20</height>
      </rect>
     </property>
     <property name="layoutDirection">
