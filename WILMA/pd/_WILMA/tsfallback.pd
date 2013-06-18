@@ -11,7 +11,7 @@
 #X obj 105 164 t f f;
 #X obj 105 187 *;
 #X obj 105 209 select 0 1;
-#X obj 207 278 + 64;
+#X obj 207 278 + \$1;
 #X obj 207 300 t f f;
 #X obj 140 365 +;
 #X obj 140 388 % 65536;
