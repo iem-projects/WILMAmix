@@ -102,7 +102,7 @@ class pdserver:
 
     def _runningCb(self, state):
         if self.stateCb is not None:
-            msg=['/state']
+            msg=['/state/process']
             if state:
                 msg+=[',T', True]
             else:
@@ -112,7 +112,7 @@ class pdserver:
     def add(self, callback, oscAddress):
         if oscAddress is None:
             self.stateCb=callback
-        elif oscAddress is '/state':
+        elif oscAddress is '/state/process':
             self.stateCb=callback
         self.server.add(callback, oscAddress)
     def send(self, addr, data=None):

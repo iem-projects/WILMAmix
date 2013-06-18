@@ -76,6 +76,7 @@ class SMgui:
         self.connection.shutdown()
 
     def _connect(self):
+        self.connection.add(self._smiMode,      '/mode')
         self.connection.add(self._smiUser,      '/user')
         self.connection.add(self._smiOutpath,   '/path/out')
         self.connection.add(self._smiInpath,    '/path/in')
@@ -83,7 +84,6 @@ class SMgui:
         self.connection.add(self._smiLevel,     '/level')
         self.connection.add(self._smiTimestamp, '/timestamp')
         self.connection.add(self._smiStreamURI, '/stream/uri')
-        self.connection.add(self._smiState,     '/state')
         self.connection.add(self._smiStateCpu,  '/state/cpu')
         self.connection.add(self._smiStateMem,  '/state/memory')
         self.connection.add(self._smiStateDisk, '/state/disk')
@@ -92,7 +92,9 @@ class SMgui:
         self.connection.add(self._smiStateSyncExternal, '/state/sync/external')
         self.connection.add(self._smiStateSyncInternal, '/state/sync/internal')
 
-        self.connection.add(self._smiProcess, '/process/')
+        self.connection.add(self._smiStatePd,   '/state/process')
+        self.connection.add(self._smiState,     '/process')
+        self.connection.add(self._smiProcess,   '/process/')
 
     def widget(self):
         return self.channels
@@ -213,6 +215,19 @@ class SMgui:
         self.channels.setLaunched(self.running)
         self.connection.send(bundle)
 
+    def _smiMode(self, addr, typetags, data, source):
+        self.settings['/mode']=data[0]
+        self.channels.launchButton.setText(self.settings['/mode'].upper())
+    def _smiState(self, addr, typetags, data, source):
+        state=data[0]
+        print "STATE", state
+        self.running=state
+        self.channels.setLaunched(self.running)
+    def _smiStatePd(self, addr, typetags, data, source):
+        state=data[0]
+        print "PdSTATE", state
+        # Pd either crashed or recovered; in any case, we stop
+        self.launch(False)
     def _smiUser(self, addr, typetags, data, source):
         self.settings['/user']=data[0]
     def _smiFader(self, addr, typetags, data, source):
@@ -232,12 +247,6 @@ class SMgui:
         self.settings['/path/in']=data[0]
     def _smiStreamURI(self, addr, typetags, data, source):
         print "FIXME: smiURI"
-    def _smiState(self, addr, typetags, data, source):
-        ## indicates whether the remote processing unit (aka Pd) has started/stopped working
-        state=data[0]
-        #print "FIXME STATE:", state
-        ## in any case a state-change is bad, so we stop processing
-        self.launch(False)
     def _smiStateCpu(self, addr, typetags, data, source):
         value=data[0]
         index=0
