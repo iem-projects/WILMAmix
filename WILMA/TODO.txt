@@ -1,7 +1,3 @@
-recovery:
-   Q: when Pd-crashes, we should recover the last state (if possible)
-      (and if not possible and this was the SMi-Pd, turn off the "play" button)
-
 pd.SMi:
   Q: rethink architecture
      1-wrapper abs per mode:
@@ -103,5 +99,10 @@ BUG:record
    Q: if the harddisk is full, Pd hangs...
    A: stop recording if the disk is full
    A: implemented
+
+recovery:
+   Q: when Pd-crashes, we should recover the last state (if possible)
+      (and if not possible and this was the SMi-Pd, turn off the "play" button)
+   A: implemented the simple solution (turning OFF the play-button)
 
 
