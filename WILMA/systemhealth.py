@@ -126,7 +126,7 @@ class systemhealth:
                         exception=e
                         pass # hopefully a temporary error...
 ##                        if (exception is None):
-##                            logging.debug("GAUGE read: OK")
+##                            logging.info("GAUGE read: OK")
 ##                        else:
 ##                            logging.exception("GAUGE read)
 
@@ -160,7 +160,7 @@ class systemhealth:
                         pass # hopefully a temporary error...
 
 ##                    if (exception is None):
-##                        logging.debug("PIC read: OK")
+##                        logging.info("PIC read: OK")
 ##                    else:
 ##                        logging.exception("PIC read")
 

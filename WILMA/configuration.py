@@ -130,11 +130,11 @@ _smConfs=dict()
 def getSM(id=None):
     """get config dict for WILMAsm"""
     if (id is None) or (id == _smConf['/id']):
-        logging.debug("default SMconf %s" % id)
+        logging.info("default SMconf %s" % id)
         return _smConf
     else:
         if _smConfs.has_key(id):
-            logging.debug("cached conf %s" % id)
+            logging.info("cached conf %s" % id)
             return _smConfs[id]
         d=_getDict(_config, id)
         d['/id']=id

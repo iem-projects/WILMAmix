@@ -98,7 +98,7 @@ class PdCommunicator:
         self.smi.state.timestamp=ts
     def _catchall(self, addr, typetags, data, source):
         self.smi.server.sendMsg(addr[0], data)
-        logging.debug("got message: " + str((addr, typetags, data, source)))
+        logging.info("got message: " + str((addr, typetags, data, source)))
     def _forward(self, addr, typetags, data, source):
         self.smi.server.sendMsg(addr[1], data)
 
@@ -281,7 +281,7 @@ class SMi:
         self.settings['/record/timestamp' ] = int(data[0])
 
     def _process(self, addr, typetags, data, src):
-        logging.debug("++++++++++++++++++++++++ _process +++++++++++++++++++++")
+        logging.info("++++++++++++++++++++++++ _process +++++++++++++++++++++")
         state=data[0]
 
         ## hacks for specific modes: RECORD
@@ -326,10 +326,10 @@ class SMi:
             self.streamer.dumpInfo()
     def _catchall(self, addr, typetags, data, src):
         logging.info("SMi:catchall: %s" % str((self, addr, typetags, data, src)))
-        logging.debug("OSC-callbacks: %s" % str((self.server.addressManager.__dict__)))
+        logging.info("OSC-callbacks: %s" % str((self.server.addressManager.__dict__)))
     def _network(self, addr, typetags, data, src):
         ## FIXXME changing network
-        logging.debug("FIXME:SMi:_network %s", str((addr, typetags, data)))
+        logging.info("FIXME:SMi:_network %s", str((addr, typetags, data)))
 
 if __name__ == '__main__':
     print "SMi..."

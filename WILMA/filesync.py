@@ -65,7 +65,7 @@ class _FileSyncer(Thread):
         self.p=pexpect.spawn(self.prog, self.progargs)
         while self.p.isalive():
             i=self.p.expect(self.expects)
-            logging.debug("expectation met: %d" % i)
+            logging.info("expectation met: %d" % i)
             if i is 3: # EOF
                 break
             elif i is 2: # yes/no
@@ -101,7 +101,7 @@ class filesync:
         if deleteSource:
             prog+=['--remove-source-files']
         prog+=[source, target]
-        logging.debug("FileSync: %s" % str(prog))
+        logging.info("FileSync: %s" % str(prog))
         self.syncer=_FileSyncer(prog,
                                 passphrases,
                                 doneCallback=self._callback)

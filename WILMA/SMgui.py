@@ -74,7 +74,7 @@ class SMgui:
     def __del__(self):
         self.shutdown()
     def shutdown(self):
-        logging.debug("shutdown %s" % str(self))
+        logging.info("shutdown %s" % str(self))
         self.connection.shutdown()
 
     def _connect(self):

@@ -67,7 +67,7 @@ class launcher(threading.Thread):
         if self.process is None:
             return
         if True or self.process.poll():
-            #logging.debug("shutting down process %d" % self.process.pid)
+            #logging.info("shutting down process %d" % self.process.pid)
             self.join(timeout)
             if self.is_alive():
                 try:
