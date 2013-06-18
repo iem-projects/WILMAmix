@@ -314,7 +314,7 @@ class SMi:
         bundle = Bundle(oscprefix=self.oscprefix)
 
         self.state.addToBundle(bundle)
-        for a in ['/user', '/path/in', '/path/out' ]:
+        for a in ['/mode', '/user', '/path/in', '/path/out' ]:
             bundle.append((a, [self.settings[a]]))
         self.server.sendBundle(bundle)
         self.pd.ping()
