@@ -286,14 +286,20 @@ class SMi:
         state=data[0]
 
         ## hacks for specific modes: RECORD
-        filename=self.settings['/record/filename']
-        timestamp=int(self.settings['/record/timestamp'])
-        TShi=(timestamp>>16)&0xFFFF
-        TSlo=(timestamp>> 0)&0xFFFF
-        self.pd.send('/record/filename', [filename])
-        self.pd.send('/record/timestamp', [TSlo, TShi])
+        try:
+            filename=self.settings['/record/filename']
+            timestamp=int(self.settings['/record/timestamp'])
+            TShi=(timestamp>>16)&0xFFFF
+            TSlo=(timestamp>> 0)&0xFFFF
+            self.pd.send('/record/filename', [filename])
+            self.pd.send('/record/timestamp', [TSlo, TShi])
+        except KeyError:
+            pass
         ## hacks for specific modes: STREAM
-        self.pd.send("/stream/destination", self.settings['/stream/destination'])
+        try:
+            self.pd.send("/stream/destination", self.settings['/stream/destination'])
+        except KeyError:
+            pass
 
         ## ready, steady, GO!
         if state is not None and int(state) > 0:
