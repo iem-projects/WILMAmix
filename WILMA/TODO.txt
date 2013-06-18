@@ -2,6 +2,12 @@ recovery:
    Q: when Pd-crashes, we should recover the last state (if possible)
       (and if not possible and this was the SMi-Pd, turn off the "play" button)
 
+BUG:record
+   Q: if the harddisk is full, Pd hangs...
+   A: stop recording if the disk is full
+
+BUG:disk-usage
+   Q: disk-usage should work on path/out
 
 pd.SMi:
   Q: rethink architecture
