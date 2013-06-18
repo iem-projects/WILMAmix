@@ -17,11 +17,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
-
-from PySide.QtGui import QDialog, QApplication, QVBoxLayout
+import logging
 import sys
 
-from WILMA import MIXgui
+from PySide.QtGui import QDialog, QApplication, QVBoxLayout
+
+from WILMA import MIXgui, logger
+
 class _Form(QDialog):
    
     def __init__(self, parent=None):
@@ -33,6 +35,7 @@ class _Form(QDialog):
         # Set dialog layout
         self.setLayout(layout)
 if __name__ == '__main__':
+    l = logger.logger("WILMix")
     import gobject
     gobject.threads_init()
     # Create the Qt Application

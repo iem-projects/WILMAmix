@@ -17,13 +17,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
-
-from WILMA import SMi
+import logging
 
 import gobject
 
+from WILMA import SMi, logger
+
 if __name__ == '__main__':
-    print "SM..."
+    l = logger.logger("WILMAsm")
+    logging.info("SM...")
     gobject.threads_init()
     sm = SMi()
     import time
@@ -31,7 +33,7 @@ if __name__ == '__main__':
     try:
         gobject.MainLoop().run()
     except KeyboardInterrupt:
-        print "WILMAsm KeyboardInterrupt"
+        logging.exception("WILMAsm KeyboardInterrupt")
         pass
     sm.cleanup()
 
