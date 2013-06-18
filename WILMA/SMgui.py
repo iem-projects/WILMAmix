@@ -253,7 +253,7 @@ class SMgui:
         index=2
         self.config.setState(index, value)
         self.critical[index]=value>0.9
-        if (value>=0.99) and ("record" == self.settings['/mode']):
+        if (self.running) and (value>=0.99) and ("record" == self.settings['/mode']):
             self.launch(False)
     def _smiStateBatt(self, addr, typetags, data, source):
         value=data[0]
