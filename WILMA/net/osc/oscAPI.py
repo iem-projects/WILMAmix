@@ -30,10 +30,11 @@
 
     Thanks for the support to Buchsenhausen, Innsbruck, Austria.
 """
-
-import OSC, Bundle
+import logging
 import socket
 from threading import Thread
+
+import OSC, Bundle
 
 # globals
 outSocket = 0 
@@ -139,7 +140,7 @@ class OSCServer(Thread) :
             # self.socket.settimeout(1.0) # make sure its not blocking forever...
             self.haveSocket = True
         except socket.error :
-            print 'there was an error binding to ip %s and port %i , maybe the port is already taken by another process?' % (ipAddr, port)
+            logging.exception( 'there was an error binding to ip %s and port %i , maybe the port is already taken by another process?' % (ipAddr, port) )
             self.haveSocket=False
 
     def recvFrom(self, data):

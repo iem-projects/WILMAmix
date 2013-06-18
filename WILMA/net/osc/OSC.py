@@ -30,6 +30,7 @@
 # 13 Feb. 2002:
 #   Added a generic callback handler.
 #   - dwh
+import logging
 
 import socket
 import struct
@@ -118,7 +119,7 @@ def readBlob(data):
 
 def readInt(data):
     if(len(data)<4):
-        print "Error: too few bytes for int", data, len(data)
+        logging.warn( "Error: too few bytes (%d) for int %s" % (len(data), str(data)))
         rest = data
         integer = 0
     else:
@@ -155,7 +156,7 @@ def readDouble(data):
 
 def readFloat(data):
     if(len(data)<4):
-        print "Error: too few bytes for float", data, len(data)
+        logging.warn("too few bytes (%d) for float %s" % (len(data), str(data)))
         rest = data
         float = 0
     else:
@@ -229,7 +230,7 @@ def parseArgs(args):
     possible) as floats or integers."""
     parsed = []
     for arg in args:
-        print arg
+        #print arg
         arg = arg.strip()
         interpretation = None
         try:
@@ -290,7 +291,7 @@ def decodeOSC(data):
                     return decoded
                 decoded.append(value)
         else:
-            print "Oops, typetag lacks the magic ,"
+            logging.warn( "Oops, typetag lacks the magic ','")
 
     return decoded
 
@@ -322,11 +323,11 @@ class CallbackManager:
     def dispatch(self, message, source = None):
         """Sends decoded OSC data to an appropriate callback"""
         if self.verbose :
-            print "dispatching: '", message, "' from ", source
+            logging.info( "dispatching: '%s' from %s" % (str(message),str(source)))
         try:
             address=message[0]
         except IndexError, e:
-            print 'got malformed OSC message', message
+            logging.exception( "got malformed OSC message: '%s'" % str( message))
             return
 
         if type(address) == str :
@@ -379,8 +380,8 @@ class CallbackManager:
                 if self.catchall is not None:
                     self.catchall([address, message[0]], message[1], message[2:], source)
                 else:
-                    print '\tOSC-address %s not found in callback manager:' % address
-                    pprint.pprint(message)
+                    logging.warn( '\tOSC-address %s not found in callback manager' % address)
+                    logging.info(pprint.pformat(message))
 
         elif type(address) == list :
             # smells like nested messages
@@ -489,7 +490,7 @@ class CallbackManager:
         try:
             return filter(r.match, keys)
         except TypeError as e:
-            print "error matching ", (pattern, keys)
+            logging.warn("error matching %s" % str( (pattern, keys) ))
             raise OSCException(str(e))
 
     @staticmethod
