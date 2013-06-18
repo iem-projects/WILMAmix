@@ -41,7 +41,7 @@ class State:
           self.mixer = AudioMixer(config)
         except IOError as e:
           print "failed to open audio mixer:",e
-        self.health = systemhealth.systemhealth()
+        self.health = systemhealth.systemhealth(path=config['/path/out'])
         self.cpu = 1.
         self.mem = 1.
         self.disk = 1.
@@ -115,7 +115,6 @@ class SMi:
     def __init__(self):
         self.settings=configuration.getSM()
         self.state=State(self.settings)
-        self.mode=None
 
         self.oscprefix='/'+self.settings['/id']
         self.server = NetServer(
@@ -130,9 +129,7 @@ class SMi:
 
         self.server.add(self._process, '/process')
         self.server.add(self._processProxy, '/process/')
-        self.server.add(self._record, '/record')
 
-        self.server.add(self._stream, '/stream')
         self.server.add(self._streamTransport, '/stream/transport/protocol')
         self.server.add(self._streamTransportPort, '/stream/transport/port')
         self.server.add(self._streamProtocol, '/stream/protocol')
@@ -142,6 +139,8 @@ class SMi:
 
         self.server.add(self._recordTimestamp, '/record/timestamp')
         self.server.add(self._recordFilename, '/record/filename')
+
+        self.server.add(self._network, '/network/')
 
         self.server.add(self.dumpInfo, '/dump') ## debugging
         self.server.add(self._catchall, None) ## debugging
@@ -159,7 +158,7 @@ class SMi:
             gains=self.mixer.gain(data)
 
     def _reloadStream(self):
-        if 'stream' == self.mode:
+        if 'stream' == self.settings['/mode']:
             self.pd.send('/control/load/stream', [self.settings['/stream/transport/protocol'],
                                                   self.settings['/stream/transport/port'],
                                                   self.settings['/stream/protocol'],
@@ -169,12 +168,12 @@ class SMi:
             return True
         return False
     def _reloadRecord(self):
-        if 'record' == self.mode:
+        if 'record' == self.settings['/mode']:
             self.pd.send('/control/load/record',[])
             return True
         return False
     def _reloadProcess(self):
-        if 'process' != self.mode:
+        if 'process' != self.settings['/mode']:
             return False
         inlets=0
         outlets=0
@@ -188,7 +187,7 @@ class SMi:
         return True
 
     def _mode(self, addr, typetags, data, source):
-        self.mode=str(data[0]).lower()
+        self.settings['/mode']=str(data[0]).lower()
         if self._reloadStream() or self._reloadRecord() or self._reloadProcess():
             pass
     def _hasSettingChanged(self, key, value):
@@ -268,12 +267,6 @@ class SMi:
         bundle.append(('/stream/destination', self.settings['/stream/destination']))
         self.pd.send(bundle)
 
-    def _stream(self, addr, typetags, data, src):
-        state=data[0]
-        if state is not None and int(state) > 0:
-            self.startStream()
-        else:
-            self.stopStream()
     def streamStarted(self, uri):
         self.server.sendMsg('/stream/uri', uri)
     def startStream(self):
@@ -287,22 +280,32 @@ class SMi:
     def _recordTimestamp(self, addr, typetags, data, src):
         self.settings['/record/timestamp' ] = int(data[0])
 
-    def _record(self, addr, typetags, data, src):
-        state=data[0]
-        filename=self.settings['/record/filename']
-        timestamp=int(self.settings['/record/timestamp'])
-        TShi=(timestamp>>16)&0xFFFF
-        TSlo=(timestamp>> 0)&0xFFFF
-        if state is not None and int(state) > 0:
-            self.pd.send("/record/start", [filename, TSlo, TShi])
-        else:
-            self.pd.send("/record/stop")
     def _process(self, addr, typetags, data, src):
+        print "++++++++++++++++++++++++ _process +++++++++++++++++++++"
         state=data[0]
+
+        ## hacks for specific modes: RECORD
+        try:
+            filename=self.settings['/record/filename']
+            timestamp=int(self.settings['/record/timestamp'])
+            TShi=(timestamp>>16)&0xFFFF
+            TSlo=(timestamp>> 0)&0xFFFF
+            self.pd.send('/record/filename', [filename])
+            self.pd.send('/record/timestamp', [TSlo, TShi])
+        except KeyError:
+            pass
+        ## hacks for specific modes: STREAM
+        try:
+            self.pd.send("/stream/destination", self.settings['/stream/destination'])
+        except KeyError:
+            pass
+
+        ## ready, steady, GO!
         if state is not None and int(state) > 0:
-            self.pd.send("/process/start")
+            self.pd.send("/start")
         else:
-            self.pd.send("/process/stop")
+            self.pd.send("/stop")
+
     def _processProxy(self, addr, typetags, data, src):
         self.pd.send('/process'+addr[0], data)
 
@@ -311,7 +314,7 @@ class SMi:
         bundle = Bundle(oscprefix=self.oscprefix)
 
         self.state.addToBundle(bundle)
-        for a in ['/user', '/path/in', '/path/out' ]:
+        for a in ['/mode', '/user', '/path/in', '/path/out' ]:
             bundle.append((a, [self.settings[a]]))
         self.server.sendBundle(bundle)
         self.pd.ping()
@@ -324,6 +327,9 @@ class SMi:
     def _catchall(self, addr, typetags, data, src):
         print "SMi:catchall", (self, addr, typetags, data, src)
         print "OSC-callbacks", self.server.addressManager.__dict__
+    def _network(self, addr, typetags, data, src):
+        ## FIXXME changing network
+        print "SMi:_network", (addr, typetags, data)
 
 if __name__ == '__main__':
     print "SMi..."

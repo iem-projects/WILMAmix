@@ -21,25 +21,25 @@
 ## that's the main instance for SMi's GUI
 
 import configuration, filesync
-from gui import SMconfig, SMchannels, ThreadedInvoke
+from gui import SMconfig, SMchannel, ThreadedInvoke
 from net import client as _NetClient
 from net.osc import Bundle
 import os
 import datetime as _datetime
 
 class SMgui:
-    def __init__(self, mixer=None, guiparent=None, name="SMi", confs=None, maxwidth=None):
+    def __init__(self, mixer=None, guiparent=None, name="SMi", netconfs=None, maxwidth=None):
         oscprefix=name
         while oscprefix.startswith('/'):
             oscprefix=oscprefix[1:]
         interfaces=[]
-        if confs is not None:
-            interfaces=sorted(confs.keys())
+        if netconfs is not None:
+            interfaces=sorted(netconfs.keys())
 
         self.settings=configuration.getSM(name)
         self._enabled = True
         self.running=False
-        self.confs=confs
+        self.netconfs=netconfs
         self.connection=None
         self.critical=[False]*7
         self.pingcounter=0
@@ -51,7 +51,7 @@ class SMgui:
 
         try:
             defaultconf=interfaces[0]
-            config = confs[defaultconf]
+            config = netconfs[defaultconf]
             self.settings['/host'] = config['address']
             self.connection = _NetClient(config['address'],
                                          config['port'],
@@ -61,13 +61,13 @@ class SMgui:
         except IndexError:
             print "no network configurations -> no connection"
 
-        self.channels=SMchannels.SMchannels(self, guiparent=guiparent, settings=self.settings, maxwidth=maxwidth)
+        self.channels=SMchannel.SMchannel(self, guiparent=guiparent, settings=self.settings, maxwidth=maxwidth)
         self.config=SMconfig.SMconfig(self, guiparent=guiparent, settings=self.settings, interfaces=interfaces)
         self.name = name
 
         self.channels.launchButton.setText(self.settings['/mode'].upper())
-        if confs is not None:
-            print "FIXXME: confs not yet used in SMgui"
+        if netconfs is not None:
+            print "FIXXME: netconfs not yet used in SMgui", netconfs
 
     def __del__(self):
         self.shutdown()
@@ -76,6 +76,7 @@ class SMgui:
         self.connection.shutdown()
 
     def _connect(self):
+        self.connection.add(self._smiMode,      '/mode')
         self.connection.add(self._smiUser,      '/user')
         self.connection.add(self._smiOutpath,   '/path/out')
         self.connection.add(self._smiInpath,    '/path/in')
@@ -83,7 +84,6 @@ class SMgui:
         self.connection.add(self._smiLevel,     '/level')
         self.connection.add(self._smiTimestamp, '/timestamp')
         self.connection.add(self._smiStreamURI, '/stream/uri')
-        self.connection.add(self._smiState,     '/state')
         self.connection.add(self._smiStateCpu,  '/state/cpu')
         self.connection.add(self._smiStateMem,  '/state/memory')
         self.connection.add(self._smiStateDisk, '/state/disk')
@@ -92,7 +92,11 @@ class SMgui:
         self.connection.add(self._smiStateSyncExternal, '/state/sync/external')
         self.connection.add(self._smiStateSyncInternal, '/state/sync/internal')
 
-        self.connection.add(self._smiProcess, '/process/')
+        self.connection.add(self._smiStatePd,   '/state/process')
+
+        ## the /process message itself will be forwarded t both smiState and smiProcess
+        self.connection.add(self._smiState,     '/process')
+        self.connection.add(self._smiProcess,   '/process/')
 
     def widget(self):
         return self.channels
@@ -135,7 +139,7 @@ class SMgui:
         self.connection.send(msg, data)
 
 
-    ## callbacks from childs (SMchannels/SMconfig)
+    ## callbacks from childs (SMchannel/SMconfig)
     def showConfig(self):
         self.config.applySettings(self.settings)
         self.config.show()
@@ -148,34 +152,20 @@ class SMgui:
         self.settings[key]=newsettings[key]
         return True
     def applySettings(self, settings):
-        print "FIXME: SMgui.applySettings", settings
-        # /network/interface
-        ## IGNORED FOR NOW
-        self._hasSettingChanged('/network/interface', settings)
+        changed=False
+        bundle = Bundle(oscprefix=self.oscprefix)
+        for s in settings:
+            changed|=self._hasSettingChanged(s, settings)
+            bundle.append((s, [self.settings[s]]))
 
-        # /stream
-        streamchanged=(self._hasSettingChanged('/stream/protocol', settings) or
-                       self._hasSettingChanged('/stream/profile' , settings) or
-                       self._hasSettingChanged('/stream/channels', settings))
-        # /mode
-        modechanged=self._hasSettingChanged('/mode', settings)
         self.channels.launchButton.setText(self.settings['/mode'].upper())
 
-        # if the mode has changed or the streaming settings have changed while we were streaming,
-        # stop it
-        if modechanged or (streamchanged and self.running and self.settings['/mode'] == 'stream'):
+        ## TODO: if things have changed significantly, stop processing
+        if changed:
             self.launch(False)
-        ## send new streamsettings
-        props=[]
-        if streamchanged:
-            props += ['/stream/protocol', '/stream/profile', '/stream/channels']
-        if modechanged:
-            props += ['/mode']
-        if len(props)>0:
-            bundle = Bundle(oscprefix=self.oscprefix)
-            for p in props:
-                bundle.append((p, [self.settings[p]]))
-            self.connection.send(bundle)
+
+        ## in any case, we just dump the entire configuration to the SMi
+        self.connection.send(bundle)
 
     def copySettings(self, settings):
         self.mixer.applySMiSettings(settings)
@@ -183,7 +173,7 @@ class SMgui:
         if path is None:
             return
         source=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/out']+'/' #remote
-        target=os.path.join(path, self.name) #local
+        target=os.path.join(path, self.name, '') #local
         self.config.pullEnable(False)
         self.pullCb=fun
         f=filesync.filesync(source, target,
@@ -199,7 +189,7 @@ class SMgui:
     def push(self, path, fun=None):
         if path is None:
             return
-        source=path #local
+        source=os.path.join(path, '') #local
         target=self.settings['/user']+'@'+self.settings['/host']+':'+self.settings['/path/in']+'/' #remote
         self.config.pushEnable(False)
         self.pushCb=fun
@@ -217,17 +207,27 @@ class SMgui:
     def launch(self, state, ts=None):
         bundle = Bundle(oscprefix=self.oscprefix)
         mode=self.settings['/mode']
-        uri ='rtp://localhost:8787' ## FIXXXXME!
         starttime=0
         if ts is not None: ## (TSmax, TSmin)
             starttime=ts[1]+10000
         bundle.append(('/record/timestamp', [starttime]))
         bundle.append(('/record/filename',  [_datetime.datetime.now().strftime('%Y%m%d-%H%M')]))
-        bundle.append(('/stream/uri', [uri]))
-        bundle.append(('/'+mode, [state]))
+        bundle.append(('/process', [state]))
         self.running=state
+        self.channels.setLaunched(self.running)
         self.connection.send(bundle)
 
+    def _smiMode(self, addr, typetags, data, source):
+        self.settings['/mode']=data[0]
+        self.channels.launchButton.setText(self.settings['/mode'].upper())
+    def _smiState(self, addr, typetags, data, source):
+        state=data[0]
+        self.running=state
+        self.channels.setLaunched(self.running)
+    def _smiStatePd(self, addr, typetags, data, source):
+        state=data[0]
+        # Pd either crashed or recovered; in any case, we stop
+        self.launch(False)
     def _smiUser(self, addr, typetags, data, source):
         self.settings['/user']=data[0]
     def _smiFader(self, addr, typetags, data, source):
@@ -247,8 +247,6 @@ class SMgui:
         self.settings['/path/in']=data[0]
     def _smiStreamURI(self, addr, typetags, data, source):
         print "FIXME: smiURI"
-    def _smiState(self, addr, typetags, data, source):
-        print "FIXME STATE:", data[0]
     def _smiStateCpu(self, addr, typetags, data, source):
         value=data[0]
         index=0
@@ -264,6 +262,8 @@ class SMgui:
         index=2
         self.config.setState(index, value)
         self.critical[index]=value>0.9
+        if (self.running) and (value>=0.99) and ("record" == self.settings['/mode']):
+            self.launch(False)
     def _smiStateBatt(self, addr, typetags, data, source):
         value=data[0]
         index=3

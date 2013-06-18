@@ -57,6 +57,7 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
     def _connect(self):
         self.closeButtons.accepted.connect(self._do_accept)
         self.closeButtons.rejected.connect(self._do_reject)
+        self.syncButton.clicked.connect(self._sync)
 
     def _do_accept(self):
         self.hide()
@@ -71,7 +72,6 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         self.settings['/proxy/client/port'  ]=self.proxy_sendPort.value()
         self.settings['/proxy/client/host'  ]=self.proxy_sendHost.text()
 
-
     def applySettings(self, settings):
         """applies settings to the config-panel
         this really only sets the values in the selection boxes to the proper values.
@@ -84,6 +84,18 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         self.proxy_recvPort.setValue(int(self.settings['/proxy/server/port']))
         self.proxy_sendPort.setValue(int(self.settings['/proxy/client/port']))
         self.proxy_sendHost.setText(self.settings['/proxy/client/host'])
+
+    def showSync(self, state):
+        if(type(state) is int):
+            self.label_sync.setText("sync @")
+            self.label_syncTS.setText(str("%010d" % state))
+        else:
+            self.label_sync.setText("freewheeling")
+            self.label_syncTS.setText("")
+    def _sync(self):
+        state=self.syncButton.isChecked()
+        #self.syncButton.setChecked(state)
+        self.mixer.setSync(state)
 
 ######################################################################
 if __name__ == '__main__':

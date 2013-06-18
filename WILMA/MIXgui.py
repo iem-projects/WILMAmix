@@ -44,12 +44,18 @@ class StreamReceiver:
         self.server.send(addr,data)
 
     def removeAll(self):
-        ## FIXXME: this removes self.server-internal hooks like /ping
-        self.server.server.removeAll()
+        self.server.removeAll()
+        self.server.add(self._synched, '/stream/synched')
     def add(self, callback, oscAddress):
         self.server.add(callback, oscAddress)
     def ping(self):
         self.server.ping()
+    def _synched(self, addr, typetags, data, source):
+        state=data[0]
+        if type(state) is not int:
+            state = None
+        if self.parent is not None:
+            self.parent._configSynched(state)
 
 
 class MIXgui:
@@ -78,7 +84,7 @@ class MIXgui:
 
         self._proxyServer()
         self._proxyClient()
-        self.registerProxy(self.streamreceiver.server.server)
+        self.registerProxy(self.streamreceiver)
 
     def widget(self):
         return self.smmixer
@@ -88,6 +94,10 @@ class MIXgui:
 
     def _config(self):
         self.mixconfig.show()
+    def _configSynched(self, state):
+        self.mixconfig.showSync(state)
+    def setSync(self, state):
+        self.streamreceiver.send('/stream/sync', [state])
 
     def _proxyServer(self):
         self.proxyserver = None
@@ -136,11 +146,12 @@ class MIXgui:
 
         for sm in sorted(self.dict.keys()):
             d=self.dict[sm]
-            smi=SMgui.SMgui(mixer=self, guiparent=self.smmixer, name=sm, confs=d)
+            smi=SMgui.SMgui(mixer=self, guiparent=self.smmixer, name=sm, netconfs=d)
             self.sm+=[smi]
         self.smmixer.setSM(self.sm)
         self.registerProcessProxies()
-        self.registerProxy(self.streamreceiver.server.server)
+
+        self.registerProxy(self.streamreceiver)
         self.streamreceiver.send('/create', sorted(self.dict.keys()))
 
     def registerProcessProxies(self, proxies=None):

@@ -92,7 +92,10 @@ class systemhealth:
                 now=time.time()
 
                 s=os.statvfs(self.path)
-                self.disk=(s.f_blocks-s.f_bfree)*1./s.f_blocks
+                ## (blocks-bfree) does is inaccurate
+                #self.disk=(s.f_blocks-s.f_bfree)*1./s.f_blocks
+                ## this is more accurate
+                self.disk=(s.f_blocks-s.f_bavail)*1./s.f_blocks
 
                 ## CPU,...
                 if psutil is not None:

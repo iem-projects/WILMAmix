@@ -1,8 +1,3 @@
-recovery:
-   Q: when Pd-crashes, we should recover the last state (if possible)
-      (and if not possible and this was the SMi-Pd, turn off the "play" button)
-
-
 pd.SMi:
   Q: rethink architecture
      1-wrapper abs per mode:
@@ -14,17 +9,14 @@ pd.SMi:
 				bufsize:0 dacoffset:0
 	abstraction: adc2send (multichannel)
 
+RTP.recvr.packetloss:
+  Q: request re-transmission of lost packets
 
 BUG:WILMAsm:
   Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
 
 BUG:net.serverTCP:
   Q: quitting might result in: "socket.error: [Errno 104] Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
-
-
-BUG:modeswitching
-  Q: switching between modes will send a "/<newmode>/stop" message to the SMi before "/control/load/<newmode>"
-     it really should send "/<oldmode>/stop"!
 
 ------------------------------------
 
@@ -76,3 +68,41 @@ import:
 naming:
   Q: rename WILMA to WILMA (WILMA is really only the fund that sponsors the project)
   A: done
+
+BUG:udpclient
+  Q: sometimes iemnet's [udpclient] does not receive any data
+  A: probably fixed with iemnet#ce45ba70026adfe992ec11193a7edfbb2ee1c1ec
+
+BUG:udpclient
+  Q: every 2nd automatically assigned does not receive data
+  A: probably fixed with iemnet#ce45ba70026adfe992ec11193a7edfbb2ee1c1ec
+
+BUG:modeswitching
+  Q: switching between modes will send a "/<newmode>/stop" message to the SMi before "/control/load/<newmode>"
+     it really should send "/<oldmode>/stop"!
+  A: we only send "/stop" which will stop everything
+
+RTP.recvr.sync:
+  Q: implement RTP-receiver synchronization
+  A: done
+
+GUI.recvr.sync:
+  Q: allow user to manually trigger a sync request (or receive streams without sync)
+     ideally, only 'selected' SMis would try to sync
+  A: sync-all is implemented
+
+BUG:disk-usage
+   Q: disk-usage should work on path/out
+   A: implemented
+
+BUG:record
+   Q: if the harddisk is full, Pd hangs...
+   A: stop recording if the disk is full
+   A: implemented
+
+recovery:
+   Q: when Pd-crashes, we should recover the last state (if possible)
+      (and if not possible and this was the SMi-Pd, turn off the "play" button)
+   A: implemented the simple solution (turning OFF the play-button)
+
+

@@ -20,13 +20,13 @@
 
 from PySide import QtCore, QtGui
 from PySide.QtGui import *
-import SMchannels_ui
+import SMchannel_ui
 
 import SMconfig
 
-class SMchannels(QtGui.QGroupBox, SMchannels_ui.Ui_SMchannels):
+class SMchannel(QtGui.QGroupBox, SMchannel_ui.Ui_SMchannel):
     def __init__(self, sm, guiparent=None, settings={'/id':"SMi"}, maxwidth=None):
-        super(SMchannels, self).__init__(guiparent)
+        super(SMchannel, self).__init__(guiparent)
         self.sm=sm
         name=settings['/id']
         self.settings=settings
@@ -93,7 +93,7 @@ class SMchannels(QtGui.QGroupBox, SMchannels_ui.Ui_SMchannels):
 
     def ping(self):
         ## FIXME: compat implementation for SM.py
-        print "FIXME: SMchannels ping"
+        print "FIXME: SMchannel ping"
         pass
 
 
@@ -109,7 +109,7 @@ if __name__ == '__main__':
                 names+=['SM#'+str(i)]
             self.meter=[]
             for n in names:
-                m=SMchannels(self, self, n)
+                m=SMchannel(self, self, n)
                 self.meter+=[m]
                 layout.addWidget(m)
 
