@@ -115,7 +115,6 @@ class SMi:
     def __init__(self):
         self.settings=configuration.getSM()
         self.state=State(self.settings)
-        self.mode=None
 
         self.oscprefix='/'+self.settings['/id']
         self.server = NetServer(
@@ -159,7 +158,7 @@ class SMi:
             gains=self.mixer.gain(data)
 
     def _reloadStream(self):
-        if 'stream' == self.mode:
+        if 'stream' == self.settings['/mode']:
             self.pd.send('/control/load/stream', [self.settings['/stream/transport/protocol'],
                                                   self.settings['/stream/transport/port'],
                                                   self.settings['/stream/protocol'],
@@ -169,12 +168,12 @@ class SMi:
             return True
         return False
     def _reloadRecord(self):
-        if 'record' == self.mode:
+        if 'record' == self.settings['/mode']:
             self.pd.send('/control/load/record',[])
             return True
         return False
     def _reloadProcess(self):
-        if 'process' != self.mode:
+        if 'process' != self.settings['/mode']:
             return False
         inlets=0
         outlets=0
@@ -188,7 +187,7 @@ class SMi:
         return True
 
     def _mode(self, addr, typetags, data, source):
-        self.mode=str(data[0]).lower()
+        self.settings['/mode']=str(data[0]).lower()
         if self._reloadStream() or self._reloadRecord() or self._reloadProcess():
             pass
     def _hasSettingChanged(self, key, value):
