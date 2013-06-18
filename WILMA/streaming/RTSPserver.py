@@ -17,6 +17,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
+import logging as logging_
+logging = logging_.getLogger('WILMA.streaming.RTSPserver')
 
 import gst.rtspserver
 import gstutils

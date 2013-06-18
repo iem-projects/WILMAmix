@@ -38,7 +38,8 @@
 ##value.write()
 ################################################################
 
-import logging
+import logging as logging_
+logging = logging_.getLogger('WILMA.audio.mixer')
 import pyalsa.alsahcontrol
 import WILMA.utils
 

@@ -26,7 +26,8 @@
 # query output directory from client
 # run rsync
 
-import logging
+import logging as logging_
+logging = logging_.getLogger('WILMA.filesync')
 import pexpect
 from threading import Thread
 

@@ -30,7 +30,8 @@
 
     Thanks for the support to Buchsenhausen, Innsbruck, Austria.
 """
-import logging
+import logging as logging_
+logging = logging_.getLogger('OSC.oscAPI')
 import socket
 from threading import Thread
 

@@ -30,7 +30,8 @@
 # 13 Feb. 2002:
 #   Added a generic callback handler.
 #   - dwh
-import logging
+import logging as logging_
+logging = logging_.getLogger('OSC')
 
 import socket
 import struct

@@ -21,7 +21,8 @@
 ## dictionary:
 ## name ->
 ##        iface -> {ip, port}
-import logging
+import logging as logging_
+logging = logging_.getLogger('WILMA.net.discovery.Avahi')
 
 import dbus, avahi
 from dbus import DBusException

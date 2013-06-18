@@ -22,7 +22,8 @@
 # start a UDP-server and the Pd-workinghorse
 # Pd communicates with use through the UDP-server
 
-import logging
+import logging as logging_
+logging = logging_.getLogger('WILMA.pdserver')
 import os, tempfile
 
 from net import server as NetServer
