@@ -93,6 +93,8 @@ class SMgui:
         self.connection.add(self._smiStateSyncInternal, '/state/sync/internal')
 
         self.connection.add(self._smiStatePd,   '/state/process')
+
+        ## the /process message itself will be forwarded t both smiState and smiProcess
         self.connection.add(self._smiState,     '/process')
         self.connection.add(self._smiProcess,   '/process/')
 
@@ -220,12 +222,10 @@ class SMgui:
         self.channels.launchButton.setText(self.settings['/mode'].upper())
     def _smiState(self, addr, typetags, data, source):
         state=data[0]
-        print "STATE", state
         self.running=state
         self.channels.setLaunched(self.running)
     def _smiStatePd(self, addr, typetags, data, source):
         state=data[0]
-        print "PdSTATE", state
         # Pd either crashed or recovered; in any case, we stop
         self.launch(False)
     def _smiUser(self, addr, typetags, data, source):
