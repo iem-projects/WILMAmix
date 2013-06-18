@@ -1,0 +1,24 @@
+#!/bin/sh
+
+usage() {
+  echo "$0 <srcdir>" 1>&2
+  exit 1
+}
+
+DIR=$1
+
+if [ -d "${DIR}" ]; then :; else usage; fi
+
+
+for f in ${FILES}
+do
+ if [ -e "${f}" ]; then
+   echo "skipping: ${f}"
+ else
+   if [ -e "${DIR}/${f}" ]; then
+      ln -s "${DIR}/${f}" .
+   else
+      echo "missing. ${f}"
+   fi
+ fi
+done
