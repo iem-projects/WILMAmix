@@ -127,10 +127,10 @@ class systemhealth:
                     except IOError as e:
                         exception=e
                         pass # hopefully a temporary error...
-                    if (exception is None):
-                        print "GAUGE read: OK"
-                    else:
-                        print "GAUGE read:",e
+##                        if (exception is None):
+##                            print "GAUGE read: OK"
+##                        else:
+##                            print "GAUGE read:",e
 
                     exception=None
                     try:
@@ -161,10 +161,10 @@ class systemhealth:
                         exception=e
                         pass # hopefully a temporary error...
 
-                    if (exception is None):
-                        print "PIC read: OK"
-                    else:
-                        print "PIC read:",e
+##                    if (exception is None):
+##                        print "PIC read: OK"
+##                    else:
+##                        print "PIC read:",e
 
 
                     self.battery = charge/100.
