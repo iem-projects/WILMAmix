@@ -41,7 +41,7 @@ class State:
           self.mixer = AudioMixer(config)
         except IOError as e:
           print "failed to open audio mixer:",e
-        self.health = systemhealth.systemhealth()
+        self.health = systemhealth.systemhealth(path=config['/path/out'])
         self.cpu = 1.
         self.mem = 1.
         self.disk = 1.
