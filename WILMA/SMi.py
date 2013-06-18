@@ -18,11 +18,11 @@
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
 
-from net import server as NetServer
+import logging
 from urlparse import urlparse
 
+from net import server as NetServer
 from net.osc import Bundle
-
 from audio import AudioMixer
 import systemhealth
 import pdserver
@@ -40,7 +40,7 @@ class State:
         try:
           self.mixer = AudioMixer(config)
         except IOError as e:
-          print "failed to open audio mixer:",e
+          logging.exception("failed to open audio mixer")
         self.health = systemhealth.systemhealth(path=config['/path/out'])
         self.cpu = 1.
         self.mem = 1.
@@ -98,7 +98,7 @@ class PdCommunicator:
         self.smi.state.timestamp=ts
     def _catchall(self, addr, typetags, data, source):
         self.smi.server.sendMsg(addr[0], data)
-        print "got message: ", (addr, typetags, data, source)
+        logging.debug("got message: " + str((addr, typetags, data, source)))
     def _forward(self, addr, typetags, data, source):
         self.smi.server.sendMsg(addr[1], data)
 
@@ -235,19 +235,19 @@ class SMi:
         if scheme == 'rtp':
             transport='udp'
         else:
-            print "ERROR: unsupported scheme in", uri
+            logging.error("unsupported scheme in '%s'" % str(uri))
         if len(schemelist)>1:
             transport=schemelist[1]
         if not (('udp' == transport) or ('tcp' == transport)):
-            print "ERROR: unsupported transport protocol in", uri
+            logging.error("unsupported transport protocol in '%s'" % str(uri))
             transport='udp'
         restart=False
         if self._hasSettingChanged('/stream/transport/protocol', transport):
-            print "ERROR: transport protocol changed to", transport
+            logging.warning("transport protocol changed to '%s'" % str(transport))
             restart=True
 
         if self._hasSettingChanged('/stream/protocol', scheme):
-            print "ERROR: stream protocol changed to", scheme
+            logging.error("stream protocol changed to '%s'" % str(scheme))
             restart=True
 
         host=o.hostname
@@ -281,7 +281,7 @@ class SMi:
         self.settings['/record/timestamp' ] = int(data[0])
 
     def _process(self, addr, typetags, data, src):
-        print "++++++++++++++++++++++++ _process +++++++++++++++++++++"
+        logging.debug("++++++++++++++++++++++++ _process +++++++++++++++++++++")
         state=data[0]
 
         ## hacks for specific modes: RECORD
@@ -320,16 +320,16 @@ class SMi:
         self.pd.ping()
 
     def dumpInfo(self, addr, typetags, data, src):
-        print "setting: ", self.settings
-        print "state  : ", self.state.__dict__
+        logging.info("setting: %s" % str(self.settings))
+        logging.info("state  : %s" % str(self.state.__dict__))
         if self.streamer is not None:
             self.streamer.dumpInfo()
     def _catchall(self, addr, typetags, data, src):
-        print "SMi:catchall", (self, addr, typetags, data, src)
-        print "OSC-callbacks", self.server.addressManager.__dict__
+        logging.info("SMi:catchall: %s" % str((self, addr, typetags, data, src)))
+        logging.debug("OSC-callbacks: %s" % str((self.server.addressManager.__dict__)))
     def _network(self, addr, typetags, data, src):
         ## FIXXME changing network
-        print "SMi:_network", (addr, typetags, data)
+        logging.debug("FIXME:SMi:_network %s", str((addr, typetags, data)))
 
 if __name__ == '__main__':
     print "SMi..."

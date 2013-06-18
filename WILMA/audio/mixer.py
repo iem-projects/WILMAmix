@@ -38,7 +38,7 @@
 ##value.write()
 ################################################################
 
-
+import logging
 import pyalsa.alsahcontrol
 import WILMA.utils
 
@@ -67,9 +67,9 @@ class AudioMixer:
         try:
             gainsi = [WILMA.utils.SCALE(i, self.info.min, self.info.max, 0., 1., True) for i in gains]
         except TypeError: ## never try to catch _all_ errors
-            print "caught TypeError (try adjusting 'SMi/gain_control/' in WILMix.conf)"
-            print "\tOUCH: ", gains
-            print "\tmixer: ", self.info.name
+            logging.exception("caught TypeError (try adjusting 'SMi/gain_control/' in WILMix.conf)")
+            logging.debug("\tOUCH: %s" % str(gains))
+            logging.debug("\tmixer: %s" % self.info.name)
             gainsi=[0]
         return  gainsi
 
@@ -77,12 +77,10 @@ class AudioMixer:
 ######################################################################
 
 if __name__ == '__main__':
-    print "SM..."
     sm = WILMAsm()
     import time
 
     main_loop = gobject.MainLoop()
-    print "start loop"
     try:
         main_loop.run()
     except KeyboardInterrupt:

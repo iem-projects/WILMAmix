@@ -17,6 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
+import warnings
 
 from PySide import QtCore, QtGui
 from PySide.QtGui import *
@@ -93,7 +94,7 @@ class SMchannel(QtGui.QGroupBox, SMchannel_ui.Ui_SMchannel):
 
     def ping(self):
         ## FIXME: compat implementation for SM.py
-        print "FIXME: SMchannel ping"
+        warnings.warn("FIXME: SMchannel ping")
         pass
 
 

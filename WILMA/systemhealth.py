@@ -18,8 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import time
+import logging
+import os, time
 from threading import Thread
 
 class systemhealth:
@@ -29,7 +29,7 @@ class systemhealth:
             have_psutil = True
         except ImportError:
             have_psutil = False
-            print "failed to import 'psutil'. do you have 'python-psutil' installed?"
+            logging.fatal("failed to import 'psutil'. do you have 'python-psutil' installed?")
 
         SMBUS_gaugeAddr                = 0x0b
         SMBUS_cmdRelativeStateOfCharge = 0x0d
@@ -57,14 +57,12 @@ class systemhealth:
             try:
                 from smbus import SMBus
                 self.smbus = SMBus(3)
-            except ImportError as e:
+            except ImportError:
                 self.smbus = None
-                print "failed to import 'smbus'. do you have 'python-smbus' installed?"
-                print e
-            except IOError as e:
+                logging.exception("failed to import 'smbus'. do you have 'python-smbus' installed?")
+            except IOError:
                 self.smbus = None
-                print "failed to connect to SMBus. is the user member of the 'i2c' group?"
-                print e
+                logging.exception("failed to connect to SMBus. is the user member of the 'i2c' group?")
 
             self.interval=interval
             self.cpu = 1.
@@ -128,9 +126,9 @@ class systemhealth:
                         exception=e
                         pass # hopefully a temporary error...
 ##                        if (exception is None):
-##                            print "GAUGE read: OK"
+##                            logging.debug("GAUGE read: OK")
 ##                        else:
-##                            print "GAUGE read:",e
+##                            logging.exception("GAUGE read)
 
                     exception=None
                     try:
@@ -162,9 +160,9 @@ class systemhealth:
                         pass # hopefully a temporary error...
 
 ##                    if (exception is None):
-##                        print "PIC read: OK"
+##                        logging.debug("PIC read: OK")
 ##                    else:
-##                        print "PIC read:",e
+##                        logging.exception("PIC read")
 
 
                     self.battery = charge/100.

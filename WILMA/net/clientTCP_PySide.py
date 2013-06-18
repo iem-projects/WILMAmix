@@ -17,10 +17,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
+import logging
+
+from PySide.QtNetwork import QTcpSocket, QHostAddress
 
 import clientAbstract
 from SLIP import SLIP
-from PySide.QtNetwork import QTcpSocket, QHostAddress
 
 class clientTCP(clientAbstract.clientAbstract):
     """ OSC-client running on GOD.
@@ -69,8 +71,7 @@ class clientTCP(clientAbstract.clientAbstract):
         
     def _send(self, data):
         if self.socket is not None and self.remote is not None:
-            if self.verbose:
-                print "sending '", data, "' to ", self.remote
+            logging.debug("sending '%s' to %s" % (str(data), str(self.remote)))
             slip = SLIP();
             slip+=data;
             sdata=str(slip.getData())

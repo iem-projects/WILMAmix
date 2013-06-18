@@ -17,13 +17,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
+import logging, sys
 
 import metro, configuration
 import SMgui
 import net
 from gui import SMmixer, MIXctl, MIXconfig
-
-import sys
 
 class StreamReceiver:
     def __init__(self, parent):
@@ -172,7 +171,7 @@ class MIXgui:
 
 
     def printIt(self):
-        print self.dict
+        logging.info(self.dict)
 
     def ping(self):
         for sm in self.sm:

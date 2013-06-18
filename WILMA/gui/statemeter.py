@@ -25,7 +25,7 @@ from PySide import QtCore, QtGui
 class statemeterValue(QtGui.QFrame):
     def __init__(self, pMeter, label=None, scale=None, height=4, inverse=False):
         QtGui.QFrame.__init__(self, pMeter)
-        #print "statemeter for :", label
+        #logging.debug( "statemeter for: %s" % label)
         # Local instance variables.
         self.paint_time = 0.
         self.m_pMeter      = pMeter

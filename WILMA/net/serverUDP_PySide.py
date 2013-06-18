@@ -17,10 +17,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
+import logging
 
-import serverAbstract
 from PySide.QtNetwork import QUdpSocket, QHostAddress
 from PySide import QtCore
+
+import serverAbstract
 
 class serverUDP(serverAbstract.serverAbstract):
     """ OSC-server running on GOD.
@@ -72,8 +74,7 @@ class serverUDP(serverAbstract.serverAbstract):
     def _send(self, data):
         from PySide.QtNetwork import QHostAddress
         if self.socket is not None and self.remote is not None:
-            if self.verbose:
-                print "sending '", data, "' to ", self.remote
+            logging.debug( "serverUDPy.sending '%s' to %s" % (str(data), str(self.remote)))
             self.socket.writeDatagram(data, QHostAddress(self.remote[0]), self.remote[1])
 
     def getPort(self):

@@ -19,13 +19,15 @@
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
 
 ## that's the main instance for SMi's GUI
+import logging, warnings
+import os
+import datetime as _datetime
+
 
 import configuration, filesync
 from gui import SMconfig, SMchannel, ThreadedInvoke
 from net import client as _NetClient
 from net.osc import Bundle
-import os
-import datetime as _datetime
 
 class SMgui:
     def __init__(self, mixer=None, guiparent=None, name="SMi", netconfs=None, maxwidth=None):
@@ -59,7 +61,7 @@ class SMgui:
                                          transport=self.settings['/protocol'])
             self._connect()
         except IndexError:
-            print "no network configurations -> no connection"
+            logging.exception("no network configurations -> no connection")
 
         self.channels=SMchannel.SMchannel(self, guiparent=guiparent, settings=self.settings, maxwidth=maxwidth)
         self.config=SMconfig.SMconfig(self, guiparent=guiparent, settings=self.settings, interfaces=interfaces)
@@ -67,12 +69,12 @@ class SMgui:
 
         self.channels.launchButton.setText(self.settings['/mode'].upper())
         if netconfs is not None:
-            print "FIXXME: netconfs not yet used in SMgui", netconfs
+            warnings.warn("FIXXME: netconfs not yet used in SMgui: %s" % str(netconfs))
 
     def __del__(self):
         self.shutdown()
     def shutdown(self):
-        print "shutdown", self
+        logging.debug("shutdown %s" % str(self))
         self.connection.shutdown()
 
     def _connect(self):
@@ -246,7 +248,7 @@ class SMgui:
     def _smiInpath (self, addr, typetags, data, source):
         self.settings['/path/in']=data[0]
     def _smiStreamURI(self, addr, typetags, data, source):
-        print "FIXME: smiURI"
+        warnings.warn("FIXME: smiURI")
     def _smiStateCpu(self, addr, typetags, data, source):
         value=data[0]
         index=0

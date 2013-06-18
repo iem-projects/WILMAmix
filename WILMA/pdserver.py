@@ -22,14 +22,13 @@
 # start a UDP-server and the Pd-workinghorse
 # Pd communicates with use through the UDP-server
 
+import logging
+import os, tempfile
+
 from net import server as NetServer
 from net.osc import Bundle
 
-
 from launcher import launcher
-
-import os
-import tempfile
 
 def _createDirIfNeeded(directory):
     if not os.path.exists(directory):
@@ -68,7 +67,7 @@ class _pdprocess:
         self.shouldRun=True
 
     def _doneCb(self):
-        print "Pd exited", self.shouldRun
+        logging.info("Pd exited %s" % str(self.shouldRun))
         if self.runningCb is not None: self.runningCb(False)
         if self.shouldRun: ## ouch: crashed, so restart
             self._launch()

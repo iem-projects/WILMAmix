@@ -17,12 +17,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
-
-
-
-import jack
-import os
+import os, logging
 import re
+import jack
 
 _counter=0.1
 
@@ -56,15 +53,14 @@ class patcher:
         self.jack.activate()
 
     def _connection(self, a, b, state):
-        print "callback: ",self.running
+        logging.debug( "callback: %s",self.running)
         if not self.running:
             return
         self.defer(self._applyRules)
-        if True:
-            if state:
-                print "connection "+str(a)+"->"+str(b)
-            else:
-                print "disconnection "+str(a)+"->"+str(b)
+        if state:
+            logging.debug( "connection '%s' -> '%s'" % (str(a)+, str(b)))
+        else:
+            logging.debug( "disconnection '%s' -> '%s'" % (str(a), str(b)))
 
     def start(self):
         self.running=True
@@ -74,37 +70,37 @@ class patcher:
 
 
     def _applyRules(self):
-        print "applying:"
+        logging.debug( "applying:")
         for r in self.rules:
             r[0](*r[1])
         return False
 
     def _doconnect(self, source, target):
-        print "Connect: "+source+"->"+target
+        logging.debug( "Connect: '%s' -> '%s'" % (source, target))
         r=re.compile(source)
         for s in self.jack.get_ports(source,'',jack.IsOutput):
             targets=self.jack.get_ports(re.sub(r, target, s), '', jack.IsInput) ## all matching targetports
             ## LATER: intersect targets with actual connected targets
             for t in targets:
-                print "connecting: "+s+" & "+t
+                logging.debug("connecting: %s & %s" % (s, t))
                 try:
                     self.jack.connect(s,t)
-                except jack.Error, e:
-                    print "failed connecting:",e
+                except jack.Error:
+                    logging.exception("failed connecting")
     def _dodisconnect(self, source, target):
-        print "Disconnect: "+source+"->"+target
+        logging.debug("Disconnect: %s -> %s" % (source, target))
         r=re.compile(source)
         for s in self.jack.get_ports(source,'',jack.IsOutput):
             targets = self.jack.get_ports(re.sub(r, target, s), '', jack.IsInput) ## all matching targetports
             ## LATER: intersect targets with actual connected targets
             for t in targets:
-                print "disconnecting: "+s+" & "+t
+                logging.debug( "disconnecting: %s & %s" % (s, t))
                 try:
                     self.jack.disconnect(s,t)
-                except jack.Error, e:
-                    print "failed disconnecting:",e
+                except jack.Error:
+                    logging.exception("failed disconnecting")
     def _doduplicate(self, reference, target):
-        print "Duplicate: "+reference+"->"+target
+        logging.debug( "Duplicate: '%s' -> '%s'" % (reference, target))
         r=re.compile(reference)
         for p in self.jack.get_ports(reference):
             flags=self.jack.get_port_flags(p) & (jack.IsInput | jack.IsOutput)
@@ -137,7 +133,7 @@ class patcher:
         self.rules=[]
 
     def add(self, ruletype, a, b):
-        print "adding rule '"+ruletype+"': " + a + "->"+b
+        logging.debug( "adding rule '%s': %s -> %s"; % (ruletype, a, b))
         if ruletype is "connect":
             self.rules+=[[self._doconnect   , [a, b]]]
         elif ruletype is "disconnect":

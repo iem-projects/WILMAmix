@@ -46,10 +46,8 @@ class RTSPserverX:
         gobject.io_add_watch(self.urifile.file, gobject.IO_IN, self._callback)
 
     def _callback(self, f, bar):
-        #print "callback0", self
-        #print "callback1", f
-        #print "callback2", bar
-        #print "something happened to ", self.urifile.name
+        #logging.debug( "callback (%s, %s, %s)" % (str(self), str(f), str(bar)))
+        #logging.debug("something happened to %s" % self.urifile.name)
 
         if f is self.urifile.file:
             data=self.urifile.read()
@@ -59,7 +57,7 @@ class RTSPserverX:
 
                 if self.startCb is not None:
                     self.startCb(self.uri)
-                print "URI: ", self.uri
+                logging.info("URI: %s" % self.uri)
                 return False
 
         return True
@@ -68,23 +66,23 @@ class RTSPserverX:
         return self.uri
 
     def start(self):
-        print "start", self
+        logging.info( "start %s" % self)
         self.server.launch()
         #while(self.server.isRunning() and self.uri is None):
         #    time.sleep(0.1)
 
     def stop(self):
-        #print "stop", self
+        logging.debug( "stop %s" % self)
         # ouch, how to do that?
-        print "server stopping"
+        logging.info( "server stopping")
         self.server.shutdown()
         self.uri=None
         self.urifile=None
 
     def dumpInfo(self):
-        print "server: ", self.server
-        print "server running", self.server.isRunning()
-        print "URI   : ", self.uri
+        logging.info("server: %s" % str(self.server)
+        logging.info("server running %s" % self.server.isRunning()
+        logging.info("URI   : %s" % self.uri
 
 
 ######################################################################

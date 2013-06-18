@@ -17,14 +17,17 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
+import logging
 
 from PySide import QtCore, QtGui
-import WILMA.utils
-
-from qsynthMeter import qsynthMeter
 from PySide.QtGui import *
-import SMconfig_ui
+
+import WILMA.utils
+from qsynthMeter import qsynthMeter
 import DirChooser
+
+import SMconfig_ui
+
 
 _dictKeys=[
     '/mode',
@@ -45,7 +48,7 @@ def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
         try:
             targetdict[k]=sourcedict[k]
         except KeyError:
-            print "missing key '"+k+"' in source dictionary",sourcedict
+            logging.exception("missing key in source dictionary %s" %sourcedict)
     return targetdict
 
 _streamProtocols=['RTP', 'RTSP']
@@ -133,7 +136,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         elif value is 2:
             mode='process'
         else:
-            print "invalid mode "+str(value)+": falling back to ",mode
+            logging.warn("invalid mode '%s': falling back to '%s'" % (str(value), mode))
         self.settings['/mode']=mode
 
     def _moved_gainFader(self, value): ## this should immediately be sent to the SMi

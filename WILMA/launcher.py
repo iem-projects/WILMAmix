@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import subprocess
 import os, signal
 import threading
@@ -49,7 +50,7 @@ class launcher(threading.Thread):
             else:
                 self.process.wait()
         except KeyboardInterrupt:
-            print "............................................. KEYBOARD INTERRUPT ......"
+            logging.exception("............................................. KEYBOARD INTERRUPT ......")
         self.process=None
         if self.__doneCb is not None:
             self.__doneCb()
@@ -66,13 +67,13 @@ class launcher(threading.Thread):
         if self.process is None:
             return
         if True or self.process.poll():
-            #print "shutting down process", self.process.pid
+            #logging.debug("shutting down process %d" % self.process.pid)
             self.join(timeout)
             if self.is_alive():
                 try:
                     self.process.terminate()
                 except OSError:
-                    print "failed to terminate"
+                    logging.exception("failed to terminate")
                 self.join()
                 #pid=self.process.pid
                 #os.kill(self.process.pid, signal.SIGKILL)

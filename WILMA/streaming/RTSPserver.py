@@ -29,9 +29,11 @@ class RTSPserver:
                  ):
         profile = profile.replace(' ', '')
         depayelement='rtp'+profile+'pay'
-        if not ( gstutils.checkElement(source) and gstutils.checkElement(depayelement) ):
-            print ouch
-            return
+        if not gstutils.checkElement(source):
+            raise NameError(source)
+
+        if not gstutils.checkElement(depayelement):
+            raise NameError(depayelement)
         
         pipeline=source + " ! audioconvert ! audio/x-raw-int/channels="+str(channels)+" ! "+depayelement+" name=pay0"
         self.mountpoint='/'+profile
@@ -41,7 +43,7 @@ class RTSPserver:
         mapping =self.server.get_media_mapping()
         self.factory =gst.rtspserver.MediaFactory()
         self.factory.set_launch(pipeline)
-        #print "pipeline: ", self.factory.get_launch()
+        #logging.debug("pipeline: %s " % self.factory.get_launch())
         mapping.add_factory(self.mountpoint, self.factory)
         self.timeoutID=0L
         self.serverID=0L
@@ -56,20 +58,20 @@ class RTSPserver:
         port=int(self.server.get_service())
         ip=socket.gethostbyname(socket.gethostname())
         uri= 'rtsp://'+ip+':'+str(port)+self.mountpoint
-        #print "URI: ", uri
+        #logging.debug("URI: %s" % uri)
         return uri
 
     def start(self):
-        print "start", self
+        logging.info ("start %s" % self)
         self.timeoutID=gobject.timeout_add_seconds(2, self._timeout)
         self.serverID=self.server.attach()
-        #print "started: ", self.serverID
+        #logging.debug("started: %d" % self.serverID)
         #self.getURI()
 
     def stop(self):
-        #print "stop", self
+        #logging.debug("stop %s" % self)
         # ouch, how to do that?
-        print "server stopping"
+        logging.info("server stopping")
         if self.serverID>0:
             glib.source_remove(self.serverID)
         self.serverID=0L
@@ -88,15 +90,15 @@ class RTSPserver:
         return True
 
     def dumpInfo(self):
-        print "server: ", dir(self.server)
-        print "server: ", self.server.__dict__
-        print "address  : ", self.server.get_address()
-        print "backlog  : ", self.server.get_backlog()
-        print "mapping  : ", self.server.get_media_mapping().__dict__
-        print "pool  : ", self.server.get_session_pool().__dict__
+        logging.info("server: %s" % dir(self.server))
+        logging.info("server: %s" % self.server.__dict__)
+        logging.info("address  : %s" % self.server.get_address())
+        logging.info("backlog  : %s" % self.server.get_backlog())
+        logging.info("mapping  : %s" % self.server.get_media_mapping().__dict__)
+        logging.info("pool  : %s" % self.server.get_session_pool().__dict__)
 
-        print "sessions: ", self.server.get_session_pool().get_n_sessions ()
-        print "sessions: ", self.server.get_session_pool().get_max_sessions ()
+        logging.info("sessions: %s" % self.server.get_session_pool().get_n_sessions ())
+        logging.info("sessions: %s" % self.server.get_session_pool().get_max_sessions ())
 
 
 

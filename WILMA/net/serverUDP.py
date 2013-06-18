@@ -17,9 +17,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
+import logging
+import socket, gobject
 
 import serverAbstract
-import socket, gobject
 from discovery import publisher
 
 class serverUDP(serverAbstract.serverAbstract):
@@ -80,8 +81,7 @@ class serverUDP(serverAbstract.serverAbstract):
 
     def _send(self, data):
         if self.socket is not None and self.remote is not None:
-            if self.verbose:
-                print "serverUDP.sending '", data, "' to ", self.remote
+            logging.debug( "serverUDP.sending '%s' to %s" % (str(data), str(self.remote)))
             self.socket.sendto( data,  self.remote)
 
 ######################################################################

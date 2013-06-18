@@ -21,6 +21,7 @@
 ## dictionary:
 ## name ->
 ##        iface -> {ip, port}
+import logging
 
 import dbus, avahi
 from dbus import DBusException
@@ -51,15 +52,15 @@ class discoverer:
             avahi.PROTO_UNSPEC, dbus.UInt32(0))
         key=self.getKey(arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags)
         self.dict[key]={'name': str(name), 'address': str(address), 'port': int(port), 'iface': if_indextoname(interface)}
-	#print "added...", self.dict
+	#logging.debug( "added...%s" % self.dict)
         
     def delHandler(self, arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags):
         key=self.getKey(arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags)
         try:
             del self.dict[key]
         except:
-            print "removed element not in dict: ", key
-	#print "deleted...", self.dict
+            logging.info("removed element '%s' not in dict" % key)
+	#logging.debug( "deleted...%s" % self.dict)
 
     def __init__(self, service = '_wilma-sm._udp', domain='local'):
         self.dict=dict()
@@ -132,7 +133,7 @@ class publisher:
                 avahi.DBUS_INTERFACE_ENTRY_GROUP)
             self.group.connect_to_signal('StateChanged', self.entry_group_state_changed)
 
-        #print "Adding service '%s' of type '%s' ..." % (self.serviceName, self.serviceType)
+        #logging.debug( "Adding service '%s' of type '%s' ..." % (self.serviceName, self.serviceType))
 
         self.group.AddService(
             avahi.IF_UNSPEC,  #interface
@@ -150,24 +151,24 @@ class publisher:
 
     def server_state_changed(self, state):
         if state == avahi.SERVER_COLLISION:
-            #print "WARNING: Server name collision"
+            #logging.debug( "WARNING: Server name collision")
             self.remove_service()
         elif state == avahi.SERVER_RUNNING:
             self.add_service()
 
     def entry_group_state_changed(self, state, error):
-        #print "state change: %i" % state
+        #logging.debug( "state change: %i" % state)
 
         if state == avahi.ENTRY_GROUP_ESTABLISHED:
-            #print "Service established."
+            #logging.debug( "Service established.")
             pass
         elif state == avahi.ENTRY_GROUP_COLLISION:
             self.serviceName = self.server.GetAlternativeServiceName(self.serviceName)
-            #print "WARNING: Service name collision, changing name to '%s' ..." % self.serviceName
+            #logging.debug( "WARNING: Service name collision, changing name to '%s' ..." % self.serviceName)
             self.remove_service()
             self.add_service()
         elif state == avahi.ENTRY_GROUP_FAILURE:
-            print "Error in group state changed", error
+            logging.debug( "Error in group state changed: %s" % str( error))
             #main_loop.quit()
             return
 

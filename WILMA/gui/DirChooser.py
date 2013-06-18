@@ -20,6 +20,7 @@
 
 from PySide import QtCore, QtGui
 import os
+import warnings
 
 class PullDirChooser:
     def __init__(self, parent=None, startdir=None):
@@ -118,11 +119,11 @@ if __name__ == '__main__':
         def do_pushdir(self):
             self.pushchooser.choose(self.got_pushdir)
         def got_pushdir(self, path):
-            print "PUSH: ", path
+            warnings.warn("PUSH: '%s'" % path)
         def do_pulldir(self):
             self.pullchooser.choose(self.got_pulldir)
         def got_pulldir(self, path):
-            print "PULL: ", path
+            warnings.warn("PULL: '%s'" % path)
 
         def quitB(self):
             sys.exit(0)

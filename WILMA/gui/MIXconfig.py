@@ -17,6 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
+import logging
 
 from PySide import QtGui
 import MIXconfig_ui
@@ -38,7 +39,7 @@ def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
         try:
             targetdict[k]=sourcedict[k]
         except KeyError:
-            print "missing key '"+k+"' in source dictionary",sourcedict
+            logging.exception("missing key in source dictionary" % sourcedict)
     return targetdict
 
 _streamProtocols=['RTP', 'RTSP']
@@ -78,7 +79,7 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         it doesn't do anything on the remote end"""
         _syncDicts(settings, self.settings)
         _syncDicts(self.settings, self.orgsettings)
-        print "settings", self.settings
+        logging.debug("settings: %s " % self.settings)
 
         # proxy
         self.proxy_recvPort.setValue(int(self.settings['/proxy/server/port']))

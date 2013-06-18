@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
-
+import logging
 import locale, os
 from PySide.QtCore import QTranslator, QLibraryInfo
 
@@ -31,7 +31,7 @@ class Translator:
       path=os.path.join('i18n', sLocale)
       if oTranslator.load(path):
         oApp.installTranslator(oTranslator)
-        print "translator: OK"
+        logging.debug( "translator: OK")
         
 ##      # Install the appropriate Qt translation file
 ##      oTranslatorQt = QTranslator()
@@ -40,5 +40,5 @@ class Translator:
 ##        oApp.installTranslator(oTranslatorQt)
           
     except Exception, oEx:
-      print "translator: ",oEx
+      logging.exception( "translator")
       pass

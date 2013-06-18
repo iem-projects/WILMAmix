@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import socket
 import ConfigParser, os
 import ast as _ast
@@ -129,11 +130,11 @@ _smConfs=dict()
 def getSM(id=None):
     """get config dict for WILMAsm"""
     if (id is None) or (id == _smConf['/id']):
-        print "default SMconf", id
+        logging.debug("default SMconf %s" % id)
         return _smConf
     else:
         if _smConfs.has_key(id):
-            print "cached conf"
+            logging.debug("cached conf %s" % id)
             return _smConfs[id]
         d=_getDict(_config, id)
         d['/id']=id

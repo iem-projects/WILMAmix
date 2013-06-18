@@ -17,11 +17,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
+import logging
+import socket, gobject
 
 import serverAbstract
-import socket, gobject
-from discovery import publisher
 from SLIP import SLIP
+from discovery import publisher
 
 class serverTCP(serverAbstract.serverAbstract):
     """ OSC-server running on SMi.
@@ -64,7 +65,7 @@ class serverTCP(serverAbstract.serverAbstract):
     def _accept(self, sock, *args):
         '''Asynchronous connection listener. Starts a handler for each connection.'''
         conn, addr = sock.accept()
-#        print "Connected", sock
+#        logging.debug( "Connected %s" % str( sock ))
         self.remotes[conn]=SLIP()
         gobject.io_add_watch(conn, gobject.IO_IN, self._callback)
         self.remote=(len(self.remotes) or None)
@@ -74,9 +75,9 @@ class serverTCP(serverAbstract.serverAbstract):
         '''Asynchronous connection listener. Handles incoming data.'''
         # sock == self.socket
         data, address = sock.recvfrom(8192)
-##        print "DATA", data
+##        logging.debug( "DATA: %s" % str(data))
 ##        for d in data:
-##            print "data: ",ord(d)
+##            logging.debug( "data: %d " % ord(d)
 
         try:
             slip=self.remotes[sock]
@@ -100,8 +101,7 @@ class serverTCP(serverAbstract.serverAbstract):
 
         if self.remotes is not None:
             for s in self.remotes:
-                if self.verbose:
-                    print "sending '", data, "' to ", self.remotes[s]
+                logging.debug( "sending '%s' to %s" % (str(data), str(self.remotes[s])))
                 slip = SLIP();
                 slip+=data;
                 s.sendall( slip.getData() )
