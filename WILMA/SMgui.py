@@ -19,7 +19,8 @@
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
 
 ## that's the main instance for SMi's GUI
-import logging, warnings
+import logging
+import warnings
 import os
 import datetime as _datetime
 
