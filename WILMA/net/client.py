@@ -53,5 +53,5 @@ def client(host='', port=0, oscprefix=None, verbose=False, transport='udp', back
 
 ######################################################################
 
-if __name__ == '__main__':
-    print "no tests yet"
+##if __name__ == '__main__':
+##    pass

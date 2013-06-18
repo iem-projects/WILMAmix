@@ -54,5 +54,5 @@ def server(host='', port=0, oscprefix=None, service=None, verbose=False, transpo
 
 ######################################################################
 
-if __name__ == '__main__':
-    print "no tests yet"
+##if __name__ == '__main__':
+##    pass
