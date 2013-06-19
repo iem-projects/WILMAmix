@@ -47,12 +47,18 @@ class systemhealth:
         def __init__(self, interval=1.0, path=None):
             Thread.__init__(self)
             self.setDaemon(True)
+            if path is None:
+                path='.'
             try:
-                if path is None:
-                    path='.'
+                os.makedirs(path)
+            except OSError:
+                if not os.path.isdir(path):
+                    raise
+            try:
                 os.statvfs(path)
                 self.path=path
-            except None:
+            except OSError:
+                logging.exception("monitoring non-existing path '%s', fallback to ~" % path)
                 self.path=os.path.expanduser('~')
 
             try:
@@ -89,12 +95,18 @@ class systemhealth:
             while self.keepRunning:
                 self.isRunning=True
                 now=time.time()
-
-                s=os.statvfs(self.path)
-                ## (blocks-bfree) does is inaccurate
-                #self.disk=(s.f_blocks-s.f_bfree)*1./s.f_blocks
-                ## this is more accurate
-                self.disk=(s.f_blocks-s.f_bavail)*1./s.f_blocks
+                try:
+                    s=os.statvfs(self.path)
+                    ## (blocks-bfree) does is inaccurate
+                    ## self.disk=(s.f_blocks-s.f_bfree)*1./s.f_blocks
+                    ## this is more accurate
+                    self.disk=(s.f_blocks-s.f_bavail)*1./s.f_blocks
+                except OSError:
+                    try:
+                        os.makedirs(self.path)
+                    except OSError:
+                        if not os.path.isdir(self.path):
+                            raise
 
                 ## CPU,...
                 if psutil is not None:
