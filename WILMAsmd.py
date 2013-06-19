@@ -29,7 +29,7 @@ import gobject
 
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument("-p", "--pid", type=str,
+parser.add_argument("-p", "--pidfile", type=str,
                     help="PID-file to use")
 args = parser.parse_args()
 print args
@@ -39,8 +39,8 @@ if __name__ == '__main__':
     l = logger.logger("WILMAsmd")
 
     pidfile=None
-    if args.pid is not None:
-        pidfile=daemon.pidlockfile.TimeoutPIDLockFile(args.pid, 10)
+    if args.pidfile is not None:
+        pidfile=daemon.pidlockfile.TimeoutPIDLockFile(args.pidfile, 10)
     print "WILMAsmd", l.getFiles()
 
     with daemon.DaemonContext(files_preserve=l.getFiles(),
