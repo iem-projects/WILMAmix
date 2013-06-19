@@ -12,11 +12,18 @@ pd.SMi:
 RTP.recvr.packetloss:
   Q: request re-transmission of lost packets
 
-BUG:WILMAsm:
-  Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
-
 BUG:net.serverTCP:
   Q: quitting might result in: "socket.error: [Errno 104] Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
+
+BUG:inout-paths
+  Q: WILMAsm fails to start if the out-path is not existing
+  A: create in/out paths at startup
+
+BUG:daemon
+  Q: WILMAsm fails to start as daemon
+
+BUG:WILMAsm:
+  Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
 
 ------------------------------------
 
