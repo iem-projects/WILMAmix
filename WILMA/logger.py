@@ -25,7 +25,16 @@ class logger:
         formatter = logging.Formatter('%(asctime)s %(levelname)s(%(name)s): %(message)s')
         lh = None
         if name is not None:
-            lh = logging.FileHandler(name+'.log')
+            if lh is None:
+                try:
+                    lh = logging.FileHandler(name+'.log')
+                except IOError:
+                    pass
+            if lh is None:
+                try:
+                    lh = logging.FileHandler('/tmp/'+name+'.log')
+                except IOError:
+                    pass
         if lh is not None:
             lh.setFormatter(formatter)
         self.lh = lh
