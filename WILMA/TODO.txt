@@ -15,10 +15,6 @@ RTP.recvr.packetloss:
 BUG:net.serverTCP:
   Q: quitting might result in: "socket.error: [Errno 104] Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
 
-BUG:inout-paths
-  Q: WILMAsm fails to start if the out-path is not existing
-  A: create in/out paths at startup
-
 BUG:daemon
   Q: WILMAsm fails to start as daemon
 
@@ -111,5 +107,10 @@ recovery:
    Q: when Pd-crashes, we should recover the last state (if possible)
       (and if not possible and this was the SMi-Pd, turn off the "play" button)
    A: implemented the simple solution (turning OFF the play-button)
+
+BUG:inout-paths
+  Q: WILMAsm fails to start if the out-path is not existing
+  A: create in/out paths at startup
+  A: implemented (and try to gracefully handle vanishing paths in 'systemhealth'
 
 
