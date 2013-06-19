@@ -17,22 +17,29 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
+import logging as logging_
+logging = logging_.getLogger('WILMA')
 
 import daemon
-from WILMA import SMi
+from WILMA import SMi, logger
 
 import gobject
 
 if __name__ == '__main__':
-    print "SM..."
-    gobject.threads_init()
-    with daemon.DaemonContext():
+    l = logger.logger("WILMAsmd")
+    print "WILMAsmd", l.getFiles()
+
+    with daemon.DaemonContext(files_preserve=l.getFiles()):
+        gobject.threads_init()
+        logging.info("SMd...")
+
         sm = SMi()
         try:
             gobject.MainLoop().run()
         except KeyboardInterrupt:
-            print "WILMAsm KeyboardInterrupt"
-            pass
+            logging.info("WILMAsm KeyboardInterrupt")
+        except:
+            logging.exception("?")
         sm.cleanup()
-
+    logging.fatal("BYE")
 
