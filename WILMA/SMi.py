@@ -116,6 +116,13 @@ class SMi:
     def __init__(self):
         self.settings=configuration.getSM()
         self.state=State(self.settings)
+        for path in ['/path/out', '/path/in']:
+            p=self.settings[path]
+            try:
+                os.makedirs(p)
+            except OSError:
+                if not os.path.isdir(p):
+                    raise
 
         self.oscprefix='/'+self.settings['/id']
         self.server = NetServer(
