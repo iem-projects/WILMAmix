@@ -118,17 +118,9 @@ def readBlob(data):
 
 
 def readInt(data):
-    if(len(data)<4):
-        logging.warn( "Error: too few bytes (%d) for int %s" % (len(data), str(data)))
-        rest = data
-        integer = 0
-    else:
-        integer = struct.unpack(">i", data[0:4])[0]
-        rest    = data[4:]
-
+    integer = struct.unpack(">i", data[0:4])[0]
+    rest    = data[4:]
     return (integer, rest)
-
-
 
 def readLong(data):
     """Tries to interpret the next 8 bytes of the data
@@ -155,15 +147,8 @@ def readDouble(data):
     return (big, rest)
 
 def readFloat(data):
-    if(len(data)<4):
-        logging.warn("too few bytes (%d) for float %s" % (len(data), str(data)))
-        rest = data
-        float = 0
-    else:
-        float = struct.unpack(">f", data[0:4])[0]
-        rest  = data[4:]
+    return (struct.unpack(">f", data[0:4])[0], data[4:])
 
-    return (float, rest)
 
 def readTrue(data):
     return (True, data)
@@ -287,7 +272,8 @@ def decodeOSC(data):
             for tag in typetags[1:]:
                 try:
                     value, rest = table[tag](rest)
-                except:
+                except struct.error:
+                    logging.exception("wrong number of bytes (%d) for type '%s'" % (len(rest), tag))
                     return decoded
                 decoded.append(value)
         else:
