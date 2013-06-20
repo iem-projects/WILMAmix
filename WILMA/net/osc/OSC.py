@@ -111,7 +111,6 @@ def readString(data):
     nextData = int(math.ceil((length+1) / 4.0) * 4)
     return (data[0:length], data[nextData:])
 
-
 def readBlob(data):
     length   = struct.unpack(">i", data[0:4])[0]
     nextData = int(math.ceil((length) / 4.0) * 4) + 4
@@ -199,28 +198,28 @@ def OSCArgument(next):
     OSC binary representations, returning a
     (typetag, data) tuple."""
 
-    if type(next) == type(""):
+    if type(next) == type(''):
         OSCstringLength = math.ceil((len(next)+1) / 4.0) * 4
-        binary  = struct.pack(">%ds" % (OSCstringLength), next)
-        tag = "s"
+        binary  = struct.pack('>%ds' % (OSCstringLength), next)
+        tag = 's'
     elif type(next) == type(42.5):
-        binary  = struct.pack(">f", next)
-        tag = "f"
+        binary  = struct.pack('>f', next)
+        tag = 'f'
     elif type(next) == type(13):
-        binary  = struct.pack(">i", next)
-        tag = "i"
+        binary  = struct.pack('>i', next)
+        tag = 'i'
     elif type(next) == type(True):
         binary = ''
         if next is True:
-            tag = "T"
+            tag = 'T'
         else:
-            tag = "F"
+            tag = 'F'
     elif next is None:
         binary = ''
         tag = 'N'
     else:
-        binary  = ""
-        tag = "N" ## better than nothing...
+        binary  = ''
+        tag = 'N' ## better than nothing...
 
     return (tag, binary)
 
@@ -262,16 +261,16 @@ def decodeOSC(data):
 ##    I + INFINITUM
 
     """Converts a typetagged OSC message to a Python list."""
-    table = { "i" : readInt, "f" : readFloat, "s" : readString, "b" : readBlob, "d" : readDouble,
-              "h" : readLong,
-              "S" : readString,
-              "T" : readTrue, "F": readFalse, "N": readNil, "I": readInf
+    table = { 'i' : readInt, 'f' : readFloat, 's' : readString, 'b' : readBlob, 'd' : readDouble,
+              'h' : readLong,
+              'S' : readString,
+              'T' : readTrue, 'F': readFalse, 'N': readNil, 'I': readInf
               }
     decoded = []
     address,  rest = readString(data)
-    typetags = ""
+    typetags = ''
 
-    if address == "#bundle":
+    if address == '#bundle':
         time, rest = readULong(rest)
         decoded.append(address)
         decoded.append(time)
@@ -284,7 +283,7 @@ def decodeOSC(data):
         typetags, rest = readString(rest)
         decoded.append(address)
         decoded.append(typetags)
-        if len(typetags)>0 and typetags[0] == ",":
+        if len(typetags)>0 and typetags[0] == ',':
             for tag in typetags[1:]:
                 try:
                     value, rest = table[tag](rest)
