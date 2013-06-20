@@ -149,6 +149,12 @@ def readDouble(data):
 def readFloat(data):
     return (struct.unpack(">f", data[0:4])[0], data[4:])
 
+def readChar(data):
+    (i,r) = readInt(data)
+    return (chr(i & 0xff), r)
+
+def readMIDI(data):
+    return (struct.unpack('>bbbb', data[0:4])[0], data[4:])
 
 def readTrue(data):
     return (True, data)
@@ -165,7 +171,6 @@ def readInf(data):
 def OSCBlob(next):
     """Convert a string into an OSC Blob,
     returning a (typetag, data) tuple."""
-
     if type(next) == type(""):
         length = len(next)
         padded = math.ceil((len(next)) / 4.0) * 4
@@ -238,8 +243,8 @@ def decodeOSC(data):
 ##    d + 64bit (double) floating point number
 ##    s + string
 ##    S + symbol
-##    c - char
-##    m - 4 byte midi packet (8 digits hexadecimal)
+##    c - char /* an ascii character, sent as 32 bits */
+##    m - 4 byte midi packet (8 digits hexadecimal) /* port id, status byte, data1, data2 */
 ##    T + TRUE
 ##    F + FALSE
 ##    N + NIL
@@ -249,6 +254,8 @@ def decodeOSC(data):
     table = { 'i' : readInt, 'f' : readFloat, 's' : readString, 'b' : readBlob, 'd' : readDouble,
               'h' : readLong,
               'S' : readString,
+              'c' : readChar,
+              'm' : readMIDI,
               'T' : readTrue, 'F': readFalse, 'N': readNil, 'I': readInf
               }
     decoded = []
