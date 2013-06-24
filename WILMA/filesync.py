@@ -42,7 +42,7 @@ class _FileSyncer(Thread):
         self.expects = [
             "Enter passphrase for key '.*':",                          # ssh-key (try all passphrases)
             "[Pp]assword:",                                            # ordinary password (try all passphrases)
-            "Are you sure you want to continue connecting (yes/no)\?", # unknown host
+            "Are you sure you want to continue connecting \(yes/no\)\?", # unknown host
             pexpect.EOF                                                # shutdown
             ]
         self.passphrases=['yes']*3
