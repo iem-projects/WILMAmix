@@ -9,15 +9,15 @@ SUBMODULES=iemlib \
 all: clean $(SUBMODULES)
 
 clean:
-	rm -f *.pd *.pd_linux
+	find . -type l -delete
 
 iemlib:
 iemnet:
-	./link_net ../../../../pd/iemnet
+	./link_net.sh ../../../../pd/iemnet
 iemrtp:
-	./link_rtp ../../../../pd/iemrtp
+	./link_rtp.sh ../../../../pd/iemrtp
 osc:
-	./link_osc ../../../../pd/osc
+	./link_osc.sh ../../../../pd/osc
 WILMA:
-	./link_WILMA ../../../../pd/WILMA
+	./link_WILMA.sh ../../../../pd/WILMA
 
