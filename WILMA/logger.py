@@ -21,9 +21,12 @@
 import logging, logging.handlers
 
 class logger:
-    def __init__(self, name=None):
+    def __init__(self, name=None, path=None):
         formatter = logging.Formatter('%(asctime)s %(levelname)s(%(name)s): %(message)s')
         lh = None
+        if path is None:
+            path='/tmp'
+
         if name is not None:
             if lh is None:
                 try:
@@ -32,7 +35,7 @@ class logger:
                     pass
             if lh is None:
                 try:
-                    lh = logging.FileHandler('/tmp/'+name+'.log')
+                    lh = logging.FileHandler(os.path.join(path, name+'.log'))
                 except IOError:
                     pass
         if lh is not None:
