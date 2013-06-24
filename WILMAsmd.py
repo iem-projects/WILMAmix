@@ -22,7 +22,7 @@ logging = logging_.getLogger('WILMA')
 
 
 import daemon, daemon.pidlockfile
-from WILMA import SMi, logger
+from WILMA import SMi, logger, user
 
 import gobject
 
@@ -31,20 +31,32 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--pidfile", type=str,
                     help="PID-file to use")
+parser.add_argument("-u", "--user", type=str,
+                    help="User to run as")
+parser.add_argument("-g", "--group", type=str,
+                    help="Group to run as")
+parser.add_argument("--path", type=str,
+                    help="Working directory to use")
+
 args = parser.parse_args()
-print args
 
 
 if __name__ == '__main__':
-    l = logger.logger("WILMAsmd")
-
     pidfile=None
     if args.pidfile is not None:
         pidfile=daemon.pidlockfile.TimeoutPIDLockFile(args.pidfile, 10)
-    print "WILMAsmd", l.getFiles()
+
+    if args.path is None:
+        args.path=args.user
+
+    l = logger.logger("WILMAsmd")
 
     with daemon.DaemonContext(files_preserve=l.getFiles(),
-                              pidfile=pidfile):
+                              pidfile=pidfile,
+                              uid=user.getUser(args.user),
+                              gid=user.getGroup(args.group),
+                              working_directory=user.getHome(args.path),
+                              ):
         gobject.threads_init()
         logging.info("SMd...")
 
