@@ -12,6 +12,7 @@ clean:
 	find . -type l -delete
 
 iemlib:
+	./link_iemlib.sh ../../../../pd/iemlib/lib
 iemnet:
 	./link_net.sh ../../../../pd/iemnet
 iemrtp:
