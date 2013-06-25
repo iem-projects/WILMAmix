@@ -24,10 +24,13 @@ import socket
 import ConfigParser, os
 import ast as _ast
 
-_configfiles=['WILMix.conf',
-              os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', 'WILMix.conf'),
-              os.path.expanduser('~/.config/wilma.iem.at/WILMix.conf'),
-             ]
+## files listed LATER can overwrite values from earlier files
+_configfiles=[
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', 'WILMix.conf'), ## built-in
+    os.path.join('etc', 'WILMA', 'WILMix.conf'),                                       ## system-wide
+    os.path.join(os.path.expanduser('~'), '.config', 'wilma.iem.at', 'WILMix.conf'),   ## per-user
+    'WILMix.conf',                                                                     ## local
+    ]
 
 
 ### OSC-style configuration
