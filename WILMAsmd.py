@@ -46,6 +46,7 @@ if __name__ == '__main__':
     uid=user.getUser(args.user),
     gid=user.getGroup(args.group),
     working_directory=user.getHome(args.path),
+    logfile=None
     logfiles=None
     if args.pidfile is not None:
         pidfile=daemon.pidlockfile.TimeoutPIDLockFile(args.pidfile, 10)
@@ -55,11 +56,14 @@ if __name__ == '__main__':
 
     l = logger.logger("WILMAsmd")
     logfiles=l.getFiles()
+    if len(logfiles)>0:
+        logfile=logfiles[0]
 
     with daemon.DaemonContext(files_preserve=logfiles,
                               pidfile=pidfile,
                               uid=uid, gid=gid,
                               working_directory=working_directory,
+                              stderr=logfile, stdout=logfile
                               ):
         gobject.threads_init()
         logging.info("SMd...")
