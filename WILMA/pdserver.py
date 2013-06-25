@@ -57,7 +57,7 @@ class _pdprocess:
         self.shouldRun=False
         self.pd=None
         dir = os.path.dirname(os.path.abspath(__file__))
-        self.pdbinary = os.path.join(dir, '..', '..', 'pd', 'pd')
+        self.pdbinary = os.path.join(dir, '..', '..', 'bin', 'pd')
         if not os.path.exists(self.pdbinary):
             self.pdbinary = 'pd'
 
