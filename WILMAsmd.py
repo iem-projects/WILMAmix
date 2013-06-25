@@ -62,8 +62,11 @@ if __name__ == '__main__':
         ## if the directory exists, don't do anything
         piddir=os.path.split(args.pidfile)[0]
         if not os.path.exists(piddir):
-            os.makedirs(piddir)
-            os.chown(piddir, uid, gid)
+            try:
+                os.makedirs(piddir)
+                os.chown(piddir, uid, gid)
+            except OSError:
+                pass
         pidfile=daemon.pidlockfile.TimeoutPIDLockFile(args.pidfile, 10)
 
     if args.path is None:
