@@ -52,9 +52,12 @@ def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
             logging.exception("missing key in source dictionary %s" %sourcedict)
     return targetdict
 
-_streamProtocols=['RTP', 'RTSP']
-_streamProfiles =['L16', 'L24']
-_streamChannels =(4,5)
+#_streamProtocols=['RTP', 'RTSP']
+#_streamProfiles =['L16', 'L24']
+#_streamChannels =(4,5)
+_streamProtocols=['RTP']
+_streamProfiles =['L16']
+_streamChannels =(4,4)
 
 class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def __init__(self, sm=None, guiparent=None, settings={}, interfaces=[]):
