@@ -69,6 +69,15 @@ if __name__ == '__main__':
                 pass
         pidfile=daemon.pidlockfile.TimeoutPIDLockFile(args.pidfile, 10)
 
+    if args.logfile is not None:
+        logdir=os.path.split(args.logfile)[0]
+        if not os.path.exists(logdir):
+            try:
+                os.makedirs(logdir)
+                os.chown(logdir, uid, gid)
+            except OSError:
+                pass
+
     if args.path is None:
         args.path=args.user
 
