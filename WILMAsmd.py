@@ -38,6 +38,8 @@ parser.add_argument("-g", "--group", type=str,
                     help="Group to run as")
 parser.add_argument("--path", type=str,
                     help="Working directory to use")
+parser.add_argument("--logfile", type=str,
+                    help="Logfile to write to")
 
 args = parser.parse_args()
 
@@ -67,7 +69,7 @@ if __name__ == '__main__':
     if args.path is None:
         args.path=args.user
 
-    l = logger.logger("WILMAsmd")
+    l = logger.logger(args.logfile)
     logfiles=l.getFiles()
     if len(logfiles)>0:
         logfile=logfiles[0]
