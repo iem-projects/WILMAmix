@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
     l = logger.logger(args.logfile)
     logfiles=l.getFiles()
-    if len(logfiles)>0:
+    if logfiles:
         logfile=logfiles[0]
 
     with daemon.DaemonContext(files_preserve=logfiles,
