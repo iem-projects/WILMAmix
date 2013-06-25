@@ -20,6 +20,7 @@
 import logging as logging_
 logging = logging_.getLogger('WILMA')
 
+import os
 
 import daemon, daemon.pidlockfile
 from WILMA import SMi, logger, user
@@ -43,9 +44,9 @@ args = parser.parse_args()
 
 if __name__ == '__main__':
     pidfile=None
-    uid=user.getUser(args.user),
-    gid=user.getGroup(args.group),
-    working_directory=user.getHome(args.path),
+    uid=user.getUser(args.user)
+    gid=user.getGroup(args.group)
+    working_directory=user.getHome(args.path)
     logfile=None
     logfiles=None
     piddir=None
@@ -57,7 +58,7 @@ if __name__ == '__main__':
 
         ## if the directory does not exist, create it and give it user-write permissions
         ## if the directory exists, don't do anything
-        piddir=os.path.split(args.pidfile)
+        piddir=os.path.split(args.pidfile)[0]
         if not os.path.exists(piddir):
             os.makedirs(piddir)
             os.chown(piddir, uid, gid)
