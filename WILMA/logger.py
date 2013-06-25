@@ -19,27 +19,32 @@
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging, logging.handlers
+import os
 
 class logger:
-    def __init__(self, name=None, path=None):
+    def __init__(self, name=None):
         formatter = logging.Formatter('%(asctime)s %(levelname)s(%(name)s): %(message)s')
         lh = None
-        if path is None:
-            path='/tmp'
-
-        if name is not None:
+        if name is None:
+            lh = logging.handlers.SysLogHandler(address='/dev/log')
+        else:
             if lh is None:
                 try:
-                    lh = logging.FileHandler(name+'.log')
+                    lh = self._getFileHandler(name)
                 except IOError:
                     pass
             if lh is None:
+                ## hmm, couldn't create a logfile at the desired place
+                ## try creating it in /tmp
                 try:
-                    lh = logging.FileHandler(os.path.join(path, name+'.log'))
-                except IOError:
+                    import tempfile
+                    lh = self._getFileHandler(os.path.join(tempfile.tempdir, self._unabsPath(name)))
+                except IOError, OSError:
                     pass
         if lh is not None:
             lh.setFormatter(formatter)
+        else:
+            lh=logging.StreamHandler()
         self.lh = lh
 
         logger = logging.getLogger('WILMA')
@@ -50,7 +55,27 @@ class logger:
             l.setLevel(logging.INFO)
             if lh is not None:
                 l.addHandler(lh)
-##            l.addHandler(logging.handlers.SysLogHandler(address='/dev/log'))
+
+    @staticmethod
+    def _getFileHandler(filename):
+        dir=os.path.split(filename)[0]
+        if dir:
+            try:
+                os.makedirs(dir)
+            except:
+                pass
+        return logging.FileHandler(filename)
+    @staticmethod
+    def _unabsPath(path):
+      folders=[]
+      while 1:
+          path,folder=os.path.split(path)
+          if folder:
+              folders.append(folder)
+          else:
+              break
+      folders.reverse()
+      return os.path.join(*folders)
 
     def getFiles(self):
         try:
