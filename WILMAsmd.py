@@ -48,7 +48,19 @@ if __name__ == '__main__':
     working_directory=user.getHome(args.path),
     logfile=None
     logfiles=None
+    piddir=None
+
     if args.pidfile is not None:
+        ## if the pidfile is in a subdirectory, make sure this subdir belongs to the user
+        ## also make sure, that we don't chown /var/run or the like
+        ## note: this code is executed as root, but we might want to make sure that 'user' may write
+
+        ## if the directory does not exist, create it and give it user-write permissions
+        ## if the directory exists, don't do anything
+        piddir=os.path.split(args.pidfile)
+        if not os.path.exists(piddir):
+            os.makedirs(piddir)
+            os.chown(piddir, uid, gid)
         pidfile=daemon.pidlockfile.TimeoutPIDLockFile(args.pidfile, 10)
 
     if args.path is None:
@@ -76,5 +88,12 @@ if __name__ == '__main__':
         except:
             logging.exception("?")
         sm.cleanup()
+
+    if piddir is not None:
+        try:
+            os.rmdir(piddir)
+        except OSError:
+            logging.exception("leaving PID-directory %s" % piddir)
+
     logging.fatal("BYE")
 
