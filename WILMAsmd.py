@@ -17,14 +17,22 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
+import os, sys
+LIBDIR='/usr/lib'
+dir = os.path.dirname(os.path.abspath(__file__))
+if os.path.exists(os.path.join(dir, '.git')) or \
+       os.path.exists(os.path.join(dir, '..', '.git')):
+        root = os.path.split(dir)[0]
+else:
+       root = os.path.join(LIBDIR, 'WILMA', 'python')
+sys.path.insert(0, root)
+
+
 import logging as logging_
 logging = logging_.getLogger('WILMA')
 
-import os
 
 import daemon, daemon.pidlockfile
-from WILMA import SMi, logger, user
-
 import gobject
 
 
@@ -43,6 +51,10 @@ parser.add_argument("--logfile", type=str,
 
 args = parser.parse_args()
 
+
+
+
+from WILMA import SMi, logger, user
 
 if __name__ == '__main__':
     pidfile=None
