@@ -56,10 +56,15 @@ class _pdprocess:
             self.args+=['-open', patch]
         self.shouldRun=False
         self.pd=None
+        dir = os.path.dirname(os.path.abspath(__file__))
+        self.pdbinary = os.path.join(dir, '..', '..', 'pd', 'pd')
+        if not os.path.exists(self.pdbinary):
+            self.pdbinary = 'pd'
+
 
     def _launch(self):
         _createDirIfNeeded(self.cwd)
-        self.pd = launcher("pd",
+        self.pd = launcher(self.pdbinary,
                            self.args,
                            cwd=self.cwd,
                            doneCb=self._doneCb)
