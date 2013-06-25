@@ -35,7 +35,7 @@ class _Form(QDialog):
         # Set dialog layout
         self.setLayout(layout)
 if __name__ == '__main__':
-    l = logger.logger("WILMix")
+    l = logger.logger("WILMix.log")
     import gobject
     gobject.threads_init()
     # Create the Qt Application

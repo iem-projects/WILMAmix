@@ -24,7 +24,7 @@ import gobject
 from WILMA import SMi, logger
 
 if __name__ == '__main__':
-    l = logger.logger("WILMAsm")
+    l = logger.logger("WILMAsm.log")
     logging.info("SM...")
     gobject.threads_init()
     sm = SMi()
