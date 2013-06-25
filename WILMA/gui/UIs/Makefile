@@ -1,5 +1,7 @@
 default: all
 
+## the .ui files should be edited with `designer-qt4`
+
 %_ui.py: %.ui
 	pyside-uic $^ | ./uic_filter.sh $@
 
