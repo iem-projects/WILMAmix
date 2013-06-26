@@ -64,6 +64,18 @@ def getGID(group=None):
         logging.exception("invalid group name '%(group)s'" % locals())
     return os.getgid()
 
+getpass=None
+def getUser(user=None):
+    global getpass
+    try:
+        uid=getUID(user)
+        u=pwd.getpwuid(uid).pw_name
+    except KeyError:
+        if getpass is None:
+            import getpass
+        u=getpass.getuser()
+    return u
+
 def getHome(user=None):
     if user is None:
         return os.path.expanduser("~")
