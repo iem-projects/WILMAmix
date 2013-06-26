@@ -54,12 +54,15 @@ args = parser.parse_args()
 
 
 
-from WILMA import SMi, logger, user
+from WILMA import logger, user, configuration
+from WILMA import SMi
 
 if __name__ == '__main__':
     pidfile=None
     uid=user.getUID(args.user)
     gid=user.getGID(args.group)
+    username=user.getUser(args.user)
+    configuration.init({'/user': username})
     working_directory=user.getHome(args.path)
     logfile=None
     logfiles=None
