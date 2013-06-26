@@ -48,6 +48,9 @@ parser.add_argument("--path", type=str,
                     help="Working directory to use")
 parser.add_argument("--logfile", type=str,
                     help="Logfile to write to")
+parser.add_argument("-f", "--foreground", ## this is really 'not detach_process'
+                    action='store_false', default=None,
+                    help="stay in foreground")
 
 args = parser.parse_args()
 
@@ -105,7 +108,8 @@ if __name__ == '__main__':
                               pidfile=pidfile,
                               uid=uid, gid=gid,
                               working_directory=working_directory,
-                              stderr=logfile, stdout=logfile
+                              stderr=logfile, stdout=logfile,
+                              detach_process=args.foreground
                               ):
         gobject.threads_init()
         logging.info("SMd...")
