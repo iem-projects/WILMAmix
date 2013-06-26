@@ -27,6 +27,10 @@ class logger:
         lh = None
         if name is None:
             lh = logging.handlers.SysLogHandler(address='/dev/log')
+        elif 'stderr' == name:
+            # fall back to a stderr
+            lh=logging.StreamHandler()
+            pass
         else:
             if lh is None:
                 try:
