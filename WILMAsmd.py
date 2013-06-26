@@ -70,6 +70,7 @@ if __name__ == '__main__':
     logfile=None
     logfiles=None
     piddir=None
+    detachprocess=args.foreground
 
     if args.pidfile is not None:
         ## if the pidfile is in a subdirectory, make sure this subdir belongs to the user
@@ -96,6 +97,9 @@ if __name__ == '__main__':
             except OSError:
                 pass
 
+    if detachprocess is False and args.logfile is None:
+            args.logfile='stderr'
+
     if args.path is None:
         args.path=args.user
 
@@ -109,7 +113,7 @@ if __name__ == '__main__':
                               uid=uid, gid=gid,
                               working_directory=working_directory,
                               stderr=logfile, stdout=logfile,
-                              detach_process=args.foreground
+                              detach_process=detachprocess
                               ):
         gobject.threads_init()
         logging.info("SMd...")
