@@ -58,8 +58,8 @@ from WILMA import SMi, logger, user
 
 if __name__ == '__main__':
     pidfile=None
-    uid=user.getUser(args.user)
-    gid=user.getGroup(args.group)
+    uid=user.getUID(args.user)
+    gid=user.getGID(args.group)
     working_directory=user.getHome(args.path)
     logfile=None
     logfiles=None

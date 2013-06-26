@@ -24,7 +24,8 @@ import os, os.path
 
 import pwd, grp
 
-def getUser(user=None):
+
+def getUID(user=None):
     if user is None:
         return os.getuid()
     try:
@@ -43,7 +44,7 @@ def getUser(user=None):
         logging.exception("invalid user name '%(user)s'" % locals())
     return os.getuid()
 
-def getGroup(group=None):
+def getGID(group=None):
     if group is None:
         return os.getgid()
     try:
