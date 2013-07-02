@@ -31,7 +31,7 @@ import pdfile
 import configuration
 
 
-import os
+import os, os.path
 
 class State:
     def __init__(self, config):
@@ -115,14 +115,15 @@ class PdCommunicator:
 class SMi:
     def __init__(self):
         self.settings=configuration.getSM()
-        self.state=State(self.settings)
         for path in ['/path/out', '/path/in']:
-            p=self.settings[path]
+            p=os.path.expanduser(self.settings[path])
+            self.settings[path]=p
             try:
                 os.makedirs(p)
             except OSError:
                 if not os.path.isdir(p):
                     raise
+        self.state=State(self.settings)
 
         self.oscprefix='/'+self.settings['/id']
         self.server = NetServer(

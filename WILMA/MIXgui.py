@@ -19,7 +19,7 @@
 # along with WILMix.  If not, see <http://www.gnu.org/licenses/>.
 import logging as logging_
 logging = logging_.getLogger('WILMA.MIXgui')
-import sys
+import sys, os.path
 
 import metro, configuration
 import SMgui
@@ -62,6 +62,10 @@ class StreamReceiver:
 class MIXgui:
     def __init__(self, parent=None):
         self.settings=configuration.getMIX()
+        for path in ['/path/out', '/path/in']:
+            p=os.path.expanduser(self.settings[path])
+            self.settings[path]=p
+
         service=(self.settings['/service']+'._'+self.settings['/protocol'])
         self.discover=net.discoverer(service=service)
 

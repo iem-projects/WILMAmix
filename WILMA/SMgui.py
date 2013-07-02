@@ -22,7 +22,7 @@
 import logging as logging_
 logging = logging_.getLogger('WILMA.SMgui')
 import warnings
-import os
+import os, os.path
 import datetime as _datetime
 
 
@@ -41,6 +41,9 @@ class SMgui:
             interfaces=sorted(netconfs.keys())
 
         self.settings=configuration.getSM(name)
+        for path in ['/path/out', '/path/in']:
+            p=os.path.expanduser(self.settings[path])
+            self.settings[path]=p
         self._enabled = True
         self.running=False
         self.netconfs=netconfs
