@@ -131,7 +131,10 @@ if __name__ == '__main__':
         try:
             os.rmdir(piddir)
         except OSError:
+            logging.info("leaving PID-directory %s" % piddir)
+        except:
             logging.exception("leaving PID-directory %s" % piddir)
 
-    logging.fatal("BYE")
+
+    logging.info("BYE")
 
