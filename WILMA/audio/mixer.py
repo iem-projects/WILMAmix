@@ -69,6 +69,7 @@ class AudioMixer:
             gainsi = [WILMA.utils.SCALE(i, self.info.min, self.info.max, 0., 1., True) for i in gains]
         except TypeError: ## never try to catch _all_ errors
             logging.exception("caught TypeError (try adjusting 'SMi/gain_control/' in WILMix.conf)")
+            logging.info("use `amixer control | grep 'Amp Capture Volume'`")
             logging.debug("\tOUCH: %s" % str(gains))
             logging.debug("\tmixer: %s" % self.info.name)
             gainsi=[0]
