@@ -101,7 +101,7 @@ def init(defaults={}):
     mydefaults['/protocol'] = 'udp'
     mydefaults['/service' ] = '_wilma-sm'
     mydefaults['/port'    ] = '7777' # LATER change to 0
-    mydefaults['/gain_control'] = '4' ## alsa control for mic amp
+    mydefaults['/gain_control'] = '3' ## alsa control for mic amp
 
     mydefaults['/path/in' ] = '/tmp/WILMA/in'
     mydefaults['/path/out'] = '/tmp/WILMA/out'
