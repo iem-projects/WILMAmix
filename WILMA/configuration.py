@@ -21,8 +21,9 @@
 import logging as logging_
 logging = logging_.getLogger('WILMA.configuration')
 import socket
-import ConfigParser, os
-import ast as _ast
+import ConfigParser
+import os.path
+
 def getRoot(file=None):
   if file is None:
       file='.'
