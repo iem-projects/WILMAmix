@@ -60,11 +60,7 @@ class SMgui:
             defaultconf=interfaces[0]
             config = netconfs[defaultconf]
             self.settings['/host'] = config['address']
-            self.connection = _NetClient(config['address'],
-                                         config['port'],
-                                         oscprefix=self.oscprefix,
-                                         transport=self.settings['/protocol'])
-            self._connect()
+            self._makeConnection(defaultconf)
         except IndexError:
             logging.exception("no network configurations -> no connection")
 
@@ -80,9 +76,27 @@ class SMgui:
         self.shutdown()
     def shutdown(self):
         logging.info("shutdown %s" % str(self))
-        self.connection.shutdown()
+        if self.connection is not None:
+            self.connection.shutdown()
 
-    def _connect(self):
+    def _makeConnection(self, iface):
+        if self.connection:
+            self.connection.shutdown()
+
+        try:
+            config=self.netconfs[iface]
+            address=config['address']
+            port=config['port']
+            oscprefix=self.oscprefix
+            transport=self.settings['/protocol']
+        except IndexError, KeyError:
+            logging.exception("failed to guess network configurations -> no connection")
+            return None
+
+        self.connection = _NetClient(address,
+                                     port,
+                                     oscprefix=oscprefix,
+                                     transport=transport)
         self.connection.add(self._smiMode,      '/mode')
         self.connection.add(self._smiUser,      '/user')
         self.connection.add(self._smiOutpath,   '/path/out')
@@ -104,6 +118,8 @@ class SMgui:
         ## the /process message itself will be forwarded t both smiState and smiProcess
         self.connection.add(self._smiState,     '/process')
         self.connection.add(self._smiProcess,   '/process/')
+
+        return self.connection
 
     def widget(self):
         return self.channels
