@@ -26,8 +26,6 @@ import serverAbstract
 from SLIP import SLIP
 from Discovery import Publisher
 
-class OSCRequestHandler(SocketServer.BaseRequestHandler):
-
 class serverTCP(serverAbstract.serverAbstract):
     """ OSC-server running on SMi.
     publishes connection information (via zeroconf),
