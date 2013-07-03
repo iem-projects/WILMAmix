@@ -89,20 +89,19 @@ class MIXgui:
         service=(self.settings['/service']+'._'+self.settings['/protocol'])
         self.discover=net.discoverer(service=service)
 
-        self.streamreceiver = StreamReceiver(self)
-
         self.mixconfig = MIXconfig.MIXconfig(self, guiparent=parent, settings=self.settings)
         self.mixctl = MIXctl.MIXctl(self, guiparent=parent, settings=self.settings)
         self.smmixer=SMmixer(guiparent=parent, mixctl=self.mixctl)
 
         self.metro = metro.metro(self.ping, 100)
 
-        self.scanSM()
+        self.streamreceiver = StreamReceiver(self, autostart=False)
         self.smmixer.show()
 
         self._proxyServer()
         self._proxyClient()
         self.registerProxy(self.streamreceiver)
+        self.streamreceiver.start()
 
     def widget(self):
         return self.smmixer
