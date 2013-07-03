@@ -119,6 +119,9 @@
           <string>Network</string>
          </property>
          <widget class="QComboBox" name="networkInterface">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="geometry">
            <rect>
             <x>90</x>
@@ -127,14 +130,12 @@
             <height>22</height>
            </rect>
           </property>
+          <property name="editable">
+           <bool>false</bool>
+          </property>
           <item>
            <property name="text">
-            <string>eth0</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>wlan0</string>
+            <string>auto</string>
            </property>
           </item>
          </widget>
