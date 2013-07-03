@@ -46,6 +46,8 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
         self.selectAllButton.setCheckState(QtCore.Qt.CheckState.Checked)
         self.selectToggleButton.setCheckState(QtCore.Qt.CheckState.PartiallyChecked)
         #self.setSizePolicy(QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred))
+
+        self.scanEnable(False)
         self._connect()
     def _connect(self):
         self.selectNoneButton.clicked.connect(self._selectNone)
@@ -100,6 +102,10 @@ class MIXctl(QtGui.QGroupBox, MIXctl_ui.Ui_MIXctl):
         self.mixer.quit()
     def _scan(self):
         self.mixer.scanSM()
+    def scanEnable(self, state):
+        oldstate=self.scanButton.isEnabled()
+        self.scanButton.setEnabled(state)
+        return (state != oldstate)
 
     def setState(self, level, msg):
         ## FIXME: add a status widget
