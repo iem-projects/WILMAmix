@@ -214,7 +214,7 @@ if __name__ == '__main__':
         def __init__(self, parent=None):
             super(Form, self).__init__(parent)
             self.d=dict()
-            self.d['/network/interface']='eth0'
+            self.d['/network/interface']='auto'
             self.d['/path/in' ]='/tmp/WILMA/in'
             self.d['/path/out']='/tmp/WILMA/out'
             self.d['/mode'    ]='stream'
