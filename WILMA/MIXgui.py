@@ -27,7 +27,7 @@ import net
 from gui import SMmixer, MIXctl, MIXconfig
 
 class StreamReceiver:
-    def __init__(self, parent):
+    def __init__(self, parent, autostart=True):
         self.parent=None
         self.settings=None
         self.server=None
@@ -38,10 +38,13 @@ class StreamReceiver:
                                         workingdir=self.settings['/path/out'],
                                         backend='gui'
                                         )
-        self.server.add(self._nullCallback, None)
-        self.server.start()
+        self.removeAll()
+        if autostart:
+            self.server.start()
     def _nullCallback(self, addr, typetags, data, source):
         pass
+    def start(self):
+        self.server.start()
     def stop(self):
         self.server.stop()
     def send(self, addr, data=None):
