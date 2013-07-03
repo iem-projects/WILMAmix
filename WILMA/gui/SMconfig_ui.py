@@ -56,7 +56,7 @@ class Ui_SMconfig(object):
         self.frameNetwork.setMinimumSize(QtCore.QSize(210, 0))
         self.frameNetwork.setObjectName("frameNetwork")
         self.networkInterface = QtGui.QComboBox(self.frameNetwork)
-        self.networkInterface.setEnabled(False)
+        self.networkInterface.setEnabled(True)
         self.networkInterface.setGeometry(QtCore.QRect(90, 20, 101, 22))
         self.networkInterface.setEditable(False)
         self.networkInterface.setObjectName("networkInterface")
