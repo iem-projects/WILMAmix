@@ -28,6 +28,9 @@ from gui import SMmixer, MIXctl, MIXconfig
 
 class StreamReceiver:
     def __init__(self, parent):
+        self.parent=None
+        self.settings=None
+        self.server=None
         self.parent=parent
         self.settings=parent.settings
         import pdserver
@@ -61,6 +64,20 @@ class StreamReceiver:
 
 class MIXgui:
     def __init__(self, parent=None):
+        self.settings       = None
+        self.discover       = None
+        self.dict           = None
+        self.pushing        = dict()
+        self.pulling        = dict()
+        self.proxyserver    = None
+        self.proxyclient    = None
+        self.mixconfig      = None
+        self.mixctl         = None
+        self.sm             = [] ## array of active SMi's
+        self.smmixer        = None
+        self.metro          = None
+        self.streamreceiver = None
+
         self.settings=configuration.getMIX()
         for path in ['/path/out', '/path/in']:
             p=os.path.expanduser(self.settings[path])
@@ -69,17 +86,10 @@ class MIXgui:
         service=(self.settings['/service']+'._'+self.settings['/protocol'])
         self.discover=net.discoverer(service=service)
 
-        self.dict=None
-        self.pushing=dict()
-        self.pulling=dict()
-
-        self.proxyserver = None
-        self.proxyclient = None
         self.streamreceiver = StreamReceiver(self)
 
         self.mixconfig = MIXconfig.MIXconfig(self, guiparent=parent, settings=self.settings)
         self.mixctl = MIXctl.MIXctl(self, guiparent=parent, settings=self.settings)
-        self.sm     = [] ## array of active SMi's
         self.smmixer=SMmixer(guiparent=parent, mixctl=self.mixctl)
 
         self.metro = metro.metro(self.ping, 100)
