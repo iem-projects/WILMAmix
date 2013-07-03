@@ -25,14 +25,18 @@ import metro, configuration
 import SMgui
 import net
 from gui import SMmixer, MIXctl, MIXconfig
+from gui import ThreadedInvoke
 
 class StreamReceiver:
     def __init__(self, parent, autostart=True):
         self.parent=None
         self.settings=None
         self.server=None
+        self.receiverStateCb=None
+
         self.parent=parent
         self.settings=parent.settings
+        self.receiverStateCb = ThreadedInvoke.Invoker(self.parent._receiverStateCb)
         import pdserver
         self.server = pdserver.pdserver(mainpatch='_WILMAmix.pd',
                                         workingdir=self.settings['/path/out'],
@@ -52,7 +56,9 @@ class StreamReceiver:
 
     def removeAll(self):
         self.server.removeAll()
+        self.server.add(self._nullCallback, None)
         self.server.add(self._synched, '/stream/synched')
+        self.server.add(self._receiverStateCb, '/state/process')
     def add(self, callback, oscAddress):
         self.server.add(callback, oscAddress)
     def ping(self):
@@ -63,6 +69,9 @@ class StreamReceiver:
             state = None
         if self.parent is not None:
             self.parent._configSynched(state)
+    def _receiverStateCb(self, addr, typetags, data, source):
+        state=data[0]
+        self.receiverStateCb(state)
 
 
 class MIXgui:
@@ -261,3 +270,9 @@ class MIXgui:
         self.pushing[sm]=False
         if not True in self.pushing.values():
             self.mixctl.pushpulled(True)
+
+    def _receiverStateCb(self, state):
+        if(self.mixctl.scanEnable(state)):
+            print "recieverState", state
+            self.scanSM(state)
+
