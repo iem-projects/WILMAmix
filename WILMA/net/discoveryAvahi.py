@@ -48,11 +48,14 @@ class discoverer:
         return key
 
     def newHandler(self, arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags):
-        interface, protocol, name, stype, domain, host, aprotocol, address, port, txt, flags = self.server.ResolveService(
-            arg_interface, arg_protocol, arg_name, arg_stype, arg_domain,
-            avahi.PROTO_UNSPEC, dbus.UInt32(0))
-        key=self.getKey(arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags)
-        self.dict[key]={'name': str(name), 'address': str(address), 'port': int(port), 'iface': if_indextoname(interface)}
+        try:
+            interface, protocol, name, stype, domain, host, aprotocol, address, port, txt, flags = self.server.ResolveService(
+                arg_interface, arg_protocol, arg_name, arg_stype, arg_domain,
+                avahi.PROTO_UNSPEC, dbus.UInt32(0))
+            key=self.getKey(arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags)
+            self.dict[key]={'name': str(name), 'address': str(address), 'port': int(port), 'iface': if_indextoname(interface)}
+        except DBusException:
+            logging.exception("caught exception")
 	#logging.debug( "added...%s" % self.dict)
         
     def delHandler(self, arg_interface, arg_protocol, arg_name, arg_stype, arg_domain, arg_flags):
