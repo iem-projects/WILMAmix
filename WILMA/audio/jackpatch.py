@@ -60,7 +60,7 @@ class patcher:
             return
         self.defer(self._applyRules)
         if state:
-            logging.debug( "connection '%s' -> '%s'" % (str(a)+, str(b)))
+            logging.debug( "connection '%s' -> '%s'" % (str(a), str(b)))
         else:
             logging.debug( "disconnection '%s' -> '%s'" % (str(a), str(b)))
 
@@ -135,7 +135,7 @@ class patcher:
         self.rules=[]
 
     def add(self, ruletype, a, b):
-        logging.debug( "adding rule '%s': %s -> %s"; % (ruletype, a, b))
+        logging.debug( "adding rule '%s': %s -> %s" % (ruletype, a, b))
         if ruletype is "connect":
             self.rules+=[[self._doconnect   , [a, b]]]
         elif ruletype is "disconnect":
@@ -143,7 +143,7 @@ class patcher:
         elif ruletype is "duplicate":
             self.rules+=[[self._doduplicate , [a, b]]]
         else:
-            raise Exception("unknown rules type '"+ruletype+"'")
+            raise Exception("unknown rules type '%s'" % ruletype)
 
 
 

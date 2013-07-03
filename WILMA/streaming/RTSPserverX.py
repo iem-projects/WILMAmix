@@ -82,9 +82,9 @@ class RTSPserverX:
         self.urifile=None
 
     def dumpInfo(self):
-        logging.info("server: %s" % str(self.server)
-        logging.info("server running %s" % self.server.isRunning()
-        logging.info("URI   : %s" % self.uri
+        logging.info("server: %s" % str(self.server))
+        logging.info("server running %s" % self.server.isRunning())
+        logging.info("URI   : %s" % self.uri)
 
 
 ######################################################################
