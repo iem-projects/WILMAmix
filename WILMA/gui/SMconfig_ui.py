@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'SMconfig.ui'
 #
-# Created: Mon Jun 10 16:29:26 2013
+# Created: Wed Jul  3 14:29:03 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -56,9 +56,10 @@ class Ui_SMconfig(object):
         self.frameNetwork.setMinimumSize(QtCore.QSize(210, 0))
         self.frameNetwork.setObjectName("frameNetwork")
         self.networkInterface = QtGui.QComboBox(self.frameNetwork)
+        self.networkInterface.setEnabled(False)
         self.networkInterface.setGeometry(QtCore.QRect(90, 20, 101, 22))
+        self.networkInterface.setEditable(False)
         self.networkInterface.setObjectName("networkInterface")
-        self.networkInterface.addItem("")
         self.networkInterface.addItem("")
         self.label_networkInterface = QtGui.QLabel(self.frameNetwork)
         self.label_networkInterface.setGeometry(QtCore.QRect(10, 20, 52, 13))
@@ -196,8 +197,7 @@ class Ui_SMconfig(object):
         SMconfig.setWindowTitle(QtGui.QApplication.translate("SMconfig", "Configuration of ...", None, QtGui.QApplication.UnicodeUTF8))
         self.frameAudio.setTitle(QtGui.QApplication.translate("SMconfig", "Audio", None, QtGui.QApplication.UnicodeUTF8))
         self.frameNetwork.setTitle(QtGui.QApplication.translate("SMconfig", "Network", None, QtGui.QApplication.UnicodeUTF8))
-        self.networkInterface.setItemText(0, QtGui.QApplication.translate("SMconfig", "eth0", None, QtGui.QApplication.UnicodeUTF8))
-        self.networkInterface.setItemText(1, QtGui.QApplication.translate("SMconfig", "wlan0", None, QtGui.QApplication.UnicodeUTF8))
+        self.networkInterface.setItemText(0, QtGui.QApplication.translate("SMconfig", "auto", None, QtGui.QApplication.UnicodeUTF8))
         self.label_networkInterface.setText(QtGui.QApplication.translate("SMconfig", "Interface", None, QtGui.QApplication.UnicodeUTF8))
         self.frameState.setTitle(QtGui.QApplication.translate("SMconfig", "System Health", None, QtGui.QApplication.UnicodeUTF8))
         self.stateSyncExt.setText(QtGui.QApplication.translate("SMconfig", "Sync(Ext)", None, QtGui.QApplication.UnicodeUTF8))
