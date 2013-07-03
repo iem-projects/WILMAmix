@@ -119,6 +119,7 @@ class SMgui:
         self.connection.add(self._smiState,     '/process')
         self.connection.add(self._smiProcess,   '/process/')
 
+        self.settings ['/network/interface']=iface
         return self.connection
 
     def widget(self):
@@ -176,6 +177,8 @@ class SMgui:
         return True
     def applySettings(self, settings):
         changed=False
+        oldiface=self.settings ['/network/interface']
+        newiface=settings ['/network/interface']
         bundle = Bundle(oscprefix=self.oscprefix)
         for s in settings:
             changed|=self._hasSettingChanged(s, settings)
@@ -186,6 +189,9 @@ class SMgui:
         ## TODO: if things have changed significantly, stop processing
         if changed:
             self.launch(False)
+
+        if oldiface != newiface:
+            self._makeConnection(newiface)
 
         ## in any case, we just dump the entire configuration to the SMi
         self.connection.send(bundle)
