@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'SMconfig.ui'
 #
-# Created: Wed Jul  3 14:29:03 2013
+# Created: Wed Jul  3 18:13:53 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
