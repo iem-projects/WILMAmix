@@ -15,11 +15,12 @@ RTP.recvr.packetloss:
 BUG:net.serverTCP:
   Q: quitting might result in: "socket.error: [Errno 104] Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
 
-BUG:daemon
-  Q: WILMAsm fails to start as daemon
-
 BUG:WILMAsm:
   Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
+
+feature:WILMix.StreamReceiver
+  Q: monitor current state of StreamReceiver
+     (and if SR crashes, re-create the receivers)
 
 ------------------------------------
 
@@ -112,5 +113,10 @@ BUG:inout-paths
   Q: WILMAsm fails to start if the out-path is not existing
   A: create in/out paths at startup
   A: implemented (and try to gracefully handle vanishing paths in 'systemhealth'
+
+BUG:daemon
+  Q: WILMAsm fails to start as daemon
+  A: fixed with python-daemon (well-behaved daemon)
+  A: fixed with start-stop-daemon (starting as non-root)
 
 
