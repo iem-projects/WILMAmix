@@ -36,13 +36,12 @@ def getRoot(file=None):
   return drive+path
 
 ## files listed LATER can overwrite values from earlier files
-_configfiles=[
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', 'WILMix.conf'), ## built-in
-    os.path.join(getRoot(), 'etc', 'WILMA', 'WILMix.conf'),                            ## system-wide
-    os.path.join(os.path.expanduser('~'), '.config', 'wilma.iem.at', 'WILMix.conf'),   ## per-user
-    'WILMix.conf',                                                                     ## local
+_configpaths=[
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config'), ## built-in
+    os.path.join(getRoot(), 'etc', 'WILMA'),                            ## system-wide
+    os.path.join(os.path.expanduser('~'), '.config', 'wilma.iem.at'),   ## per-user
+    '.',                                                                ## local
     ]
-
 
 ### OSC-style configuration
 # mapping ConfigParser to a diectionary of OSC-addresses
@@ -92,10 +91,9 @@ _config=None
 _smConf=None
 _smConfs=dict()
 _mixConf=None
-_smDefaults=None
 
 def init(defaults={}):
-    global _config, _smDefaults, _smConf, _smConfs, _mixConf
+    global _config, _smConf, _smConfs, _mixConf
     _smConfs=dict()
     mydefaults=dict()
     mydefaults['/id'      ] = socket.gethostname()
@@ -139,15 +137,12 @@ def init(defaults={}):
     for k in defaults:
         mydefaults[k]=defaults[k]
 
-    _config = ConfigParser.ConfigParser(mydefaults)
-    _config.read(_configfiles)
-    _mixConf=_getDict(_config, 'MIX')
+    configfiles=[os.path.join(path, "WILMix.conf") for path in _configpaths]
 
-    _smDefaults=_getDict(_config, 'SM')
-    _config = ConfigParser.ConfigParser(_smDefaults)
-    _config.read(_configfiles)
-    _smConf=_getDict(_config, _smDefaults['/id'])
-    _smConf['/id']=_smDefaults['/id']
+    _config = ConfigParser.ConfigParser(mydefaults)
+    _config.read(configfiles)
+    _mixConf=_getDict(_config, 'MIX')
+    _smConf=_getDict(_config, 'SM')
 
 ###
 # public accessors
@@ -162,7 +157,10 @@ def getSM(id=None):
         if _smConfs.has_key(id):
             logging.info("cached conf %s" % id)
             return _smConfs[id]
-        d=_getDict(_config, id)
+        ## FIXXME: currently we only have a single 'SM' config
+        ##         if the user requests the 'special' config for a named SMi,
+        ##         we just return a new *copy* (with the ID set properly)
+        d=dict(_smConf)
         d['/id']=id
         _smConfs[id]=d
         return d
@@ -174,13 +172,12 @@ def getMIX():
     return _mixConf
 
 def write(name):
-    if (not _smConf) or (not _smConf) or (not _smDefaults):
+    if (not _smConf) or (not _smConf):
         init()
 
     config=ConfigParser.ConfigParser()
     _setDict(config, 'MIX', _mixConf)
-    _setDict(config, 'SM' , _smDefaults)
-    _setDict(config, _smDefaults['/id'], _smConf)
+    _setDict(config, 'SM' , _smConf)
     for id in _smConfs:
         _setDict(config, id, _smConfs[id])
     with open(name, 'wb') as f:
