@@ -155,16 +155,17 @@ class MIXgui:
         for s in self.selected():
             s.send(addr, msg)
 
-    def scanSM(self):
+    def scanSM(self, doScan=True):
         self.dict = self.discover.getDict()
         for sm in self.sm:
             sm.shutdown()
         self.sm=[]
 
-        for sm in sorted(self.dict.keys()):
-            d=self.dict[sm]
-            smi=SMgui.SMgui(mixer=self, guiparent=self.smmixer, name=sm, netconfs=d)
-            self.sm+=[smi]
+        if doScan:
+            for sm in sorted(self.dict.keys()):
+                d=self.dict[sm]
+                smi=SMgui.SMgui(mixer=self, guiparent=self.smmixer, name=sm, netconfs=d)
+                self.sm+=[smi]
         self.smmixer.setSM(self.sm)
         self.registerProcessProxies()
 
