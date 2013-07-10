@@ -123,7 +123,7 @@ class systemhealth:
             have_psutil = False
             logging.fatal("failed to import 'psutil'. do you have 'python-psutil' installed?")
 
-        def __init__(self, interval=1.0, path=None):
+        def __init__(self, interval=1.0, intervalSM=60.0, path=None):
             Thread.__init__(self)
             self.setDaemon(True)
             if path is None:
@@ -166,6 +166,9 @@ class systemhealth:
             self.keepRunning=True
             self.isRunning=False
 
+            self.lastSM=0
+            self.intervalSM = intervalSM
+
         def run(self):
             if systemhealth.SystemHealthThread.have_psutil:
                 psutil=systemhealth.SystemHealthThread.psutil
@@ -194,9 +197,11 @@ class systemhealth:
 
                 ### battery
                 if self.smbus is not None:
+                    if ((now-self.lastSM) >= self.intervalSM):
+                        self.lastSM=now
 
-                    (self.battery, self.runtime, state) = _getGAUGE(smbus)
-                    (self.temperature, self.packetRatio, self.rssi, (self.sync_external, self.sync_internal)) = _getPIC(smbus)
+                        (self.battery, self.runtime, state) = _getGAUGE(smbus)
+                        (self.temperature, self.packetRatio, self.rssi, (self.sync_external, self.sync_internal)) = _getPIC(smbus)
 
                 deltime = self.interval - (time.time()-now)
                 if deltime > 0.:
@@ -206,7 +211,7 @@ class systemhealth:
             self.isRunning=False
 
     def __init__(self, interval=1.0, path=None):
-        self.thread = systemhealth.SystemHealthThread(interval, path)
+        self.thread = systemhealth.SystemHealthThread(interval=interval, path=path, intervalSM=interval*60)
         self.cpu = 1.
         self.mem = 1.
         self.disk= 1.
