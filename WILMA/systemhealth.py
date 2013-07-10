@@ -200,8 +200,8 @@ class systemhealth:
                     if ((now-self.lastSM) >= self.intervalSM):
                         self.lastSM=now
 
-                        (self.battery, self.runtime, state) = _getGAUGE(smbus)
-                        (self.temperature, self.packetRatio, self.rssi, (self.sync_external, self.sync_internal)) = _getPIC(smbus)
+                        (self.battery, self.runtime, state) = _getGAUGE(self.smbus)
+                        (self.temperature, self.packetRatio, self.rssi, (self.sync_external, self.sync_internal)) = _getPIC(self.smbus)
 
                 deltime = self.interval - (time.time()-now)
                 if deltime > 0.:
