@@ -23,6 +23,97 @@ logging = logging_.getLogger('WILMA.systemhealth')
 import os, time
 from threading import Thread
 
+## NOTE: wait longer!
+
+
+def _getCPU(psutil, interval):
+    percent=psutil.cpu_percent(interval=interval)
+    return (percent/100.)
+
+def _getMEM(psutil):
+    used=psutil.used_phymem()
+    avail=psutil.avail_phymem()
+    return (1.0*used)/(used+avail)
+
+def _getGAUGE(smbus):
+    ## SMBus constants
+    gaugeAddr                = 0x0b
+    cmdRelativeStateOfCharge = 0x0d
+    cmdRunTimeToEmpty        = 0x11
+    cmdAverageTimeToEmpty    = 0x13
+    cmdBatteryStatus         = 0x16
+
+    ## defaults
+    charge=0.
+    runtime=0.
+    state=0
+
+    exception=None
+    try:
+        charge  = smbus.read_word_data(gaugeAddr,
+                                            cmdRelativeStateOfCharge)
+        runtime = smbus.read_word_data(gaugeAddr,
+                                            cmdRunTimeToEmpty)
+        state   = smbus.read_word_data(gaugeAddr,
+                                            cmdBatteryStatus)
+    except IOError as e:
+        exception=e
+        pass # hopefully a temporary error...
+
+    return (charge/100., runtime, state)
+
+
+def _getPIC(smbus):
+    ## SMBus constants
+    picAddr                  = 0x0e
+    cmdTemperature           = 0xbb
+    cmdSyncStatus            = 0xcc
+    cmdGetRSSI               = 0xaa
+    cmdGetPacketLoss         = 0xdd
+
+    ## defaults
+    temperature = 0
+    packetlost=0
+    rssi=0
+    syncstatus=0x0
+
+    try:
+        temperature = self.smbus.read_byte_data(picAddr,
+                                               cmdTemperature)
+
+        packetlost  = self.smbus.read_byte_data(picAddr,
+                                                cmdGetPacketLoss)
+
+        rssi        = self.smbus.read_byte_data(picAddr,
+                                                cmdGetRSSI)
+
+        syncstatus  = self.smbus.read_byte_data(picAddr,
+                                                cmdSyncStatus)
+
+        sync_external = (syncstatus & 0x01)!=0
+        sync_internal = (syncstatus & 0x02)!=0
+
+##        if(0x01==syncstatus): # syncing
+##            sync_external=True
+##            sync_internal=False
+##        elif(0x02==syncstatus): # freerunning
+##            sync_external=False
+##            sync_internal=True
+##        elif(0x03==syncstatus): # synced
+##            sync_external=True
+##            sync_internal=True
+##        else: ## ouch
+##            sync_external=False
+##            sync_internal=False
+    except IOError as e:
+        pass # hopefully a temporary error...
+    temp=(temperature/2.0) - 10.0
+    if packetlost != 0:
+        packetRatio = 100./packetlost
+    else:
+        packetRatio = 0.
+    return (temp, packetRatio, rssi-107., (sync_external, sync_internal))
+
 class systemhealth:
     class SystemHealthThread(Thread):
         try:
@@ -31,18 +122,6 @@ class systemhealth:
         except ImportError:
             have_psutil = False
             logging.fatal("failed to import 'psutil'. do you have 'python-psutil' installed?")
-
-        SMBUS_gaugeAddr                = 0x0b
-        SMBUS_cmdRelativeStateOfCharge = 0x0d
-        SMBUS_cmdRunTimeToEmpty        = 0x11
-        SMBUS_cmdAverageTimeToEmpty    = 0x13
-        SMBUS_cmdBatteryStatus         = 0x16
-
-        SMBUS_picAddr                  = 0x0e
-        SMBUS_cmdTemperature           = 0xbb
-        SMBUS_cmdSyncStatus            = 0xcc
-        SMBUS_cmdGetRSSI               = 0xaa
-        SMBUS_cmdGetPacketLoss         = 0xdd
 
         def __init__(self, interval=1.0, path=None):
             Thread.__init__(self)
@@ -110,84 +189,14 @@ class systemhealth:
 
                 ## CPU,...
                 if psutil is not None:
-                    used=psutil.used_phymem()
-                    avail=psutil.avail_phymem()
-                    #self.mem=psutil.phymem_usage().percent/100.
-                    self.mem=(1.0*used)/(used+avail)
-
-                    self.cpu=psutil.cpu_percent(interval=self.interval)/100.
+                    self.mem=_getMEM(psutil)
+                    self.cpu=_getCPU(psutil, self.interval)
 
                 ### battery
                 if self.smbus is not None:
-                    charge=0.
-                    runtime=0.
-                    sync_external=False
-                    sync_internal=False
-                    temperature=0
-                    rssi=0.
-                    packetlost=0
 
-                    exception=None
-                    try:
-                        charge  = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr,
-                                                            systemhealth.SystemHealthThread.SMBUS_cmdRelativeStateOfCharge)
-                        runtime = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr,
-                                                            systemhealth.SystemHealthThread.SMBUS_cmdRunTimeToEmpty)
-                        state   = self.smbus.read_word_data(systemhealth.SystemHealthThread.SMBUS_gaugeAddr,
-                                                            systemhealth.SystemHealthThread.SMBUS_cmdBatteryStatus)
-                    except IOError as e:
-                        exception=e
-                        pass # hopefully a temporary error...
-##                        if (exception is None):
-##                            logging.info("GAUGE read: OK")
-##                        else:
-##                            logging.exception("GAUGE read)
-
-                    exception=None
-                    try:
-                        temperature = self.smbus.read_byte_data(systemhealth.SystemHealthThread.SMBUS_picAddr,
-                                                               systemhealth.SystemHealthThread.SMBUS_cmdTemperature)
-
-                        packetlost = self.smbus.read_byte_data(systemhealth.SystemHealthThread.SMBUS_picAddr,
-                                                              systemhealth.SystemHealthThread.SMBUS_cmdGetPacketLoss)
-
-                        rssi = self.smbus.read_byte_data(systemhealth.SystemHealthThread.SMBUS_picAddr,
-                                                        systemhealth.SystemHealthThread.SMBUS_cmdGetRSSI)
-
-                        syncstatus = self.smbus.read_byte_data(systemhealth.SystemHealthThread.SMBUS_picAddr,
-                                                        systemhealth.SystemHealthThread.SMBUS_cmdSyncStatus)
-                        if(0x01==syncstatus): # syncing
-                            sync_external=True
-                            sync_internal=False
-                        elif(0x02==syncstatus): # freerunning
-                            sync_external=False
-                            sync_internal=True
-                        elif(0x03==syncstatus): # synced
-                            sync_external=True
-                            sync_internal=True
-                        else: ## ouch
-                            sync_external=False
-                            sync_internal=False
-                    except IOError as e:
-                        exception=e
-                        pass # hopefully a temporary error...
-
-##                    if (exception is None):
-##                        logging.info("PIC read: OK")
-##                    else:
-##                        logging.exception("PIC read")
-
-
-                    self.battery = charge/100.
-                    self.runtime = runtime
-                    self.sync_external = sync_external
-                    self.sync_internal = sync_internal
-                    self.temperature = (temperature/2.0) - 10.0
-                    if packetlost != 0:
-                        self.packetRatio = 100./packetlost
-                    else:
-                        self.packetRatio = 0.
-                    self.rssi   = rssi - 107.
+                    (self.battery, self.runtime, state) = _getGAUGE(smbus)
+                    (self.temperature, self.packetRatio, self.rssi, (self.sync_external, self.sync_internal)) = _getPIC(smbus)
 
                 deltime = self.interval - (time.time()-now)
                 if deltime > 0.:
