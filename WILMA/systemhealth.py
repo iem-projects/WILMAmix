@@ -78,16 +78,16 @@ def _getPIC(smbus):
     syncstatus=0x0
 
     try:
-        temperature = self.smbus.read_byte_data(picAddr,
+        temperature = smbus.read_byte_data(picAddr,
                                                cmdTemperature)
 
-        packetlost  = self.smbus.read_byte_data(picAddr,
+        packetlost  = smbus.read_byte_data(picAddr,
                                                 cmdGetPacketLoss)
 
-        rssi        = self.smbus.read_byte_data(picAddr,
+        rssi        = smbus.read_byte_data(picAddr,
                                                 cmdGetRSSI)
 
-        syncstatus  = self.smbus.read_byte_data(picAddr,
+        syncstatus  = smbus.read_byte_data(picAddr,
                                                 cmdSyncStatus)
 
         sync_external = (syncstatus & 0x01)!=0
