@@ -21,7 +21,7 @@
 import logging as logging_
 logging = logging_.getLogger('WILMA.systemhealth')
 import os, time
-from threading import Thread
+from threading import Thread, Event
 
 ## NOTE: wait longer!
 
@@ -155,8 +155,8 @@ class systemhealth:
             self.packetRatio = 0.
             self.rssi = 0.
 
-            self.keepRunning=True
-            self.isRunning=False
+            self.stopEvent=Event()
+            self.startEvent=Event()
 
             try:
                 from smbus import SMBus
@@ -170,8 +170,9 @@ class systemhealth:
 
         def run(self):
             smbus=self.smbus
-            while self.keepRunning:
-                self.isRunning=True
+            deltime=0
+            while not self.stopEvent.wait(deltime):
+                self.startEvent.set()
                 now=time.time()
                 ### battery
                 if smbus is not None:
@@ -179,9 +180,15 @@ class systemhealth:
                     (self.temperature, self.packetRatio, self.rssi, (self.sync_external, self.sync_internal)) = _getPIC(smbus)
 
                 deltime = self.interval - (time.time()-now)
-                if deltime > 0.:
-                    time.sleep(deltime)
-
+                if deltime <= 0.:
+                    deltime = 0.
+            self.startEvent.set()
+        def stop(self):
+            self.stopEvent.set()
+            self.join()
+        def start_block(self):
+            self.start()
+            self.startEvent.wait()
 
     class SystemHealthThread(Thread):
         try:
@@ -214,16 +221,17 @@ class systemhealth:
             self.disk= 1.
             self.last=0
 
-            self.keepRunning=True
-            self.isRunning=False
+            self.stopEvent=Event()
+            self.startEvent=Event()
 
         def run(self):
             if systemhealth.SystemHealthThread.have_psutil:
                 psutil=systemhealth.SystemHealthThread.psutil
             else:
                 psutil=None
-            while self.keepRunning:
-                self.isRunning=True
+            deltime=0
+            while not self.stopEvent.wait(deltime):
+                self.startEvent.set()
                 now=time.time()
                 self.disk=_getDISK(self.path)
 
@@ -233,11 +241,18 @@ class systemhealth:
                     self.cpu=_getCPU(psutil, self.interval)
 
                 deltime = self.interval - (time.time()-now)
-                if deltime > 0.:
-                    time.sleep(deltime)
+                if deltime <= 0.:
+                    deltime=0.
 
             ## loop finished
-            self.isRunning=False
+            self.startEvent.set()
+
+        def stop(self):
+            self.stopEvent.set()
+            self.join()
+        def start_block(self):
+            self.start()
+            self.startEvent.wait()
 
     def __init__(self, interval=1.0, path=None):
         self.thread = systemhealth.SystemHealthThread(interval=interval, path=path)
@@ -254,26 +269,18 @@ class systemhealth:
         self.packetRatio = 0.
         self.rssi = 0.
 
-        self.thread.start()
-        while not (self.thread.keepRunning and self.thread.isRunning):
-            time.sleep(0.1)
-
-        self.smthread.start()
-        while not (self.smthread.keepRunning and self.smthread.isRunning):
-            time.sleep(0.1)
-
+        self.thread.start_block()
+        self.smthread.start_block()
 
         self.update()
     def __del__(self):
         self.stop()
     def stop(self):
         if self.thread is not None:
-            self.thread.keepRunning = False
-            self.thread.join()
+            self.thread.stop()
             self.thread=None
         if self.smthread is not None:
-            self.smthread.keepRunning = False
-            self.smthread.join()
+            self.smthread.stop()
             self.smthread=None
     def update(self):
         if self.thread is not None:
