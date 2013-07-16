@@ -51,7 +51,7 @@ def _getDISK(path):
                 raise
     return disk
 
-def _getGAUGE(smbus):
+def _getGAUGE(smbus, sleep=1.0):
     ## SMBus constants
     gaugeAddr                = 0x0b
     cmdRelativeStateOfCharge = 0x0d
@@ -68,10 +68,13 @@ def _getGAUGE(smbus):
     try:
         charge  = smbus.read_word_data(gaugeAddr,
                                             cmdRelativeStateOfCharge)
+        time.sleep(sleep)
         runtime = smbus.read_word_data(gaugeAddr,
                                             cmdRunTimeToEmpty)
+        time.sleep(sleep)
         state   = smbus.read_word_data(gaugeAddr,
                                             cmdBatteryStatus)
+        time.sleep(sleep)
     except IOError as e:
         exception=e
         pass # hopefully a temporary error...
@@ -79,7 +82,7 @@ def _getGAUGE(smbus):
     return (charge/100., runtime, state)
 
 
-def _getPIC(smbus):
+def _getPIC(smbus, sleep=1.0):
     ## SMBus constants
     picAddr                  = 0x0e
     cmdTemperature           = 0xbb
@@ -96,15 +99,19 @@ def _getPIC(smbus):
     try:
         temperature = smbus.read_byte_data(picAddr,
                                                cmdTemperature)
+        time.sleep(sleep)
 
         packetlost  = smbus.read_byte_data(picAddr,
                                                 cmdGetPacketLoss)
+        time.sleep(sleep)
 
         rssi        = smbus.read_byte_data(picAddr,
                                                 cmdGetRSSI)
+        time.sleep(sleep)
 
         syncstatus  = smbus.read_byte_data(picAddr,
                                                 cmdSyncStatus)
+        time.sleep(sleep)
 
         sync_external = (syncstatus & 0x01)!=0
         sync_internal = (syncstatus & 0x02)!=0
