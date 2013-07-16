@@ -35,6 +35,22 @@ def _getMEM(psutil):
     avail=psutil.avail_phymem()
     return (1.0*used)/(used+avail)
 
+def _getDISK(path):
+    disk=0
+    try:
+        s=os.statvfs(path)
+        ## (blocks-bfree) does is inaccurate
+        ## self.disk=(s.f_blocks-s.f_bfree)*1./s.f_blocks
+        ## this is more accurate
+        disk=(s.f_blocks-s.f_bavail)*1./s.f_blocks
+    except OSError:
+        try:
+            os.makedirs(path)
+        except OSError:
+            if not os.path.isdir(path):
+                raise
+    return disk
+
 def _getGAUGE(smbus):
     ## SMBus constants
     gaugeAddr                = 0x0b
