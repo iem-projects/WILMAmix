@@ -187,11 +187,16 @@ class systemhealth:
             deltime=0
             while not self.stopEvent.wait(deltime):
                 self.startEvent.set()
+                if not smbus:
+                    return
+
                 now=time.time()
                 ### battery
-                if smbus is not None:
-                    (self.battery, self.runtime, state) = _getGAUGE(smbus)
-                    (self.temperature, self.packetRatio, self.rssi, (self.sync_external, self.sync_internal)) = _getPIC(smbus)
+                try:
+                    (self.battery, self.runtime, state) = _getGAUGE(smbus, event=self.stopEvent)
+                    (self.temperature, self.packetRatio, self.rssi, (self.sync_external, self.sync_internal)) = _getPIC(smbus, event=self.stopEvent)
+                except ValueError:
+                    logging.exception("")
 
                 deltime = self.interval - (time.time()-now)
                 if deltime <= 0.:
