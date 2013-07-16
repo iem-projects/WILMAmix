@@ -51,7 +51,7 @@ def _getDISK(path):
                 raise
     return disk
 
-def _getGAUGE(smbus, sleep=1.0):
+def _getGAUGE(smbus, sleep=1.0, event=None):
     ## SMBus constants
     gaugeAddr                = 0x0b
     cmdRelativeStateOfCharge = 0x0d
@@ -68,13 +68,19 @@ def _getGAUGE(smbus, sleep=1.0):
     try:
         charge  = smbus.read_word_data(gaugeAddr,
                                             cmdRelativeStateOfCharge)
-        time.sleep(sleep)
+        if event:
+            if event.wait(sleep): return
+        else: time.sleep(sleep)
         runtime = smbus.read_word_data(gaugeAddr,
                                             cmdRunTimeToEmpty)
-        time.sleep(sleep)
+        if event:
+            if event.wait(sleep): return
+        else: time.sleep(sleep)
         state   = smbus.read_word_data(gaugeAddr,
                                             cmdBatteryStatus)
-        time.sleep(sleep)
+        if event:
+            if event.wait(sleep): return
+        else: time.sleep(sleep)
     except IOError as e:
         exception=e
         pass # hopefully a temporary error...
@@ -82,7 +88,7 @@ def _getGAUGE(smbus, sleep=1.0):
     return (charge/100., runtime, state)
 
 
-def _getPIC(smbus, sleep=1.0):
+def _getPIC(smbus, sleep=1.0, event=None):
     ## SMBus constants
     picAddr                  = 0x0e
     cmdTemperature           = 0xbb
@@ -99,19 +105,27 @@ def _getPIC(smbus, sleep=1.0):
     try:
         temperature = smbus.read_byte_data(picAddr,
                                                cmdTemperature)
-        time.sleep(sleep)
+        if event:
+            if event.wait(sleep): return
+        else: time.sleep(sleep)
 
         packetlost  = smbus.read_byte_data(picAddr,
                                                 cmdGetPacketLoss)
-        time.sleep(sleep)
+        if event:
+            if event.wait(sleep): return
+        else: time.sleep(sleep)
 
         rssi        = smbus.read_byte_data(picAddr,
                                                 cmdGetRSSI)
-        time.sleep(sleep)
+        if event:
+            if event.wait(sleep): return
+        else: time.sleep(sleep)
 
         syncstatus  = smbus.read_byte_data(picAddr,
                                                 cmdSyncStatus)
-        time.sleep(sleep)
+        if event:
+            if event.wait(sleep): return
+        else: time.sleep(sleep)
 
         sync_external = (syncstatus & 0x01)!=0
         sync_internal = (syncstatus & 0x02)!=0
