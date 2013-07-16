@@ -279,7 +279,9 @@ class systemhealth:
             self.isRunning=False
 
     def __init__(self, interval=1.0, path=None):
-        self.thread = systemhealth.SystemHealthThread(interval=interval, path=path, intervalSM=interval*60)
+        self.thread = systemhealth.SystemHealthThread(interval=interval, path=path)
+        self.smthread=systemhealth.SMBusThread(interval=interval*60)
+
         self.cpu = 1.
         self.mem = 1.
         self.disk= 1.
@@ -290,9 +292,16 @@ class systemhealth:
         self.temperature = 0.
         self.packetRatio = 0.
         self.rssi = 0.
+
         self.thread.start()
         while not (self.thread.keepRunning and self.thread.isRunning):
             time.sleep(0.1)
+
+        self.smthread.start()
+        while not (self.smthread.keepRunning and self.smthread.isRunning):
+            time.sleep(0.1)
+
+
         self.update()
     def __del__(self):
         self.stop()
@@ -301,22 +310,29 @@ class systemhealth:
             self.thread.keepRunning = False
             self.thread.join()
             self.thread=None
+        if self.smthread is not None:
+            self.smthread.keepRunning = False
+            self.smthread.join()
+            self.smthread=None
     def update(self):
         if self.thread is not None:
             self.cpu  = self.thread.cpu
             self.mem  = self.thread.mem
             self.disk = self.thread.disk
-            self.battery = self.thread.battery
-            self.runtime = self.thread.runtime
-            self.sync_external = self.thread.sync_external
-            self.sync_internal = self.thread.sync_internal
-            self.temperature = self.thread.temperature
-            self.packetRatio = self.thread.packetRatio
-            self.rssi = self.thread.rssi
         else:
             self.cpu = 1.
             self.mem = 1.
             self.disk= 1.
+
+        if self.smthread is not None:
+            self.battery = self.smthread.battery
+            self.runtime = self.smthread.runtime
+            self.sync_external = self.smthread.sync_external
+            self.sync_internal = self.smthread.sync_internal
+            self.temperature = self.smthread.temperature
+            self.packetRatio = self.smthread.packetRatio
+            self.rssi = self.smthread.rssi
+        else:
             self.battery = 1.
             self.runtime = 0
             self.sync_external = True
@@ -324,7 +340,6 @@ class systemhealth:
             self.temperature = 0.
             self.packetRatio = 0.
             self.rssi = 0.
-
 
 ######################################################################
 
