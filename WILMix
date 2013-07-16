@@ -28,7 +28,7 @@ else:
        root = os.path.join(LIBDIR, 'WILMA', 'python')
 sys.path.insert(0, root)
 
-from PySide.QtGui import QDialog, QApplication, QVBoxLayout
+from PySide.QtGui import QDialog, QApplication, QVBoxLayout, QIcon
 
 from WILMA import MIXgui, logger
 
@@ -42,6 +42,7 @@ class _Form(QDialog):
         layout.addWidget(self.mix.widget())
         # Set dialog layout
         self.setLayout(layout)
+        self.setWindowIcon(QIcon('WILMA/gui/icons/micro-wireless.png'))
 if __name__ == '__main__':
     l = logger.logger("WILMix.log")
     import gobject
