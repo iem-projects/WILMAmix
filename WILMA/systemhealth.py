@@ -138,6 +138,51 @@ def _getPIC(smbus, sleep=1.0):
     return (temp, packetRatio, rssi-107., (sync_external, sync_internal))
 
 class systemhealth:
+    class SMBusThread(Thread):
+        def __init__(self, interval=60.0):
+            Thread.__init__(self)
+            self.setDaemon(True)
+
+            self.smbus = None
+            self.interval=interval
+            self.last=0
+
+            self.battery = 1.
+            self.runtime = 0
+            self.sync_external = True # just for testing
+            self.sync_internal  = False
+            self.temperature = 0.
+            self.packetRatio = 0.
+            self.rssi = 0.
+
+            self.keepRunning=True
+            self.isRunning=False
+
+            try:
+                from smbus import SMBus
+                self.smbus = SMBus(3)
+            except ImportError:
+                self.smbus = None
+                logging.exception("failed to import 'smbus'. do you have 'python-smbus' installed?")
+            except IOError:
+                self.smbus = None
+                logging.exception("failed to connect to SMBus. is the user member of the 'i2c' group?")
+
+        def run(self):
+            smbus=self.smbus
+            while self.keepRunning:
+                self.isRunning=True
+                now=time.time()
+                ### battery
+                if smbus is not None:
+                    (self.battery, self.runtime, state) = _getGAUGE(smbus)
+                    (self.temperature, self.packetRatio, self.rssi, (self.sync_external, self.sync_internal)) = _getPIC(smbus)
+
+                deltime = self.interval - (time.time()-now)
+                if deltime > 0.:
+                    time.sleep(deltime)
+
+
     class SystemHealthThread(Thread):
         try:
             import psutil
