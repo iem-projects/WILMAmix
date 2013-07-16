@@ -191,7 +191,7 @@ class systemhealth:
             have_psutil = False
             logging.fatal("failed to import 'psutil'. do you have 'python-psutil' installed?")
 
-        def __init__(self, interval=1.0, intervalSM=60.0, path=None):
+        def __init__(self, interval=1.0, path=None):
             Thread.__init__(self)
             self.setDaemon(True)
             if path is None:
@@ -208,34 +208,14 @@ class systemhealth:
                 logging.exception("monitoring non-existing path '%s', fallback to ~" % path)
                 self.path=os.path.expanduser('~')
 
-            try:
-                from smbus import SMBus
-                self.smbus = SMBus(3)
-            except ImportError:
-                self.smbus = None
-                logging.exception("failed to import 'smbus'. do you have 'python-smbus' installed?")
-            except IOError:
-                self.smbus = None
-                logging.exception("failed to connect to SMBus. is the user member of the 'i2c' group?")
-
             self.interval=interval
             self.cpu = 1.
             self.mem = 1.
             self.disk= 1.
-            self.battery = 1.
-            self.runtime = 0
             self.last=0
-            self.sync_external = True # just for testing
-            self.sync_internal  = False
-            self.temperature = 0.
-            self.packetRatio = 0.
-            self.rssi = 0.
 
             self.keepRunning=True
             self.isRunning=False
-
-            self.lastSM=0
-            self.intervalSM = intervalSM
 
         def run(self):
             if systemhealth.SystemHealthThread.have_psutil:
@@ -245,31 +225,12 @@ class systemhealth:
             while self.keepRunning:
                 self.isRunning=True
                 now=time.time()
-                try:
-                    s=os.statvfs(self.path)
-                    ## (blocks-bfree) does is inaccurate
-                    ## self.disk=(s.f_blocks-s.f_bfree)*1./s.f_blocks
-                    ## this is more accurate
-                    self.disk=(s.f_blocks-s.f_bavail)*1./s.f_blocks
-                except OSError:
-                    try:
-                        os.makedirs(self.path)
-                    except OSError:
-                        if not os.path.isdir(self.path):
-                            raise
+                self.disk=_getDISK(self.path)
 
                 ## CPU,...
                 if psutil is not None:
                     self.mem=_getMEM(psutil)
                     self.cpu=_getCPU(psutil, self.interval)
-
-                ### battery
-                if self.smbus is not None:
-                    if ((now-self.lastSM) >= self.intervalSM):
-                        self.lastSM=now
-
-                        (self.battery, self.runtime, state) = _getGAUGE(self.smbus)
-                        (self.temperature, self.packetRatio, self.rssi, (self.sync_external, self.sync_internal)) = _getPIC(self.smbus)
 
                 deltime = self.interval - (time.time()-now)
                 if deltime > 0.:
