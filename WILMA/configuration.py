@@ -122,12 +122,12 @@ def init(defaults={}):
     mydefaults['/stream/profile' ]='L16' # const for now
     mydefaults['/stream/channels']='4' # const
 
-
     mydefaults['/record/timestamp']='0' # const
     mydefaults['/record/filename' ]='WILMA' # const
 
-
     mydefaults['/network/interface']='eth0' # ????
+
+    mydefaults['/log/level']=str(logging.getEffectiveLevel())
 
     ## proxy settings
     mydefaults['/proxy/server/port']=0
