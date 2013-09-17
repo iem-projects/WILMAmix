@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'MIXconfig.ui'
 #
-# Created: Mon Jun 17 16:45:51 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.1.1
+# Created: Tue Sep 17 12:01:31 2013
+#      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -55,6 +55,15 @@ class Ui_MIXconfig(object):
         self.label_syncTS.setText("")
         self.label_syncTS.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_syncTS.setObjectName("label_syncTS")
+        self.frameDebug = QtGui.QGroupBox(MIXconfig)
+        self.frameDebug.setGeometry(QtCore.QRect(10, 210, 191, 50))
+        self.frameDebug.setObjectName("frameDebug")
+        self.debugLevel = QtGui.QComboBox(self.frameDebug)
+        self.debugLevel.setGeometry(QtCore.QRect(90, 20, 91, 22))
+        self.debugLevel.setObjectName("debugLevel")
+        self.label_debugLevel = QtGui.QLabel(self.frameDebug)
+        self.label_debugLevel.setGeometry(QtCore.QRect(10, 20, 61, 16))
+        self.label_debugLevel.setObjectName("label_debugLevel")
 
         self.retranslateUi(MIXconfig)
 
@@ -68,4 +77,6 @@ class Ui_MIXconfig(object):
         self.frame_sync.setTitle(QtGui.QApplication.translate("MIXconfig", "SyncStreams", None, QtGui.QApplication.UnicodeUTF8))
         self.syncButton.setText(QtGui.QApplication.translate("MIXconfig", "Sync", None, QtGui.QApplication.UnicodeUTF8))
         self.label_sync.setText(QtGui.QApplication.translate("MIXconfig", "freewheeling", None, QtGui.QApplication.UnicodeUTF8))
+        self.frameDebug.setTitle(QtGui.QApplication.translate("MIXconfig", "Debug", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_debugLevel.setText(QtGui.QApplication.translate("MIXconfig", "LogLevel", None, QtGui.QApplication.UnicodeUTF8))
 

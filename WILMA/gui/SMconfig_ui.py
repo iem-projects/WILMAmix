@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'SMconfig.ui'
 #
-# Created: Wed Jul  3 18:13:53 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.1.1
+# Created: Tue Sep 17 12:01:31 2013
+#      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -166,6 +166,15 @@ class Ui_SMconfig(object):
         self.streamProfile.setGeometry(QtCore.QRect(100, 50, 81, 22))
         self.streamProfile.setObjectName("streamProfile")
         self.streamProfile.addItem("")
+        self.frameDebug = QtGui.QGroupBox(self.frameMode)
+        self.frameDebug.setGeometry(QtCore.QRect(0, 170, 191, 51))
+        self.frameDebug.setObjectName("frameDebug")
+        self.debugLevel = QtGui.QComboBox(self.frameDebug)
+        self.debugLevel.setGeometry(QtCore.QRect(90, 20, 91, 22))
+        self.debugLevel.setObjectName("debugLevel")
+        self.label_debugLevel = QtGui.QLabel(self.frameDebug)
+        self.label_debugLevel.setGeometry(QtCore.QRect(10, 20, 61, 16))
+        self.label_debugLevel.setObjectName("label_debugLevel")
         self.horizontalLayout_3.addWidget(self.frameMode)
         self.verticalLayout_2.addWidget(self.frameConfig)
         self.frameButtons = QtGui.QWidget(SMconfig)
@@ -216,6 +225,8 @@ class Ui_SMconfig(object):
         self.label_streamProfile.setText(QtGui.QApplication.translate("SMconfig", "Profile", None, QtGui.QApplication.UnicodeUTF8))
         self.label_streamChannels.setText(QtGui.QApplication.translate("SMconfig", "Channels", None, QtGui.QApplication.UnicodeUTF8))
         self.streamProfile.setItemText(0, QtGui.QApplication.translate("SMconfig", "L16", None, QtGui.QApplication.UnicodeUTF8))
+        self.frameDebug.setTitle(QtGui.QApplication.translate("SMconfig", "Debug", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_debugLevel.setText(QtGui.QApplication.translate("SMconfig", "LogLevel", None, QtGui.QApplication.UnicodeUTF8))
         self.copyConfigButton.setText(QtGui.QApplication.translate("SMconfig", "Copy to selected SMi\'s", None, QtGui.QApplication.UnicodeUTF8))
 
 from qsynthMeter import qsynthMeter
