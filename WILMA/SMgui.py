@@ -112,6 +112,7 @@ class SMgui:
         self.connection.add(self._smiStateRuntime,'/state/runtime')
         self.connection.add(self._smiStateSyncExternal, '/state/sync/external')
         self.connection.add(self._smiStateSyncInternal, '/state/sync/internal')
+        self.connection.add(self._smiStateLogLevel,      '/log/level')
 
         self.connection.add(self._smiStatePd,   '/state/process')
 
@@ -311,6 +312,10 @@ class SMgui:
         value=data[0]
         self.config.setSyncInternal(value)
         self.critical[6]=not value
+    def _smiStateLogLevel(self, addr, typetags, data, source):
+        value=data[0]
+        self.settings['/log/level']=value
+        #self.config.setLogLevel(value)
     def _smiProcess(self, addr, typetags, data, source):
         self.mixer.sendProxy(self.oscprefix+addr[0], data)
 
