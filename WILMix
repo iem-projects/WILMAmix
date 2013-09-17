@@ -28,6 +28,16 @@ else:
        root = os.path.join(LIBDIR, 'WILMA', 'python')
 sys.path.insert(0, root)
 
+
+## cmdline arguments
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--logfile", type=str,
+                    help="Logfile to write to")
+args = parser.parse_args()
+
+
+
 from PySide.QtGui import QDialog, QApplication, QVBoxLayout, QIcon
 
 from WILMA import MIXgui, logger
@@ -44,7 +54,9 @@ class _Form(QDialog):
         self.setLayout(layout)
         self.setWindowIcon(QIcon('WILMA/gui/icons/micro-wireless.png'))
 if __name__ == '__main__':
-    l = logger.logger("WILMix.log")
+    if args.logfile is None:
+	    args.logfile='stderr'
+    l = logger.logger(args.logfile)
     import gobject
     gobject.threads_init()
     # Create the Qt Application
