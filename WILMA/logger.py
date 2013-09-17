@@ -90,6 +90,10 @@ class logger:
         except:
             pass
         return None
+def getLogLevels():
+    return [logging.getLevelName(lvl) for lvl in sorted(set(
+            [logging.getLevelName(lvlname) for lvlname in logging._levelNames if isinstance(lvlname, basestring)]
+            ))]
 
 
 ####################################################
