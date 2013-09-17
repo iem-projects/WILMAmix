@@ -92,13 +92,9 @@ class logger:
         return None
 
 
-getLevel=logging.getLogger().getEffectiveLevel
-
-def getLogLevels():
-    return [logging.getLevelName(lvl) for lvl in sorted(set(
-            [logging.getLevelName(lvlname) for lvlname in logging._levelNames if isinstance(lvlname, basestring)]
-            ))]
-def setLevel(lvl):
+def getLevel(lvl=None):
+    if lvl is None:
+        return logging.getLogger().getEffectiveLevel())
     try:
         ## lvl should be int, e.g. 20
         level=int(lvl)
@@ -107,8 +103,15 @@ def setLevel(lvl):
         level=logging.getLevelName(lvl)
         if not isinstance(level, (int, long)):
             ## cannot resolve logname, assume our own default
-            level=getLevel()
+            level=logging.getLogger.getEffectiveLevel()
+    return level
 
+def getLogLevels():
+    return [logging.getLevelName(lvl) for lvl in sorted(set(
+            [logging.getLevelName(lvlname) for lvlname in logging._levelNames if isinstance(lvlname, basestring)]
+            ))]
+def setLevel(lvl):
+    level = getLevel(lvl)
     levelname=logging.getLevelName(level)
     if not levelname in getLogLevels():
         ## hmm, levelname is missing from levels, add it
