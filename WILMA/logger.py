@@ -94,6 +94,23 @@ def getLogLevels():
     return [logging.getLevelName(lvl) for lvl in sorted(set(
             [logging.getLevelName(lvlname) for lvlname in logging._levelNames if isinstance(lvlname, basestring)]
             ))]
+def setLevel(lvl):
+    try:
+        ## lvl should be int, e.g. 20
+        level=int(lvl)
+    except ValueError, TypeError:
+        ## but somebody might have sent it as a string, e.g. 'INFO'
+        level=logging.getLevelName(lvl)
+        if not isinstance(level, (int, long)):
+            ## cannot resolve logname, assume our own default
+            level=logging.getLogger().getEffectiveLevel()
+
+    levelname=logging.getLevelName(level)
+    lvls=getLogLevels()
+    if not levelname in lvls:
+        ## hmm, levelname is missing from levels, add it
+        logging.addLevelName(level, levelname)
+    return level
 
 
 ####################################################
