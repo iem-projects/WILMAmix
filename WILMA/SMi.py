@@ -29,7 +29,7 @@ import systemhealth
 import pdserver
 import pdfile
 import configuration
-
+import WILMA.logger
 
 import os, os.path
 
@@ -150,6 +150,7 @@ class SMi:
         self.server.add(self._recordFilename, '/record/filename')
 
         self.server.add(self._network, '/network/')
+        self.server.add(self._loglevel, "/log/level")
 
         self.server.add(self.dumpInfo, '/dump') ## debugging
         self.server.add(self._catchall, None) ## debugging
@@ -339,6 +340,9 @@ class SMi:
     def _network(self, addr, typetags, data, src):
         ## FIXXME changing network
         logging.info("FIXME:SMi:_network %s", str((addr, typetags, data)))
+    def _loglevel(self, addr, typetags, data, src):
+        WILMA.logger.setLevel(data[0])
+
 
 if __name__ == '__main__':
     print "SMi..."
