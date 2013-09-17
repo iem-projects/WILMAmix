@@ -105,7 +105,7 @@ def setLevel(lvl):
         level=logging.getLevelName(lvl)
         if not isinstance(level, (int, long)):
             ## cannot resolve logname, assume our own default
-            level=logging.getLogger().getEffectiveLevel()
+            level=getLevel()
 
     levelname=logging.getLevelName(level)
     if not levelname in getLogLevels()
