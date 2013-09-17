@@ -23,6 +23,8 @@ logging = logging_.getLogger('WILMA.gui.MIXconfig')
 from PySide import QtGui
 import MIXconfig_ui
 
+import WILMA.logger
+
 _dictKeys=[
     '/proxy/server/port',
     '/proxy/client/port',
@@ -55,12 +57,23 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         self.orgsettings=_syncDicts(settings)
         self.setupUi(self)
         self.applySettings(settings)
+
+        self.debugLevel.clear()
+        lvls=WILMA.logger.getLogLevels()
+        self.debugLevel.addItems(lvls)
+        lvl=logging_.getLevelName(logging_.getLogger().getEffectiveLevel())
+        try:
+            self.debugLevel.setCurrentIndex(lvls.index(lvl))
+        except ValueError, e:
+            self.debugLevel.setCurrentIndex(0)
+            logging_.getLogger().setLevel(lvls[0])
+
         self._connect()
     def _connect(self):
         self.closeButtons.accepted.connect(self._do_accept)
         self.closeButtons.rejected.connect(self._do_reject)
         self.syncButton.clicked.connect(self._sync)
-
+        self.debugLevel.currentIndexChanged.connect(self._select_debugLevel)
     def _do_accept(self):
         self.hide()
         self._getSettings()
@@ -98,7 +111,9 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         state=self.syncButton.isChecked()
         #self.syncButton.setChecked(state)
         self.mixer.setSync(state)
-
+    def _select_debugLevel(self, value):
+        lvl=self.debugLevel.currentText()
+        logging_.getLogger().setLevel(lvl)
 ######################################################################
 if __name__ == '__main__':
     import sys

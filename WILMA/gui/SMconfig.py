@@ -92,6 +92,17 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.networkInterface.addItems(self.interfaces)
 
         self.applySettings(settings)
+
+        self.debugLevel.clear()
+        lvls=WILMA.logger.getLogLevels()
+        self.debugLevel.addItems(lvls)
+        lvl=logging_.getLevelName(logging_.getLogger().getEffectiveLevel())
+        try:
+            self.debugLevel.setCurrentIndex(lvls.index(lvl))
+        except ValueError, e:
+            self.debugLevel.setCurrentIndex(0)
+            logging_.getLogger().setLevel(lvls[0])
+
         self._connect()
     def _connect(self):
         self.closeButtons.accepted.connect(self._do_accept)
@@ -108,6 +119,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.networkInterface.currentIndexChanged.connect(self._select_networkInterface)
 
         self.gainFader.valueChanged.connect(self._moved_gainFader)
+        self.debugLevel.currentIndexChanged.connect(self._select_debugLevel)
 
     def _do_accept(self):
         self.hide()
@@ -142,7 +154,10 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         else:
             logging.warn("invalid mode '%s': falling back to '%s'" % (str(value), mode))
         self.settings['/mode']=mode
-
+    def _select_debugLevel(self, value):
+        lvl=logging_.getLevelName(self.debugLevel.currentText())
+        self.settings['/loglevel']
+        logging.critical("SMi-LogLevel %s" % (lvl))
     def _moved_gainFader(self, value): ## this should immediately be sent to the SMi
         gain=WILMA.utils.SCALE(value, self.gainFader.minimum(), self.gainFader.maximum(), 0., 1., True)
         self.sm.send('/gain', [gain])
