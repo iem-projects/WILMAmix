@@ -56,9 +56,12 @@ class logger:
 
         for l in [logger, osclogger]:
             l.propagate = (name is None)
-            l.setLevel(logging.INFO)
+            l.setLevel(logging.NOTSET)
             if lh is not None:
                 l.addHandler(lh)
+
+        ## set root-logger to INFO
+        logging.getLogger().setLevel(logging.INFO)
 
     @staticmethod
     def _getFileHandler(filename):
