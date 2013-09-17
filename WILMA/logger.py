@@ -106,12 +106,11 @@ def setLevel(lvl):
             level=logging.getLogger().getEffectiveLevel()
 
     levelname=logging.getLevelName(level)
-    lvls=getLogLevels()
-    if not levelname in lvls:
+    if not levelname in getLogLevels()
         ## hmm, levelname is missing from levels, add it
         logging.addLevelName(level, levelname)
+    logging.getLogger().setLevel(level)
     return level
-
 
 ####################################################
 
