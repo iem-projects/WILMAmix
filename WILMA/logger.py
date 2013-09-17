@@ -61,7 +61,7 @@ class logger:
                 l.addHandler(lh)
 
         ## set root-logger to INFO
-        logging.getLogger().setLevel(logging.INFO)
+        logging.getLogger().setLevel(logging.WARN)
 
     @staticmethod
     def _getFileHandler(filename):
