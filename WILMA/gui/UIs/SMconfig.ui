@@ -474,31 +474,6 @@
             <height>22</height>
            </rect>
           </property>
-          <item>
-           <property name="text">
-            <string notr="true">CRITICAL</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string notr="true">ERROR</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string notr="true">WARNING</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string notr="true">INFO</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string notr="true">DEBUG</string>
-           </property>
-          </item>
          </widget>
          <widget class="QLabel" name="label_debugLevel">
           <property name="geometry">
