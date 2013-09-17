@@ -36,6 +36,7 @@ _dictKeys=[
     '/stream/profile',
     '/stream/channels',
     '/network/interface',
+    '/log/level',
     ]
 def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
 
@@ -90,19 +91,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.streamChannels.setMaximum(_streamChannels[1])
         self.networkInterface.clear()
         self.networkInterface.addItems(self.interfaces)
-
         self.applySettings(settings)
-
-        self.debugLevel.clear()
-        lvls=WILMA.logger.getLogLevels()
-        self.debugLevel.addItems(lvls)
-        lvl=logging_.getLevelName(logging_.getLogger().getEffectiveLevel())
-        try:
-            self.debugLevel.setCurrentIndex(lvls.index(lvl))
-        except ValueError, e:
-            self.debugLevel.setCurrentIndex(0)
-            logging_.getLogger().setLevel(lvls[0])
-
         self._connect()
     def _connect(self):
         self.closeButtons.accepted.connect(self._do_accept)
@@ -156,7 +145,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.settings['/mode']=mode
     def _select_debugLevel(self, value):
         lvl=logging_.getLevelName(self.debugLevel.currentText())
-        self.settings['/loglevel']
+        self.settings['/log/level']
         logging.critical("SMi-LogLevel %s" % (lvl))
     def _moved_gainFader(self, value): ## this should immediately be sent to the SMi
         gain=WILMA.utils.SCALE(value, self.gainFader.minimum(), self.gainFader.maximum(), 0., 1., True)
@@ -205,6 +194,33 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
             if self.networkInterface.itemText(i) == mode:
                 self.networkInterface.setCurrentIndex(i)
                 break
+        # logging: loglevel
+        lvl = self.settings['/log/level']
+        try:
+            ## lvl should be int, e.g. 20
+            level=int(lvl)
+        except ValueError, TypeError:
+            ## but somebody might have sent it as a string, e.g. 'INFO'
+            level=logging_.getLevelName(lvl)
+            if not isinstance(level, (int, long)):
+                ## cannot resolve logname, assume our own default
+                level=logging_.getLogger().getEffectiveLevel()
+
+        levelname=logging_.getLevelName(level)
+        lvls=WILMA.logger.getLogLevels()
+        if not levelname in lvls:
+            ## hmm, levelname is missing from levels, add it
+            logging_.addLevelName(level, levelname)
+        lvls=WILMA.logger.getLogLevels()
+        self.debugLevel.clear()
+        self.debugLevel.addItems(lvls)
+        try:
+            self.debugLevel.setCurrentIndex(lvls.index(levelname))
+        except ValueError, e:
+            self.debugLevel.setCurrentIndex(0)
+            logging_.getLogger().setLevel(lvls[0])
+        logging.critical("SMi-level: %s (%s))" % (level, lvls))
+
 
     def setLevels(self, levels_dB=[-100.,-100.,-100.,-100.]):
         self.meter.setValues(levels_dB)
@@ -236,6 +252,7 @@ if __name__ == '__main__':
             self.d['/stream/protocol']='RTP'
             self.d['/stream/profile' ]='L16'
             self.d['/stream/channels']=4
+            self.d['/log/level']=logging_.getLogger().getEffectiveLevel()
             self.smconf=SMconfig(name="foo", settings=self.d)
             layout = QtGui.QHBoxLayout()
             self.openButton= QtGui.QPushButton("Config")
