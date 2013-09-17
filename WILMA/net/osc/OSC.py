@@ -315,8 +315,7 @@ class CallbackManager:
 
     def dispatch(self, message, source = None):
         """Sends decoded OSC data to an appropriate callback"""
-        if self.verbose :
-            logging.info( "dispatching: '%s' from %s" % (str(message),str(source)))
+        logging.debug( "dispatching: '%s' from %s" % (str(message),str(source)))
         try:
             address=message[0]
         except IndexError, e:
