@@ -90,12 +90,14 @@ class logger:
         except:
             pass
         return None
+
+
+getLevel=logging.getLogger().getEffectiveLevel
+
 def getLogLevels():
     return [logging.getLevelName(lvl) for lvl in sorted(set(
             [logging.getLevelName(lvlname) for lvlname in logging._levelNames if isinstance(lvlname, basestring)]
             ))]
-def getLevel():
-    return logging.getLogger().getEffectiveLevel()
 def setLevel(lvl):
     try:
         ## lvl should be int, e.g. 20
