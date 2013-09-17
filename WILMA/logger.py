@@ -94,7 +94,7 @@ class logger:
 
 def getLevel(lvl=None):
     if lvl is None:
-        return logging.getLogger().getEffectiveLevel())
+        return logging.getLogger().getEffectiveLevel()
     try:
         ## lvl should be int, e.g. 20
         level=int(lvl)
