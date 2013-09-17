@@ -128,4 +128,12 @@ if __name__ == '__main__':
     log.error("error")
     log.critical("critical")
     print("LEVELS: %s" % (getLogLevels()))
+    print("CURRENT: %s" % (getLevel()))
+    print("set(10): %s" % (setLevel(10)))
+    print("CURRENT: %s" % (getLevel()))
+    print("set(foo): %s" % (setLevel('foo')))
+    print("CURRENT: %s" % (getLevel()))
+    print("set(CRITICAL): %s" % (setLevel('CRITICAL')))
+    print("CURRENT: %s" % (getLevel()))
+    print("LEVELS: %s" % (getLogLevels()))
 
