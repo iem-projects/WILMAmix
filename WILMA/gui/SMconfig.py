@@ -195,32 +195,17 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
                 self.networkInterface.setCurrentIndex(i)
                 break
         # logging: loglevel
-        lvl = self.settings['/log/level']
-        try:
-            ## lvl should be int, e.g. 20
-            level=int(lvl)
-        except ValueError, TypeError:
-            ## but somebody might have sent it as a string, e.g. 'INFO'
-            level=logging_.getLevelName(lvl)
-            if not isinstance(level, (int, long)):
-                ## cannot resolve logname, assume our own default
-                level=logging_.getLogger().getEffectiveLevel()
-
+        level=WILMA.logger.getLevel(self.settings['/log/level'])
         levelname=logging_.getLevelName(level)
         lvls=WILMA.logger.getLogLevels()
-        if not levelname in lvls:
-            ## hmm, levelname is missing from levels, add it
-            logging_.addLevelName(level, levelname)
-        lvls=WILMA.logger.getLogLevels()
+        self.debugLevel.blockSignals(True)
         self.debugLevel.clear()
         self.debugLevel.addItems(lvls)
         try:
             self.debugLevel.setCurrentIndex(lvls.index(levelname))
         except ValueError, e:
             self.debugLevel.setCurrentIndex(0)
-            logging_.getLogger().setLevel(lvls[0])
-        logging.critical("SMi-level: %s (%s))" % (level, lvls))
-
+        self.debugLevel.blockSignals(False)
 
     def setLevels(self, levels_dB=[-100.,-100.,-100.,-100.]):
         self.meter.setValues(levels_dB)
