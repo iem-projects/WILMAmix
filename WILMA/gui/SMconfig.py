@@ -145,8 +145,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.settings['/mode']=mode
     def _select_debugLevel(self, value):
         lvl=logging_.getLevelName(self.debugLevel.currentText())
-        self.settings['/log/level']
-        logging.critical("SMi-LogLevel %s" % (lvl))
+        self.settings['/log/level']=lvl
     def _moved_gainFader(self, value): ## this should immediately be sent to the SMi
         gain=WILMA.utils.SCALE(value, self.gainFader.minimum(), self.gainFader.maximum(), 0., 1., True)
         self.sm.send('/gain', [gain])
