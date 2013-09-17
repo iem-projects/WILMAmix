@@ -4,6 +4,7 @@ OSC-messages for WILMA
 mix->SM (every message prefixed with SMi-ID: '/<ID>')
 -----------------------------------------------------
 /ping
+/log/level		20		(log-level)
 /gain                   0.5             (preamp gain: 0..1)
 /network/interface      'eth0'          (select network interface; UNIMPLEMENTED)
 /path/in                '/././.'        (where to send data to on the MIX-host; IGNORED)
@@ -38,6 +39,7 @@ SM->mix (every message prefixed with SMi-ID: '/<ID>')
 /mode                   'stream'        (the mode we are currently in)
 /process                True    whether the SMi is currently processing
 /process/...            ...     (pass to the proxy)
+/log/level		20	(log-level)
 
 
 
