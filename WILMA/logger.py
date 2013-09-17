@@ -107,4 +107,5 @@ if __name__ == '__main__':
     log.warn("warning")
     log.error("error")
     log.critical("critical")
+    print("LEVELS: %s" % (getLogLevels()))
 
