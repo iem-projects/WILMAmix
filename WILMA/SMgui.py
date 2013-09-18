@@ -314,8 +314,7 @@ class SMgui:
         self.critical[6]=not value
     def _smiStateLogLevel(self, addr, typetags, data, source):
         value=data[0]
-        self.settings['/log/level']=value
-        #self.config.setLogLevel(value)
+        self.config.setLogLevel(value)
     def _smiProcess(self, addr, typetags, data, source):
         self.mixer.sendProxy(self.oscprefix+addr[0], data)
 
