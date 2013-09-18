@@ -29,15 +29,22 @@ else:
 sys.path.insert(0, root)
 
 
+## cmdline arguments
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--logfile", type=str,
+                    help="Logfile to write to")
+args = parser.parse_args()
+
 
 import logging
-
 import gobject
-
 from WILMA import SMi, logger
 
 if __name__ == '__main__':
-    l = logger.logger("WILMAsm.log")
+    if args.logfile is None:
+	    args.logfile='stderr'
+    l = logger.logger(args.logfile)
     logging.info("SM...")
     gobject.threads_init()
     sm = SMi()
