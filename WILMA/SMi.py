@@ -298,8 +298,8 @@ class SMi:
         try:
             filename=self.settings['/record/filename']
             timestamp=int(self.settings['/record/timestamp'])
-            TShi=(timestamp>>16)&0xFFFF
-            TSlo=(timestamp>> 0)&0xFFFF
+            TShi=int((timestamp>>16)&0xFFFF)
+            TSlo=int((timestamp>> 0)&0xFFFF)
             self.pd.send('/record/filename', [filename])
             self.pd.send('/record/timestamp', [TSlo, TShi])
         except KeyError:
