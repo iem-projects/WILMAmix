@@ -18,6 +18,11 @@ BUG:net.serverTCP:
 BUG:WILMAsm:
   Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
 
+BUG:SMi-TimeStamps
+  Q: after soe time (e.g. when running overnight) the timestamps arriving in
+     WILMix become "None"
+     restarting Pd (sending a TERM signal) seems to fix the problem(?!)
+
 feature:WILMix.StreamReceiver
   Q: monitor current state of StreamReceiver
      (and if SR crashes, re-create the receivers)
