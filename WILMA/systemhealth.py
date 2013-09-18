@@ -126,9 +126,14 @@ def _getPIC(smbus, sleep=1.0, event=None):
         if event:
             if event.wait(sleep): return
         else: time.sleep(sleep)
+    except IOError as e:
+        pass # hopefully a temporary error...
 
-        sync_external = (syncstatus & 0x01)!=0
-        sync_internal = (syncstatus & 0x02)!=0
+    temp=(temperature/2.0) - 10.0
+    if packetlost != 0:
+        packetRatio = 100./packetlost
+    else:
+        packetRatio = 0.
 
 ##        if(0x01==syncstatus): # syncing
 ##            sync_external=True
@@ -142,13 +147,8 @@ def _getPIC(smbus, sleep=1.0, event=None):
 ##        else: ## ouch
 ##            sync_external=False
 ##            sync_internal=False
-    except IOError as e:
-        pass # hopefully a temporary error...
-    temp=(temperature/2.0) - 10.0
-    if packetlost != 0:
-        packetRatio = 100./packetlost
-    else:
-        packetRatio = 0.
+    sync_external = (syncstatus & 0x01)!=0
+    sync_internal = (syncstatus & 0x02)!=0
     return (temp, packetRatio, rssi-107., (sync_external, sync_internal))
 
 class systemhealth:
