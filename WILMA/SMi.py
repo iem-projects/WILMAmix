@@ -345,6 +345,7 @@ class SMi:
         logging.info("FIXME:SMi:_network %s", str((addr, typetags, data)))
     def _loglevel(self, addr, typetags, data, src):
         WILMA.logger.setLevel(data[0])
+        self.pd.send('/log/level', data)
 
 
 if __name__ == '__main__':
