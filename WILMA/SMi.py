@@ -77,6 +77,8 @@ class State:
         bundle.append(('/state/runtime', self.health.runtime))
         bundle.append(('/state/sync/internal', self.health.sync_internal))
         bundle.append(('/state/sync/external', self.health.sync_external))
+        logging.debug("sending TIMESTAMP %s" % (self.timestamp))
+
 
 class PdCommunicator:
     def __init__(self, smi):
@@ -97,6 +99,7 @@ class PdCommunicator:
         lo=int(data[1])
         ts=((hi<<16)+lo)
         self.smi.state.timestamp=ts
+        logging.debug("received TIMESTAMP %s as %s+%s = %s]" % (ts, hi, lo, data))
     def _catchall(self, addr, typetags, data, source):
         self.smi.server.sendMsg(addr[0], data)
         logging.info("got message: " + str((addr, typetags, data, source)))
