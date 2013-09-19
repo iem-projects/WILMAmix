@@ -196,6 +196,9 @@ def OSCArgument(next):
     elif type(next) == type(42):
         binary  = struct.pack('>i', next)
         tag = 'i'
+    elif type(next) == type(long(0)):
+        binary  = struct.pack('>q', next)
+        tag = 'h'
     elif type(next) == type(True):
         binary = ''
         if next is True:
