@@ -36,7 +36,7 @@ def _createDirIfNeeded(directory):
         os.makedirs(directory)
 
 class _pdprocess:
-    def __init__(self, port, patch=None, cwd=None, cpd=None, runningCb=None):
+    def __init__(self, port, patch=None, cwd=None, cpd=None, runningCb=None, additionalArgs=[]):
         self.runningCb=runningCb
         if cwd is None: ## working directory
             cwd=tempfile.mkdtemp()
@@ -52,6 +52,7 @@ class _pdprocess:
         ## NOTE: "sent" messages are executed _after_ loadbang
         self.args+=['-send', "_WILMA_pwd "+cwd]
         self.args+=['-send', "_WILMA_port "+str(port)]
+        self.args+=additionalArgs
         if patch is not None:
             self.args+=['-open', patch]
         self.shouldRun=False
@@ -88,7 +89,7 @@ class _pdprocess:
         self.pd=None
 
 class pdserver:
-    def __init__(self, mainpatch='MAIN.pd', workingdir=None, patchdir=None, backend=None):
+    def __init__(self, mainpatch='MAIN.pd', workingdir=None, patchdir=None, backend=None, pdargs=[]):
         self.stateCb = None
         self.server  = None
         self.pd      = None
@@ -96,7 +97,7 @@ class pdserver:
 
         self.server = NetServer(transport='udp')
         self.removeAll()
-        self.pd=_pdprocess(self.server.getPort(), patch=mainpatch, cwd=workingdir, cpd=patchdir, runningCb=self._runningCb)
+        self.pd=_pdprocess(self.server.getPort(), patch=mainpatch, cwd=workingdir, cpd=patchdir, runningCb=self._runningCb, additionalArgs=pdargs)
 
     def __del__(self):
         self.pd.stop()
