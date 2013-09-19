@@ -92,6 +92,7 @@ class pdserver:
         self.stateCb = None
         self.server  = None
         self.pd      = None
+        self.running = False
 
         self.server = NetServer(transport='udp')
         self.removeAll()
@@ -105,14 +106,26 @@ class pdserver:
     def stop(self):
         self.pd.stop()
 
+    def _dostateCb(self, state, source):
+        if not self.stateCb:
+            return
+        addr='/state/process'
+        typetag=',F'
+        if state:
+            typetag=',T'
+        self.stateCb([addr, addr], typetag, [state], source)
+
     def _runningCb(self, state):
-        if self.stateCb is not None:
-            msg=['/state/process']
-            if state:
-                msg+=[',T', True]
-            else:
-                msg+=[',F', False]
-            self.stateCb([msg[0], msg[0]], msg[1], [msg[2]], None)
+        if (not state):
+            self._dostateCb(False, None)
+
+##        if self.stateCb is not None:
+##            msg=['/state/process']
+##            if state:
+##                msg+=[',T', True]
+##            else:
+##                msg+=[',F', False]
+##            self.stateCb([msg[0], msg[0]], msg[1], [msg[2]], None)
 
     def add(self, callback, oscAddress):
         if oscAddress is None:
@@ -130,6 +143,9 @@ class pdserver:
     def ping(self):
         self.server.send('/ping', [])
     def _ping(self, addr, typetags, data, source):
+        if not self.running:
+            self.running = True
+            self._dostateCb(self.running, None)
         self.server.sendMsg('/pong', data)
 
 if __name__ == '__main__':
