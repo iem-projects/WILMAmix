@@ -63,4 +63,6 @@ if __name__ == "__main__":
     b=Bundle()
     b.append(('/foo', [True]))
     b.append(('/bar', ['bla', 12]))
+    b.append(('/timestamp/array', [3996747840]))
+    b.append(('/timestamp', 3996747840))
     print "bundle", b

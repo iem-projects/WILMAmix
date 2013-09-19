@@ -637,7 +637,7 @@ if __name__ == "__main__":
     msg = OSCMessage()
     print "sending a message to the callback manager (should patternmatch subtree: /foo/)"
     msg.setAddress("/f*o/schu")
-    msg.append(42)
+    msg.append(3996747840)
     c.handle(msg.getBinary())
     print "sending a message to the callback manager (should patternmatch subtree: /foo/)"
     msg.setAddress("/f*o/b?z")
