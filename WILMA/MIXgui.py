@@ -40,7 +40,12 @@ class StreamReceiver:
         import pdserver
         self.server = pdserver.pdserver(mainpatch='_WILMAmix.pd',
                                         workingdir=self.settings['/path/out'],
-                                        backend='gui'
+                                        backend='gui',
+                                        pdargs=['-nogui',
+                                                '-nrt',
+                                                '-inchannels', '0',
+                                                '-outchannels', '12',
+                                                ]
                                         )
         self.removeAll()
         if autostart:
