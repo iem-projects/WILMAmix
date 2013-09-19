@@ -190,10 +190,10 @@ def OSCArgument(next):
         OSCstringLength = math.ceil((len(next)+1) / 4.0) * 4
         binary  = struct.pack('>%ds' % (OSCstringLength), next)
         tag = 's'
-    elif type(next) == type(42.5):
+    elif type(next) == type(3.1415):
         binary  = struct.pack('>f', next)
         tag = 'f'
-    elif type(next) == type(13):
+    elif type(next) == type(42):
         binary  = struct.pack('>i', next)
         tag = 'i'
     elif type(next) == type(True):
