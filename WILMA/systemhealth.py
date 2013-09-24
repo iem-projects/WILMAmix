@@ -25,6 +25,15 @@ from threading import Thread, Event
 
 ## NOTE: wait longer!
 
+def _sleep(sleep, event):
+    '''sleep for a number of seconds;
+       returns 'True' if processing should be interrupted ASAP'''
+    if event:
+        if event.wait(sleep):
+            return True
+    else:
+        time.sleep(sleep)
+    return False
 
 def _getCPU(psutil, interval):
     percent=psutil.cpu_percent(interval=interval)
@@ -68,26 +77,21 @@ def _getGAUGE(smbus, sleep=1.0, event=None):
     try:
         charge  = smbus.read_word_data(gaugeAddr,
                                             cmdRelativeStateOfCharge)
-        if event:
-            if event.wait(sleep): return
-        else: time.sleep(sleep)
+        if _sleep(sleep, event):return (charge, runtime, state)
+
         runtime = smbus.read_word_data(gaugeAddr,
                                             cmdRunTimeToEmpty)
-        if event:
-            if event.wait(sleep): return
-        else: time.sleep(sleep)
+        if _sleep(sleep, event):return (charge, runtime, state)
+
         state   = smbus.read_word_data(gaugeAddr,
                                             cmdBatteryStatus)
-        if event:
-            if event.wait(sleep): return
-        else: time.sleep(sleep)
+
+        if _sleep(sleep, event):return (charge, runtime, state)
     except IOError as e:
         exception=e
         pass # hopefully a temporary error...
 
     return (charge/100., runtime, state)
-
-
 def _getPIC(smbus, sleep=1.0, event=None):
     ## SMBus constants
     picAddr                  = 0x0e
@@ -97,59 +101,50 @@ def _getPIC(smbus, sleep=1.0, event=None):
     cmdGetPacketLoss         = 0xdd
 
     ## defaults
-    temperature = 0
-    packetlost=0
-    rssi=0
-    syncstatus=0x0
+    temperature  =0.
+    packetRatio  =0.
+    rssi=-107.
+    sync_internal=False
+    sync_external=False
 
     try:
-        temperature = smbus.read_byte_data(picAddr,
-                                               cmdTemperature)
-        if event:
-            if event.wait(sleep): return
-        else: time.sleep(sleep)
+        _temp = smbus.read_byte_data(picAddr,  cmdTemperature)
+        temperature=(_temp/2.0) - 10.0
+        if _sleep(sleep, event):return (temperature, packetRatio, rssi, (sync_external, sync_internal))
 
-        packetlost  = smbus.read_byte_data(picAddr,
-                                                cmdGetPacketLoss)
-        if event:
-            if event.wait(sleep): return
-        else: time.sleep(sleep)
+        _packetlost  = smbus.read_byte_data(picAddr,  cmdGetPacketLoss)
+        if _packetlost != 0:
+            packetRatio = 100./_packetlost
+        else:
+            packetRatio = 0.
 
-        rssi        = smbus.read_byte_data(picAddr,
-                                                cmdGetRSSI)
-        if event:
-            if event.wait(sleep): return
-        else: time.sleep(sleep)
+        if _sleep(sleep, event):return (temperature, packetRatio, rssi, (sync_external, sync_internal))
 
-        syncstatus  = smbus.read_byte_data(picAddr,
-                                                cmdSyncStatus)
-        if event:
-            if event.wait(sleep): return
-        else: time.sleep(sleep)
-    except IOError as e:
-        pass # hopefully a temporary error...
+        _rssi        = smbus.read_byte_data(picAddr,  cmdGetRSSI)
+        rssi=_rssi-107.
+        if _sleep(sleep, event):return (temperature, packetRatio, rssi, (sync_external, sync_internal))
 
-    temp=(temperature/2.0) - 10.0
-    if packetlost != 0:
-        packetRatio = 100./packetlost
-    else:
-        packetRatio = 0.
-
-##        if(0x01==syncstatus): # syncing
+        _syncstatus  = smbus.read_byte_data(picAddr,  cmdSyncStatus)
+##        if(0x01==_syncstatus): # syncing
 ##            sync_external=True
 ##            sync_internal=False
-##        elif(0x02==syncstatus): # freerunning
+##        elif(0x02==_syncstatus): # freerunning
 ##            sync_external=False
 ##            sync_internal=True
-##        elif(0x03==syncstatus): # synced
+##        elif(0x03==_syncstatus): # synced
 ##            sync_external=True
 ##            sync_internal=True
 ##        else: ## ouch
 ##            sync_external=False
 ##            sync_internal=False
-    sync_external = (syncstatus & 0x01)!=0
-    sync_internal = (syncstatus & 0x02)!=0
-    return (temp, packetRatio, rssi-107., (sync_external, sync_internal))
+        sync_external = (_syncstatus & 0x01)!=0
+        sync_internal = (_syncstatus & 0x02)!=0
+
+        _sleep(sleep, event)
+    except IOError as e:
+        pass # hopefully a temporary error...
+
+    return (temperature, packetRatio, rssi, (sync_external, sync_internal))
 
 class systemhealth:
     class SMBusThread(Thread):
