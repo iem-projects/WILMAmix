@@ -125,7 +125,7 @@ def readInt(data):
 def readLong(data):
     """Tries to interpret the next 8 bytes of the data
     as a 64-bit signed integer."""
-    big = struct.unpack(">q", data[0:8])
+    big = struct.unpack(">q", data[0:8])[0]
     rest = data[8:]
     return (big, rest)
 
