@@ -188,7 +188,7 @@ def _argOutChannels(d, arg):
 def _argChannels(d, arg):
     _argInChannels(d, arg)
     _argOutChannels(d, arg)
-def _argAudiobuf(d, arg):
+def _argAudioBuf(d, arg):
     d['audiobuffer']=int(arg)
 def _argBlocksize(d, arg):
     d['audioblocksize']=int(arg)
@@ -237,7 +237,7 @@ def _argSend(d, arg):
     if d['send'] is None:
         d['send']=[]
     d['send']+=[arg]
-def _argSchedlib(d, arg):
+def _argSchedLib(d, arg):
     d['schedlib']=arg
 def _argExtraFlags(d, arg):
     d['schedflags']=arg
@@ -246,13 +246,13 @@ def _argCompatibility(d, arg):
 
 _subflagDict = {
     '-rate': _argRate,
-    '-audioindev': _argAudioindev,
-    '-audiooutdev': _argAudiooutdev,
-    '-audiodev': _argAudiodev,
+    '-audioindev': _argAudioInDev,
+    '-audiooutdev': _argAudioOutDev,
+    '-audiodev': _argAudioDev,
     '-inchannels': _argInChannels,
     '-outchannels': _argOutChannels,
     '-channels': _argChannels,
-    '-audiobuf': _argAudiobuf,
+    '-audiobuf': _argAudioBuf,
     '-blocksize': _argBlocksize,
     '-sleepgrain': _argSleepgrain,
     '-alsaadd': _argAlsaAdd,
