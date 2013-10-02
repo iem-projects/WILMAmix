@@ -378,10 +378,8 @@ def parseArgs(args, result=dict()):
 def _fileEnum(d, prefix, count):
     result=[]
     for id in range(count):
-        try:
-            result+=[d[prefix+str(id+1)]]
-        except KeyError:
-            pass
+        try:   result+=[d[prefix+str(id+1)]]
+        except KeyError: pass
     return result
 def _fileDisableAM(result, key, disabled):
     if disabled:
@@ -448,13 +446,8 @@ def parseFile(filename, result=dict()):
         result['path']+=_fileEnum(d, 'path', count)
     except (KeyError, ValueError): pass
 
-    try:
-        parseArgs(d['flags'], result)
-    except KeyError:
-        pass
-
-    ## midi
-
+    try:   parseArgs(d['flags'], result)
+    except KeyError: pass
 
     return result
 
