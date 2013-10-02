@@ -107,8 +107,8 @@
 # dictionary
 ## 'audioapi'     = (string))'jack'
 ## 'audiocallback'= (bool)False
-## 'audioin'      = None, ((int)0, (int)2)[]
-## 'audioout'     = None, ((int)0, (int)2)[]
+## 'audioin'      = None, [(int)0, (int)2][]
+## 'audioout'     = None, [(int)0, (int)2][]
 ## 'audiobuffer'  = (int)25
 ## 'audiorate'    = (int)rate
 ## 'audioblocksize'= (int)64
