@@ -181,14 +181,18 @@ def truism(S):
     if s in ['false', 'f', '0', 'no', 'n']: return False
     raise ValueError ('No known mapping from \'%s\' to bool' % (S))
 
-def _argAudioDevParse(devlist, arg):
+def _argAudioDevParse(devlist, arg, index=1):
     devs=[int(x) for x in arg.split(',')]
     ## now we have the deviceIDs fill/update the 'audioin' values
     for i, v in enumerate(devs):
         try:
-            devlist[i][1]=v
+            devlist[i][index]=v
         except IndexError:
-            devlist+=[[None, v]]
+            if index:
+                devlist+=[[None, v]]
+            else:
+                devlist+=[[v, None]]
+
     return devlist
 
 def _argRate(d, arg):
