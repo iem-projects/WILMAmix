@@ -172,6 +172,14 @@ _audioAPI = {
     'AUDIOUNIT': '-audiounit',
     'ESD'      : '-esd',
 }
+def truism(S):
+    try: return bool(int(S))
+    except ValueError: pass
+    s=S.lower()
+    if s in ['true', 't', '1', 'yes', 'y']: return True
+    if s in ['false', 'f', '0', 'no', 'n']: return False
+    raise ValueError ('No known mapping from \'%s\' to bool' % (S))
+
 def _argRate(d, arg):
     d['audiorate']=int(arg)
 def _argAudioInDev(d, arg):
