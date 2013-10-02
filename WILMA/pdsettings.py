@@ -153,6 +153,16 @@ _audioAPI = {
     7: 'AUDIOUNIT',
     8: 'ESD',
     9: 'DUMMY',
+    ## API to cmdline-flag
+    'ALSA'     : '-alsa',
+    'OSS'      : '-oss',
+    'MMIO'     : '-mmio',
+    'PORTAUDIO': '-pa',
+    'JACK'     : '-jack',
+    'AUDIOUNIT': '-audiounit',
+    'ESD'      : '-esd',
+}
+_audioAPIflag = {
     ## cmdline-flag to API
     '-alsa': 'ALSA',
     '-oss' : 'OSS',
@@ -162,15 +172,6 @@ _audioAPI = {
     '-jack': 'JACK',
     '-audiounit': 'AUDIOUNIT',
     '-esd' : 'ESD',
-
-    ## API to cmdline-flag
-    'ALSA'     : '-alsa',
-    'OSS'      : '-oss',
-    'MMIO'     : '-mmio',
-    'PORTAUDIO': '-pa',
-    'JACK'     : '-jack',
-    'AUDIOUNIT': '-audiounit',
-    'ESD'      : '-esd',
 }
 def truism(S):
     try: return bool(int(S))
@@ -297,6 +298,8 @@ def parseArgs(args, result=dict()):
             subParser=None
         elif a in _subflagDict:  ## check whether this argument takes a value
             subParser=_subflagDict[a]
+        elif a in _audioAPIflag: ## check whether this is a known flag setting the audio-API
+            result['audioapi']=_audioAPIflag[a]
         else: ## no, this is a no-argument flag
             if '-nodac' == a:
                 result['audioout']=None
