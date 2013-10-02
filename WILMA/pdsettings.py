@@ -475,15 +475,9 @@ if __name__ == '__main__':
     import sys
     for arg in sys.argv[1:]:
         try:
-            pd = pdsettings(arg)
-            inlets=pd.getInlets()
-            outlets=pd.getOutlets()
-            print "FILE     :", arg
-            print "inlets   :", inlets[0]
-            print "inlets~  :", inlets[1]
-            print "outlets  :", outlets[0]
-            print "outlets~ :", outlets[1]
-            print ""
+            pd = parseFile(arg)
+            for key in pd:
+                print ("%s: %s" % (key, pd[key]))
         except:
             print "unable to open file: ", arg
 
