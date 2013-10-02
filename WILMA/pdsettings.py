@@ -295,9 +295,7 @@ def parseArgs(args, result=dict()):
         if subParser:         subParser(result, a)        ## value for argument
         elif a in _subflagDict:  ## check whether this argument takes a value
             subParser=_subflagDict[a]
-            print ("complex arg %s -> %s" % (a, subParser))
         else: ## no, this is a no-argument flag
-            print("simple arg: %s" % (a))
             if '-nodac' == a:
                 result['audioout']=None
             elif '-noadc' == a:
