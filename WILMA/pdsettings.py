@@ -366,11 +366,63 @@ def _fileEnum(d, prefix, count):
             pass
     return result
 
+def parseFile(filename, result=dict()):
     d=dict()
     with open(filename, 'r') as f:
-        content = f.read()
+        content = f.readlines()
+    for l in content:
+        x,y=l.split(':', 1)
+        d[x.strip()]=y.strip()
 
-    return d
+    ## audio
+    try: result['audiorate']=int(d['rate'])
+    except (KeyError, ValueError): pass
+    try: result['audiobuffer']=int(d['audiobuf'])
+    except (KeyError, ValueError): pass
+    try: result['audioblocksize']=int(d['blocksize'])
+    except (KeyError, ValueError): pass
+#    'audioapi'    :
+#    'noaudioin'   :
+#    'noaudioout'  :
+#    'callback'    :
+
+    ## midi
+#    'nomidiin'    :
+#    'nomidiout'   :
+
+    ## boolean flags
+    try: result['standardpath']=bool(int(d['standardpath']))
+    except (KeyError, ValueError): pass
+    try: result['verbose']=bool(int(d['verbose']))
+    except (KeyError, ValueError): pass
+    try: result['realtime']=not bool(int(d['defeatrt']))
+    except (KeyError, ValueError): pass
+    ## arrays
+    try:
+        count=int(d['nloadlib'])
+        if count>0:
+            if not 'lib' in result:
+                result['lib']=[]
+            result['lib']+=_fileEnum(d, 'loadlib', count)
+    except (KeyError, ValueError) as e:
+        pass
+    try:
+        count=int(d['npath'])
+        if count>0:
+            if not 'path' in result:
+                result['path']=[]
+        result['path']+=_fileEnum(d, 'path', count)
+    except (KeyError, ValueError): pass
+
+    try:
+        parseArgs(d['flags'], result)
+    except KeyError:
+        pass
+
+    ## midi
+
+
+    return result
 
 class pdsettings:
     def __init__(self, filename):
