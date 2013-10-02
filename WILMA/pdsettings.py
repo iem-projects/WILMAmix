@@ -141,7 +141,7 @@
 ## 'font.face'    = (string)
 ## 'font.weight'  = (string)
 
-def _audioAPI = {
+_audioAPI = {
     ## pdsettings-file to API
     0: 'None',
     1: 'ALSA',
