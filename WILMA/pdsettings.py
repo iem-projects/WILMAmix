@@ -114,7 +114,7 @@
 ## 'audioblocksize'= (int)64
 
 ## 'sleepgrain'   = None(=-nosleep), (int)
-## 'alsaadd'      = (string[])
+## 'alsadevice'   = (string[])
 
 ## 'midiapi'      = (string)'alsa'
 ## 'midiin'       = None, (int[])
