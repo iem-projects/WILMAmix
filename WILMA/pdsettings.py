@@ -107,8 +107,8 @@
 # dictionary
 ## 'audioapi'     = (string))'jack'
 ## 'audiocallback'= (bool)False
-## 'audioin'      = None, (int)2, (int[])
-## 'audioout'     = None, (int)2, (int[])
+## 'audioin'      = None, ((int)0, (int)2)[]
+## 'audioout'     = None, ((int)0, (int)2)[]
 ## 'audiobuffer'  = (int)25
 ## 'audiorate'    = (int)rate
 ## 'audioblocksize'= (int)64
@@ -413,8 +413,9 @@ def parseFile(filename, result=dict()):
     try: _fileDisableAM(result, 'audioout', truism(d['noaudioout']))
     except (KeyError, ValueError): pass
 
-#    'audioindev1' :
-#    'audiooutdev1':
+#    'audioindev1' : <devID> <channels>
+#    'audiooutdev1': <devID> <channels>
+
 
     ## midi
     try: _fileDisableAM(result, 'midiin', truism(d['nomidiin']))
