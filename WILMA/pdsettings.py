@@ -314,7 +314,7 @@ def parseArgs(args, result=dict()):
                 result['midiin'] =None
                 result['midiout']=None
             elif '-alsamidi' == a:
-                pass
+                result['midiapi']='ALSA'
 
             elif '-nostdpath' == a:
                 result['standardpath']=False
