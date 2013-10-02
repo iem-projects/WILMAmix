@@ -356,6 +356,16 @@ def parseArgs(args, result=dict()):
                 result['autopatch']=True
 
     return result
+
+def _fileEnum(d, prefix, count):
+    result=[]
+    for id in range(count):
+        try:
+            result+=[d[prefix+str(id+1)]]
+        except KeyError:
+            pass
+    return result
+
     d=dict()
     with open(filename, 'r') as f:
         content = f.read()
