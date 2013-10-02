@@ -532,11 +532,13 @@ if __name__ == '__main__':
     for arg in sys.argv[1:]:
         try:
             pd = parseFile(arg)
-            pd = parseArgs('-lib zexy:iemmatrix -stderr -jack', pd)
+            pd = parseArgs('-lib zexy:iemmatrix -stderr -audioindev 5,2,7', pd)
+            #pd = parseArgs('-lib zexy:iemmatrix -stderr', pd)
             for key in pd:
                 print ("%s: %s" % (key, pd[key]))
-        except:
-            print "unable to open file: ", arg
+        except int: pass
+        #except:
+        #    print "unable to open file: ", arg
 
 
 
