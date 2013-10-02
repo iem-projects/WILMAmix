@@ -299,17 +299,22 @@ def parseArgs(args, result=dict()):
         else: ## no, this is a no-argument flag
             print("simple arg: %s" % (a))
             if '-nodac' == a:
-                pass
+                result['audioout']=None
             elif '-noadc' == a:
-                pass
+                result['audioin'] =None
             elif '-noaudio' == a:
-                pass
+                result['audioout']=None
+                result['audioin'] =None
+            elif '-nosound' == a:
+                result['audioout']=None
+                result['audioin'] =None
             elif '-nomidiin' == a:
-                pass
+                result['midiin'] =None
             elif '-nomidiout' == a:
-                pass
+                result['midiout']=None
             elif '-nomidi' == a:
-                pass
+                result['midiin'] =None
+                result['midiout']=None
             elif '-alsamidi' == a:
                 pass
 
@@ -395,14 +400,24 @@ def parseFile(filename, result=dict()):
     except (KeyError, ValueError): pass
     try: result['audioblocksize']=int(d['blocksize'])
     except (KeyError, ValueError): pass
-#    'audioapi'    :
-#    'noaudioin'   :
-#    'noaudioout'  :
-#    'callback'    :
+    try: result['audioapi']=_audioAPI[int(d['audioapi'])]
+    except (KeyError, ValueError): pass
+    try: result['audiocallback']=bool(int(d['callback']))
+    except (KeyError, ValueError): pass
+
+    try: _fileDisableAM(result, 'audioin', truism(d['noaudioin']))
+    except (KeyError, ValueError): pass
+    try: _fileDisableAM(result, 'audioout', truism(d['noaudioout']))
+    except (KeyError, ValueError): pass
+
+#    'audioindev1' :
+#    'audiooutdev1':
 
     ## midi
-#    'nomidiin'    :
-#    'nomidiout'   :
+    try: _fileDisableAM(result, 'midiin', truism(d['nomidiin']))
+    except (KeyError, ValueError): pass
+    try: _fileDisableAM(result, 'midiout', truism(d['nomidiout']))
+    except (KeyError, ValueError): pass
 
     ## boolean flags
     try: result['standardpath']=bool(int(d['standardpath']))
