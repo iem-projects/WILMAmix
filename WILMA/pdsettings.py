@@ -232,7 +232,7 @@ def _argD(d, arg):
 def _argGuiPort(d, arg):
     d['guiport']=int(arg)
 def _argGuiCmd(d, arg):
-    d['guicmd']=arg
+    d['gui']=arg
 def _argSend(d, arg):
     if d['send'] is None:
         d['send']=[]
