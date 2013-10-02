@@ -320,6 +320,8 @@ def parseArgs(args, result=dict()):
                 result['midiout']=None
             elif '-alsamidi' == a:
                 result['midiapi']='ALSA'
+            elif '-defaultmidi' == a: ## dummy-arg
+                result.pop('midiapi', None)
 
             elif '-nostdpath' == a:
                 result['standardpath']=False
