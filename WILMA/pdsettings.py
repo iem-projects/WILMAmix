@@ -292,7 +292,9 @@ def parseArgs(args, result=dict()):
         args=args.split()
 
     for a in args:
-        if subParser:         subParser(result, a)        ## value for argument
+        if subParser:
+            subParser(result, a)        ## value for argument
+            subParser=None
         elif a in _subflagDict:  ## check whether this argument takes a value
             subParser=_subflagDict[a]
         else: ## no, this is a no-argument flag
