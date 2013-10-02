@@ -276,60 +276,86 @@ _subflagDict = {
     }
 
 
-def parseArgs(args):
-    d=dist()
+def parseArgs(args, result=dict()):
     subParser=None
+    if isinstance(args, basestring):
+        ## splitargs into an array
+        ## the following is a bit naive, as it cannot parse e.g. '-send "foo bar"'
+        args=args.split()
+
     for a in args:
-        if subParser:
-            subParser(d, a)
-        if a in _subflagDict:
+        if subParser:         subParser(result, a)        ## value for argument
+        elif a in _subflagDict:  ## check whether this argument takes a value
             subParser=_subflagDict[a]
-        else if a in _audioapis:
-            pass
-        else:
+            print ("complex arg %s -> %s" % (a, subParser))
+        else: ## no, this is a no-argument flag
+            print("simple arg: %s" % (a))
             if '-nodac' == a:
                 pass
-            if '-noadc' == a:
+            elif '-noadc' == a:
                 pass
-            if '-noaudio' == a:
+            elif '-noaudio' == a:
                 pass
-            if '-nomidiin' == a:
+            elif '-nomidiin' == a:
                 pass
-            if '-nomidiout' == a:
+            elif '-nomidiout' == a:
                 pass
-            if '-nomidi' == a:
+            elif '-nomidi' == a:
                 pass
-            if '-alsamidi' == a:
-                pass
-            if '-nostdpath' == a:
-                pass
-            if '-stdpath' == a:
-                pass
-            if '-verbose' == a:
-                pass
-            if '-noloadbang' == a:
-                pass
-            if '-stderr' == a:
-                pass
-            if '-nogui' == a:
-                pass
-            if '-noprefs' == a:
-                pass
-            if '-rt' == a:
-                pass
-            if '-realtime' == a:
-                pass
-            if '-nrt' == a:
-                pass
-            if '-nosleep' == a:
-                d['sleepgrain']=None
-            if '-batch' == a:
-                pass
-            if '-noautopatch' == a:
+            elif '-alsamidi' == a:
                 pass
 
-    return d
-def parseFile(filename):
+            elif '-nostdpath' == a:
+                result['standardpath']=False
+            elif '-stdpath' == a:
+                result['standardpath']=True
+
+            elif '-verbose' == a:
+                result['verbose']=True
+            elif '-noverbose' == a: ## dummy-arg
+                result['verbose']=False
+
+            elif '-noloadbang' == a:
+                result['loadbang']=False
+            elif '-loadbang' == a: ## dummy-arg
+                result['loadbang']=True
+
+            elif '-stderr' == a:
+                result['stderr']=True
+            elif '-nostderr' == a: ## dummy-arg
+                result['stderr']=False
+
+            elif '-nogui' == a:
+                result['gui']=None
+            elif '-gui' == a: ## dummy-arg
+                result.pop('gui', None)
+
+            elif '-noprefs' == a:
+                result['preferences']=False
+            elif '-prefs' == a: ## dummy-arg
+                result['preferences']=True
+
+            elif '-rt' == a:
+                result['realtime']=True
+            elif '-realtime' == a:
+                result['realtime']=True
+            elif '-nrt' == a:
+                result['realtime']=False
+
+            elif '-nosleep' == a:
+                result['sleepgrain']=None
+
+            elif '-batch' == a:
+                result['batch']=True
+            elif '-nobatch' == a: ## dummy-arg
+                result['batch']=False
+
+            elif '-noautopatch' == a:
+                result['autopatch']=False
+            elif '-autopatch' == a: ## dummy-arg
+                result['autopatch']=True
+
+    return result
     d=dict()
     with open(filename, 'r') as f:
         content = f.read()
