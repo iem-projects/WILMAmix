@@ -181,19 +181,31 @@ def truism(S):
     if s in ['false', 'f', '0', 'no', 'n']: return False
     raise ValueError ('No known mapping from \'%s\' to bool' % (S))
 
+def _argAudioDevParse(devlist, arg):
+    devs=[int(x) for x in arg.split(',')]
+    ## now we have the deviceIDs fill/update the 'audioin' values
+    for i, v in enumerate(devs):
+        try:
+            devlist[i][1]=v
+        except IndexError:
+            devlist+=[[None, v]]
+    return devlist
+
 def _argRate(d, arg):
     d['audiorate']=int(arg)
 def _argAudioInDev(d, arg):
-    d['audioin']=arg
+    try:   d['audioin']=_argAudioDevParse(d.get('audioin', []), arg)
+    except ValueError: pass
 def _argAudioOutDev(d, arg):
-    d['audioout']=arg
-def _argAudioDev(d, arg):
-    _argAudioInDev(d, arg)
-    _argAudioOutDev(d, arg)
+    try:   d['audioout']=_argAudioDevParse(d.get('audioout', []), arg)
+    except ValueError: pass
 def _argInChannels(d, arg):
     d['inchannels']=int(arg)
 def _argOutChannels(d, arg):
     d['outchannels']=int(arg)
+def _argAudioDev(d, arg):
+    _argAudioInDev(d, arg)
+    _argAudioOutDev(d, arg)
 def _argChannels(d, arg):
     _argInChannels(d, arg)
     _argOutChannels(d, arg)
@@ -387,6 +399,16 @@ def _fileDisableAM(result, key, disabled):
     elif result.get(key, False) is None:
         ## if 'audiout' is set and 'None', delete it; else leave unchanged
         result.pop(key, None)
+def _fileDevices(d, prefix):
+    result=[]
+    for i in range(8):
+        dev=d.get(prefix+str(i+1), None)
+        if dev:
+            try:
+                result+=[[int(x) for x in dev.split()]]
+            except ValueError:
+                pass
+    return result
 
 def parseFile(filename, result=dict()):
     d=dict()
@@ -413,8 +435,14 @@ def parseFile(filename, result=dict()):
     try: _fileDisableAM(result, 'audioout', truism(d['noaudioout']))
     except (KeyError, ValueError): pass
 
-#    'audioindev1' : <devID> <channels>
-#    'audiooutdev1': <devID> <channels>
+    try:
+        devs=_fileDevices(d, 'audioindev')
+        if(devs):result['audioin']=devs
+    except (KeyError): pass
+    try:
+        devs=_fileDevices(d, 'audiooutdev')
+        if(devs):result['audioout']=devs
+    except (KeyError): pass
 
 
     ## midi
