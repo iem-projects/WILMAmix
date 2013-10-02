@@ -373,6 +373,12 @@ def _fileEnum(d, prefix, count):
         except KeyError:
             pass
     return result
+def _fileDisableAM(result, key, disabled):
+    if disabled:
+        result[key]=None
+    elif result.get(key, False) is None:
+        ## if 'audiout' is set and 'None', delete it; else leave unchanged
+        result.pop(key, None)
 
 def parseFile(filename, result=dict()):
     d=dict()
