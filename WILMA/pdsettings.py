@@ -119,7 +119,7 @@
 ## 'midiapi'      = (string)'alsa'
 ## 'midiin'       = None, (int[])
 ## 'midiout'      = None, (int[])
-## 'stdpath'      = (bool)True
+## 'standardpath' = (bool)True
 ## 'verbose'      = (bool)False
 ## 'debug'        = (int)0
 ## 'realtime'     = (bool)True
