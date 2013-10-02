@@ -48,7 +48,7 @@
 ## loadlib1: Gem
 ## nloadlib: 1
 ## defeatrt: 0
-## flags: 
+## flags:
 
 #arguments
 ## -r <n>           -- specify sample rate
@@ -63,7 +63,7 @@
 ## -sleepgrain <n>  -- specify number of milliseconds to sleep when idle
 ## -nodac           -- suppress audio output
 ## -noadc           -- suppress audio input
-## -noaudio         -- suppress audio input and output (-nosound is synonym) 
+## -noaudio         -- suppress audio input and output (-nosound is synonym)
 ## -listdev         -- list audio and MIDI devices
 ## -oss             -- use OSS audio API
 ## -alsa            -- use ALSA audio API
@@ -463,7 +463,7 @@ class pdsettings:
                     n_outletS+=1
         self.inlets=(n_inlet, n_inletS)
         self.outlets=(n_outlet, n_outletS)
-        
+
     def getInlets(self):
         return self.inlets
     def getOutlets(self):
