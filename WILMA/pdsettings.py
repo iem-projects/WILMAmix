@@ -208,11 +208,11 @@ def _argMidiDev(d, arg):
 def _argPath(d, arg):
     if d['path'] is None:
         d['path']=[]
-    d['path']+=[arg]
+    d['path']+=arg.split(':')
 def _argHelpPath(d, arg):
     if d['helppath'] is None:
         d['helppath']=[]
-    d['helppath']+=[arg]
+    d['helppath']+=arg.split(':')
 def _argOpen(d, arg):
     if d['patch'] is None:
         d['patch']=[]
@@ -220,7 +220,7 @@ def _argOpen(d, arg):
 def _argLib(d, arg):
     if d['lib'] is None:
         d['lib']=[]
-    d['lib']+=[arg]
+    d['lib']+=arg.split(':')
 def _argFontSize(d, arg):
     d['font.size']=int(arg)
 def _argFontFace(d, arg):
