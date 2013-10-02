@@ -505,6 +505,7 @@ if __name__ == '__main__':
     for arg in sys.argv[1:]:
         try:
             pd = parseFile(arg)
+            pd = parseArgs('-lib zexy:iemmatrix -stderr -jack', pd)
             for key in pd:
                 print ("%s: %s" % (key, pd[key]))
         except:
