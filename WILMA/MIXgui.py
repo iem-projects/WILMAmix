@@ -267,7 +267,9 @@ class MIXgui:
         ts=[]
         for s in self.selected():
             ts+=[s.getTimestamp()]
-        return (max(ts), min(ts))
+        if ts:
+            return (max(ts), min(ts))
+        return None
 
     def _pulled(self, sm, ret):
         self.pulling[sm]=False
