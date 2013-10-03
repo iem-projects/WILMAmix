@@ -48,7 +48,7 @@
 ## loadlib1: Gem
 ## nloadlib: 1
 ## defeatrt: 0
-## flags: 
+## flags:
 
 #arguments
 ## -r <n>           -- specify sample rate
@@ -63,7 +63,7 @@
 ## -sleepgrain <n>  -- specify number of milliseconds to sleep when idle
 ## -nodac           -- suppress audio output
 ## -noadc           -- suppress audio input
-## -noaudio         -- suppress audio input and output (-nosound is synonym) 
+## -noaudio         -- suppress audio input and output (-nosound is synonym)
 ## -listdev         -- list audio and MIDI devices
 ## -oss             -- use OSS audio API
 ## -alsa            -- use ALSA audio API
@@ -107,19 +107,19 @@
 # dictionary
 ## 'audioapi'     = (string))'jack'
 ## 'audiocallback'= (bool)False
-## 'audioin'      = None, (int)2, (int[])
-## 'audioout'     = None, (int)2, (int[])
+## 'audioin'      = None, [(int)0, (int)2][]
+## 'audioout'     = None, [(int)0, (int)2][]
 ## 'audiobuffer'  = (int)25
 ## 'audiorate'    = (int)rate
 ## 'audioblocksize'= (int)64
 
 ## 'sleepgrain'   = None(=-nosleep), (int)
-## 'alsaadd'      = (string[])
+## 'alsadevice'   = (string[])
 
 ## 'midiapi'      = (string)'alsa'
 ## 'midiin'       = None, (int[])
 ## 'midiout'      = None, (int[])
-## 'stdpath'      = (bool)True
+## 'standardpath' = (bool)True
 ## 'verbose'      = (bool)False
 ## 'debug'        = (int)0
 ## 'realtime'     = (bool)True
@@ -141,7 +141,7 @@
 ## 'font.face'    = (string)
 ## 'font.weight'  = (string)
 
-def _audioAPI = {
+_audioAPI = {
     ## pdsettings-file to API
     0: 'None',
     1: 'ALSA',
@@ -153,16 +153,6 @@ def _audioAPI = {
     7: 'AUDIOUNIT',
     8: 'ESD',
     9: 'DUMMY',
-    ## cmdline-flag to API
-    '-alsa': 'ALSA',
-    '-oss' : 'OSS',
-    '-mmio': 'MMIO',
-    '-pa'  : 'PORTAUDIO',
-    '-asio': 'PORTAUDIO',
-    '-jack': 'JACK',
-    '-audiounit': 'AUDIOUNIT',
-    '-esd' : 'ESD',
-
     ## API to cmdline-flag
     'ALSA'     : '-alsa',
     'OSS'      : '-oss',
@@ -172,23 +162,54 @@ def _audioAPI = {
     'AUDIOUNIT': '-audiounit',
     'ESD'      : '-esd',
 }
+_audioAPIflag = {
+    ## cmdline-flag to API
+    '-alsa': 'ALSA',
+    '-oss' : 'OSS',
+    '-mmio': 'MMIO',
+    '-pa'  : 'PORTAUDIO',
+    '-asio': 'PORTAUDIO',
+    '-jack': 'JACK',
+    '-audiounit': 'AUDIOUNIT',
+    '-esd' : 'ESD',
+}
+def truism(S):
+    try: return bool(int(S))
+    except ValueError: pass
+    s=S.lower()
+    if s in ['true', 't', '1', 'yes', 'y']: return True
+    if s in ['false', 'f', '0', 'no', 'n']: return False
+    raise ValueError ('No known mapping from \'%s\' to bool' % (S))
+
+def _argAudioDevParse(devlist, arg):
+    devs=[int(x) for x in arg.split(',')]
+    ## now we have the deviceIDs fill/update the 'audioin' values
+    for i, v in enumerate(devs):
+        try:
+            devlist[i][1]=v
+        except IndexError:
+            devlist+=[[None, v]]
+    return devlist
+
 def _argRate(d, arg):
     d['audiorate']=int(arg)
 def _argAudioInDev(d, arg):
-    d['audioin']=arg
+    try:   d['audioin']=_argAudioDevParse(d.get('audioin', []), arg)
+    except ValueError: pass
 def _argAudioOutDev(d, arg):
-    d['audioout']=arg
-def _argAudioDev(d, arg):
-    _argAudioInDev(d, arg)
-    _argAudioOutDev(d, arg)
+    try:   d['audioout']=_argAudioDevParse(d.get('audioout', []), arg)
+    except ValueError: pass
 def _argInChannels(d, arg):
     d['inchannels']=int(arg)
 def _argOutChannels(d, arg):
     d['outchannels']=int(arg)
+def _argAudioDev(d, arg):
+    _argAudioInDev(d, arg)
+    _argAudioOutDev(d, arg)
 def _argChannels(d, arg):
     _argInChannels(d, arg)
     _argOutChannels(d, arg)
-def _argAudiobuf(d, arg):
+def _argAudioBuf(d, arg):
     d['audiobuffer']=int(arg)
 def _argBlocksize(d, arg):
     d['audioblocksize']=int(arg)
@@ -208,11 +229,11 @@ def _argMidiDev(d, arg):
 def _argPath(d, arg):
     if d['path'] is None:
         d['path']=[]
-    d['path']+=[arg]
+    d['path']+=arg.split(':')
 def _argHelpPath(d, arg):
     if d['helppath'] is None:
         d['helppath']=[]
-    d['helppath']+=[arg]
+    d['helppath']+=arg.split(':')
 def _argOpen(d, arg):
     if d['patch'] is None:
         d['patch']=[]
@@ -220,7 +241,7 @@ def _argOpen(d, arg):
 def _argLib(d, arg):
     if d['lib'] is None:
         d['lib']=[]
-    d['lib']+=[arg]
+    d['lib']+=arg.split(':')
 def _argFontSize(d, arg):
     d['font.size']=int(arg)
 def _argFontFace(d, arg):
@@ -232,12 +253,12 @@ def _argD(d, arg):
 def _argGuiPort(d, arg):
     d['guiport']=int(arg)
 def _argGuiCmd(d, arg):
-    d['guicmd']=arg
+    d['gui']=arg
 def _argSend(d, arg):
     if d['send'] is None:
         d['send']=[]
     d['send']+=[arg]
-def _argSchedlib(d, arg):
+def _argSchedLib(d, arg):
     d['schedlib']=arg
 def _argExtraFlags(d, arg):
     d['schedflags']=arg
@@ -246,13 +267,13 @@ def _argCompatibility(d, arg):
 
 _subflagDict = {
     '-rate': _argRate,
-    '-audioindev': _argAudioindev,
-    '-audiooutdev': _argAudiooutdev,
-    '-audiodev': _argAudiodev,
+    '-audioindev': _argAudioInDev,
+    '-audiooutdev': _argAudioOutDev,
+    '-audiodev': _argAudioDev,
     '-inchannels': _argInChannels,
     '-outchannels': _argOutChannels,
     '-channels': _argChannels,
-    '-audiobuf': _argAudiobuf,
+    '-audiobuf': _argAudioBuf,
     '-blocksize': _argBlocksize,
     '-sleepgrain': _argSleepgrain,
     '-alsaadd': _argAlsaAdd,
@@ -276,65 +297,188 @@ _subflagDict = {
     }
 
 
-def parseArgs(args):
-    d=dist()
+def parseArgs(args, result=dict()):
     subParser=None
+    if isinstance(args, basestring):
+        ## splitargs into an array
+        ## the following is a bit naive, as it cannot parse e.g. '-send "foo bar"'
+        args=args.split()
+
     for a in args:
         if subParser:
-            subParser(d, a)
-        if a in _subflagDict:
+            subParser(result, a)        ## value for argument
+            subParser=None
+        elif a in _subflagDict:  ## check whether this argument takes a value
             subParser=_subflagDict[a]
-        else if a in _audioapis:
-            pass
-        else:
+        elif a in _audioAPIflag: ## check whether this is a known flag setting the audio-API
+            result['audioapi']=_audioAPIflag[a]
+        else: ## no, this is a no-argument flag
             if '-nodac' == a:
-                pass
-            if '-noadc' == a:
-                pass
-            if '-noaudio' == a:
-                pass
-            if '-nomidiin' == a:
-                pass
-            if '-nomidiout' == a:
-                pass
-            if '-nomidi' == a:
-                pass
-            if '-alsamidi' == a:
-                pass
-            if '-nostdpath' == a:
-                pass
-            if '-stdpath' == a:
-                pass
-            if '-verbose' == a:
-                pass
-            if '-noloadbang' == a:
-                pass
-            if '-stderr' == a:
-                pass
-            if '-nogui' == a:
-                pass
-            if '-noprefs' == a:
-                pass
-            if '-rt' == a:
-                pass
-            if '-realtime' == a:
-                pass
-            if '-nrt' == a:
-                pass
-            if '-nosleep' == a:
-                d['sleepgrain']=None
-            if '-batch' == a:
-                pass
-            if '-noautopatch' == a:
-                pass
+                result['audioout']=None
+            elif '-noadc' == a:
+                result['audioin'] =None
+            elif '-noaudio' == a:
+                result['audioout']=None
+                result['audioin'] =None
+            elif '-nosound' == a:
+                result['audioout']=None
+                result['audioin'] =None
+            elif '-nomidiin' == a:
+                result['midiin'] =None
+            elif '-nomidiout' == a:
+                result['midiout']=None
+            elif '-nomidi' == a:
+                result['midiin'] =None
+                result['midiout']=None
+            elif '-alsamidi' == a:
+                result['midiapi']='ALSA'
+            elif '-defaultmidi' == a: ## dummy-arg
+                result.pop('midiapi', None)
 
-    return d
-def parseFile(filename):
+            elif '-nostdpath' == a:
+                result['standardpath']=False
+            elif '-stdpath' == a:
+                result['standardpath']=True
+
+            elif '-verbose' == a:
+                result['verbose']=True
+            elif '-noverbose' == a: ## dummy-arg
+                result['verbose']=False
+
+            elif '-noloadbang' == a:
+                result['loadbang']=False
+            elif '-loadbang' == a: ## dummy-arg
+                result['loadbang']=True
+
+            elif '-stderr' == a:
+                result['stderr']=True
+            elif '-nostderr' == a: ## dummy-arg
+                result['stderr']=False
+
+            elif '-nogui' == a:
+                result['gui']=None
+            elif '-gui' == a: ## dummy-arg
+                result.pop('gui', None)
+
+            elif '-noprefs' == a:
+                result['preferences']=False
+            elif '-prefs' == a: ## dummy-arg
+                result['preferences']=True
+
+            elif '-rt' == a:
+                result['realtime']=True
+            elif '-realtime' == a:
+                result['realtime']=True
+            elif '-nrt' == a:
+                result['realtime']=False
+
+            elif '-nosleep' == a:
+                result['sleepgrain']=None
+
+            elif '-batch' == a:
+                result['batch']=True
+            elif '-nobatch' == a: ## dummy-arg
+                result['batch']=False
+
+            elif '-noautopatch' == a:
+                result['autopatch']=False
+            elif '-autopatch' == a: ## dummy-arg
+                result['autopatch']=True
+
+    return result
+
+def _fileEnum(d, prefix, count):
+    result=[]
+    for id in range(count):
+        try:   result+=[d[prefix+str(id+1)]]
+        except KeyError: pass
+    return result
+def _fileDisableAM(result, key, disabled):
+    if disabled:
+        result[key]=None
+    elif result.get(key, False) is None:
+        ## if 'audiout' is set and 'None', delete it; else leave unchanged
+        result.pop(key, None)
+def _fileDevices(d, prefix):
+    result=[]
+    for i in range(8):
+        dev=d.get(prefix+str(i+1), None)
+        if dev:
+            try:
+                result+=[[int(x) for x in dev.split()]]
+            except ValueError:
+                pass
+    return result
+
+def parseFile(filename, result=dict()):
     d=dict()
     with open(filename, 'r') as f:
-        content = f.read()
+        content = f.readlines()
+    for l in content:
+        x,y=l.split(':', 1)
+        d[x.strip()]=y.strip()
 
-    return d
+    ## audio
+    try: result['audiorate']=int(d['rate'])
+    except (KeyError, ValueError): pass
+    try: result['audiobuffer']=int(d['audiobuf'])
+    except (KeyError, ValueError): pass
+    try: result['audioblocksize']=int(d['blocksize'])
+    except (KeyError, ValueError): pass
+    try: result['audioapi']=_audioAPI[int(d['audioapi'])]
+    except (KeyError, ValueError): pass
+    try: result['audiocallback']=bool(int(d['callback']))
+    except (KeyError, ValueError): pass
+
+    try: _fileDisableAM(result, 'audioin', truism(d['noaudioin']))
+    except (KeyError, ValueError): pass
+    try: _fileDisableAM(result, 'audioout', truism(d['noaudioout']))
+    except (KeyError, ValueError): pass
+
+    try:
+        devs=_fileDevices(d, 'audioindev')
+        if(devs):result['audioin']=devs
+    except (KeyError): pass
+    try:
+        devs=_fileDevices(d, 'audiooutdev')
+        if(devs):result['audioout']=devs
+    except (KeyError): pass
+
+
+    ## midi
+    try: _fileDisableAM(result, 'midiin', truism(d['nomidiin']))
+    except (KeyError, ValueError): pass
+    try: _fileDisableAM(result, 'midiout', truism(d['nomidiout']))
+    except (KeyError, ValueError): pass
+
+    ## boolean flags
+    try: result['standardpath']=bool(int(d['standardpath']))
+    except (KeyError, ValueError): pass
+    try: result['verbose']=bool(int(d['verbose']))
+    except (KeyError, ValueError): pass
+    try: result['realtime']=not bool(int(d['defeatrt']))
+    except (KeyError, ValueError): pass
+    ## arrays
+    try:
+        count=int(d['nloadlib'])
+        if count>0:
+            if not 'lib' in result:
+                result['lib']=[]
+            result['lib']+=_fileEnum(d, 'loadlib', count)
+    except (KeyError, ValueError) as e:
+        pass
+    try:
+        count=int(d['npath'])
+        if count>0:
+            if not 'path' in result:
+                result['path']=[]
+        result['path']+=_fileEnum(d, 'path', count)
+    except (KeyError, ValueError): pass
+
+    try:   parseArgs(d['flags'], result)
+    except KeyError: pass
+
+    return result
 
 class pdsettings:
     def __init__(self, filename):
@@ -375,7 +519,7 @@ class pdsettings:
                     n_outletS+=1
         self.inlets=(n_inlet, n_inletS)
         self.outlets=(n_outlet, n_outletS)
-        
+
     def getInlets(self):
         return self.inlets
     def getOutlets(self):
@@ -387,17 +531,14 @@ if __name__ == '__main__':
     import sys
     for arg in sys.argv[1:]:
         try:
-            pd = pdsettings(arg)
-            inlets=pd.getInlets()
-            outlets=pd.getOutlets()
-            print "FILE     :", arg
-            print "inlets   :", inlets[0]
-            print "inlets~  :", inlets[1]
-            print "outlets  :", outlets[0]
-            print "outlets~ :", outlets[1]
-            print ""
-        except:
-            print "unable to open file: ", arg
+            pd = parseFile(arg)
+            pd = parseArgs('-lib zexy:iemmatrix -stderr -audioindev 5,2,7', pd)
+            #pd = parseArgs('-lib zexy:iemmatrix -stderr', pd)
+            for key in pd:
+                print ("%s: %s" % (key, pd[key]))
+        except int: pass
+        #except:
+        #    print "unable to open file: ", arg
 
 
 
