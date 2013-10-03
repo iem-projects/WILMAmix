@@ -224,8 +224,9 @@ class MIXgui:
 
     def launch(self, state):
         ts=self.syncTimestamps()
+        offset=int(self.settings['/record/timestamp/offset'])
         for s in self.selected():
-            s.launch(state, ts)
+            s.launch(state, ts, offset)
     def pull(self, path):
         if path is None:
             self.mixctl.pushpulled(False)
@@ -256,6 +257,7 @@ class MIXgui:
         proxyclientchanged = (self._hasSettingChanged('/proxy/client/port', settings) or
                               self._hasSettingChanged('/proxy/client/host', settings))
         proxyserverchanged = (self._hasSettingChanged('/proxy/server/port', settings))
+        self._hasSettingChanged('/record/timestamp/offset', settings)
         if proxyclientchanged:
             self._proxyClient()
         if proxyserverchanged:
