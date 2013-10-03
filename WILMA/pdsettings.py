@@ -235,14 +235,14 @@ def _argMidiDev(d, arg):
     _argMidiInDev(d, arg)
     _argMidiOutDev(d, arg)
 def _argPath(d, arg):
-    if d['path'] is None: d['path']=[]
+    if d.get('path', None) is None: d['path']=[]
     oldpath=d['path']
     for p in arg.split(':'):
         if not p in oldpath:
             oldpath+=[p]
     d['path']=oldpath
 def _argHelpPath(d, arg):
-    if d['helppath'] is None: d['helppath']=[]
+    if d.get('helppath', None) is None: d['helppath']=[]
     oldpath=d['helppath']
     for p in arg.split(':'):
         if not p in oldpath:
@@ -253,7 +253,7 @@ def _argOpen(d, arg):
         d['patch']=[]
     d['patch']+=[arg]
 def _argLib(d, arg):
-    if d['lib'] is None: d['lib']=[]
+    if d.get('lib', None) is None: d['lib']=[]
     oldlibs=d['lib']
     for l in arg.split(':'):
         if not l in oldlibs:
