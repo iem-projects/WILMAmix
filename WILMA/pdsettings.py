@@ -488,6 +488,173 @@ def parseFile(filename, result=dict()):
 
     return result
 
+def getArgs(settings, audio=True, midi=True, gui=True, misc=True):
+    result=[]
+    if audio:
+        v=settings.get('audioapi', None)
+        if v: result+=[_audioAPI[v]]
+
+        v=settings.get('audiocallback', None)
+        if v: pass ## not available as cmdline arg!
+
+        try:
+            v=settings['audioin']
+            if not v: result+=['-noadc']
+            else:
+                channels=None
+                devices=None
+                for i in v:
+                    if i[0] is None and i[1] is None: continue
+                    if devices: devices+=','+str(i[0])
+                    else: devices=str(i[0])
+                    if i[1] is None:
+                        c='0'
+                    else:
+                        c=str(i[1])
+                    if channels: channels+=','+c
+                    else: channels=c
+                if devices: result+=['-audioindev', devices]
+                if channels: result+=['-inchannels', channels]
+        except KeyError: pass
+        try:
+            v=settings['audioout']
+            if not v: result+=['-noadc']
+            else:
+                channels=None
+                devices=None
+                for i in v:
+                    if i[0] is None and i[1] is None: continue
+                    if devices: devices+=','+str(i[0])
+                    else: devices=str(i[0])
+                    if i[1] is None:
+                        c='0'
+                    else:
+                        c=str(i[1])
+                    if channels: channels+=','+c
+                    else: channels=c
+                if devices: result+=['-audiooutdev', devices]
+                if channels: result+=['-outchannels', channels]
+        except KeyError: pass
+
+        v=settings.get('audiobuffer', None)
+        if v: result+=['-audiobuf', str(v)]
+
+        v=settings.get('audioblocksize', None)
+        if v: result+=['-blocksize', str(v)]
+
+        v=settings.get('audiorate', None)
+        if v: result+=['-r', str(v)]
+
+        v=settings.get('alsadevice', [])
+        for d in v:
+            result+=['-alsaadd', d]
+
+        v=settings.get('realtime', None)
+        if v is not None:
+            if v: result+=['-rt']
+            else: result+=['-nrt']
+
+    if midi:
+       v=settings.get('midiapi', None)
+       if 'ALSA'==v: result+=['-alsamidi']
+
+       try:
+           v=settings['midiin']
+           if not v:
+               result+=['-nomidiin']
+           else:
+               devices=None
+               for i in v:
+                   if i:
+                       if devices: devices+=','+str(i)
+                       else: devices=str(i)
+               if devices:
+                   result+=['-midiin', devices]
+       except KeyError:pass
+       try:
+           v=settings['midiout']
+           if not v:
+               result+=['-nomidiout']
+           else:
+               devices=None
+               for i in v:
+                   if i:
+                       if devices: devices+=','+str(i)
+                       else: devices=str(i)
+               if devices:
+                   result+=['-midiout', devices]
+       except KeyError:pass
+
+    if gui:
+        try:
+            v=settings['gui']
+            if v: result+=['-guicmd', str(v)]
+            else: result+=['-nogui']
+        except KeyError: pass
+        v=settings.get('guiport', None)
+        if v: result+=['-guiport', str(v)]
+
+        v=settings.get('font.size', None)
+        if v: result+=['-font-size', str(v)]
+        v=settings.get('font.face', None)
+        if v: result+=['-font-face', str(v)]
+        v=settings.get('font.weight', None)
+        if v: result+=['-font-weight', str(v)]
+
+    if misc:
+        v=settings.get('standardpath', None)
+        if v is not None:
+            if v: result+=['-stdpath']
+            else: result+=['-nostdpath']
+
+        v=settings.get('verbose', None)
+        if v: result+=['-verbose']
+
+        v=settings.get('debug', None)
+        if v: result+=['-d', str(v)]
+
+        v=settings.get('loadbang', True)
+        if not v: result+=['-noloadbang']
+
+        v=settings.get('stderr', False)
+        if v: result+=['-stderr']
+
+        v=settings.get('batch', False)
+        if v: result+=['-batch']
+
+        v=settings.get('autopatch', True)
+        if not v: result+=['-noautopatch']
+
+        v=settings.get('compatibility', None)
+        if v is not None: result+=['-compatibility', str(v)]
+
+        v=settings.get('schedlib', None)
+        if v: result+=['-schedlib', str(v)]
+        v=settings.get('schedflags', False)
+        if v: result+=['-extraflags']
+
+        try:
+            v=settings['sleepgrain']
+            if v is None:
+                result+=['-nosleep']
+            else:
+                result+=['-sleepgrain', str(v)]
+        except KeyError: pass
+
+        v=settings.get('path', None)
+        if v: result+=['-path', ':'.join(v)]
+        v=settings.get('lib', None)
+        if v: result+=['-lib', ':'.join(v)]
+        v=settings.get('helppath', None)
+        if v: result+=['-helppath', ':'.join(v)]
+
+        v=settings.get('send', [])
+        for i in v: result+=['-send', i]
+        v=settings.get('patch', [])
+        for i in v: result+=['-open', i]
+
+    return result
+
 
 ######################################################################
 
