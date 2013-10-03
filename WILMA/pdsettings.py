@@ -235,21 +235,30 @@ def _argMidiDev(d, arg):
     _argMidiInDev(d, arg)
     _argMidiOutDev(d, arg)
 def _argPath(d, arg):
-    if d['path'] is None:
-        d['path']=[]
-    d['path']+=arg.split(':')
+    if d['path'] is None: d['path']=[]
+    oldpath=d['path']
+    for p in arg.split(':'):
+        if not p in oldpath:
+            oldpath+=[p]
+    d['path']=oldpath
 def _argHelpPath(d, arg):
-    if d['helppath'] is None:
-        d['helppath']=[]
-    d['helppath']+=arg.split(':')
+    if d['helppath'] is None: d['helppath']=[]
+    oldpath=d['helppath']
+    for p in arg.split(':'):
+        if not p in oldpath:
+            oldpath+=[p]
+    d['helppath']=oldpath
 def _argOpen(d, arg):
     if d['patch'] is None:
         d['patch']=[]
     d['patch']+=[arg]
 def _argLib(d, arg):
-    if d['lib'] is None:
-        d['lib']=[]
-    d['lib']+=arg.split(':')
+    if d['lib'] is None: d['lib']=[]
+    oldlibs=d['lib']
+    for l in arg.split(':'):
+        if not l in oldlibs:
+            oldlibs+=[l]
+    d['lib']=oldlibs
 def _argFontSize(d, arg):
     d['font.size']=int(arg)
 def _argFontFace(d, arg):
