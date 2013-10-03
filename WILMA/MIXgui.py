@@ -41,7 +41,8 @@ class StreamReceiver:
         self.server = pdserver.pdserver(mainpatch='_WILMAmix.pd',
                                         workingdir=self.settings['/path/out'],
                                         backend='gui',
-                                        pdargs=['-nogui',
+                                        pdargs=[
+                                                '-nogui',
                                                 '-nrt',
                                                 '-inchannels', '0',
                                                 '-outchannels', '12',
@@ -224,8 +225,13 @@ class MIXgui:
 
     def launch(self, state):
         ts=self.syncTimestamps()
+        offset=0
+        try:
+            offset=1000*int(self.settings['/record/timestamp/offset'])
+        except ValueError:
+            pass
         for s in self.selected():
-            s.launch(state, ts)
+            s.launch(state, ts, offset)
     def pull(self, path):
         if path is None:
             self.mixctl.pushpulled(False)
@@ -256,6 +262,7 @@ class MIXgui:
         proxyclientchanged = (self._hasSettingChanged('/proxy/client/port', settings) or
                               self._hasSettingChanged('/proxy/client/host', settings))
         proxyserverchanged = (self._hasSettingChanged('/proxy/server/port', settings))
+        self._hasSettingChanged('/record/timestamp/offset', settings)
         if proxyclientchanged:
             self._proxyClient()
         if proxyserverchanged:
@@ -265,7 +272,9 @@ class MIXgui:
         ts=[]
         for s in self.selected():
             ts+=[s.getTimestamp()]
-        return (max(ts), min(ts))
+        if ts:
+            return (max(ts), min(ts))
+        return None
 
     def _pulled(self, sm, ret):
         self.pulling[sm]=False

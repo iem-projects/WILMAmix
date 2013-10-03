@@ -234,12 +234,12 @@ class SMgui:
         if pushCb is not None:
             pushCb(self, state)
 
-    def launch(self, state, ts=None):
+    def launch(self, state, ts=None, recordoffset=10000):
         bundle = Bundle(oscprefix=self.oscprefix)
         mode=self.settings['/mode']
         starttime=0
         if ts is not None: ## (TSmax, TSmin)
-            starttime=ts[1]+10000
+            starttime=ts[0]+recordoffset
         bundle.append(('/record/timestamp', [starttime]))
         bundle.append(('/record/filename',  [_datetime.datetime.now().strftime('%Y%m%d-%H%M')]))
         bundle.append(('/process', [state]))
