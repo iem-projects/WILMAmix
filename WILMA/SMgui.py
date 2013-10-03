@@ -239,7 +239,7 @@ class SMgui:
         mode=self.settings['/mode']
         starttime=0
         if ts is not None: ## (TSmax, TSmin)
-            starttime=ts[0]+offset
+            starttime=ts[0]+recordoffset
         bundle.append(('/record/timestamp', [starttime]))
         bundle.append(('/record/filename',  [_datetime.datetime.now().strftime('%Y%m%d-%H%M')]))
         bundle.append(('/process', [state]))
