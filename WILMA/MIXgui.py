@@ -224,7 +224,11 @@ class MIXgui:
 
     def launch(self, state):
         ts=self.syncTimestamps()
-        offset=int(self.settings['/record/timestamp/offset'])
+        offset=0
+        try:
+            offset=1000*int(self.settings['/record/timestamp/offset'])
+        except ValueError:
+            pass
         for s in self.selected():
             s.launch(state, ts, offset)
     def pull(self, path):
