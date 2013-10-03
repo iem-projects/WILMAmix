@@ -1,6 +1,8 @@
-default: all
+default: usage
 
 ## the .ui files should be edited with `designer-qt4`
+
+.PHONY: all usage default
 
 %_ui.py: %.ui
 	pyside-uic $^ | ./uic_filter.sh $@
@@ -11,6 +13,10 @@ PYFILES=$(UIFILES:%.ui=%_ui.py)
 all: $(PYFILES)
 
 
-test:
+usage:
 	@echo "UI: $(UIFILES)"
 	@echo "PY: $(PYFILES)"
+	@echo "run 'make all' to build all UIs"
+	@echo " or 'make <UIfile>' to build specific UIs"
+	@echo "for editing an UI-file use"
+	@echo " designer-qt4 $(UIFILES)"
