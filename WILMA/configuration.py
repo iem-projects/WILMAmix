@@ -122,7 +122,7 @@ def init(defaults={}):
     mydefaults['/stream/profile' ]='L16' # const for now
     mydefaults['/stream/channels']='4' # const
 
-    mydefaults['/record/timestamp/offset']='10000'
+    mydefaults['/record/timestamp/offset']='10'
     mydefaults['/record/timestamp']='0' # const
     mydefaults['/record/filename' ]='WILMA' # const
 
