@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MIXconfig.ui'
 #
-# Created: Thu Oct  3 15:51:07 2013
+# Created: Thu Oct  3 16:55:52 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -57,7 +57,7 @@ class Ui_MIXconfig(object):
         self.label_syncTS.setObjectName("label_syncTS")
         self.offsetTS = QtGui.QSpinBox(self.frame_sync)
         self.offsetTS.setGeometry(QtCore.QRect(90, 80, 91, 22))
-        self.offsetTS.setMaximum(1000000)
+        self.offsetTS.setMaximum(1000)
         self.offsetTS.setObjectName("offsetTS")
         self.label_offsetTS = QtGui.QLabel(self.frame_sync)
         self.label_offsetTS.setGeometry(QtCore.QRect(20, 82, 52, 21))
