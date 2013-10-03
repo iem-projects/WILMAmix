@@ -198,17 +198,17 @@ def _argAudioDevParse(devlist, arg, index=1):
 def _argRate(d, arg):
     d['audiorate']=int(arg)
 def _argAudioInDev(d, arg):
-    try:   d['audioin']=_argAudioDevParse(d.get('audioin', []), arg, 1)
+    try:   d['audioin']=_argAudioDevParse(d.get('audioin', []), arg, 0)
     except ValueError: pass
 def _argAudioOutDev(d, arg):
-    try:   d['audioout']=_argAudioDevParse(d.get('audioout', []), arg, 1)
+    try:   d['audioout']=_argAudioDevParse(d.get('audioout', []), arg, 0)
     except ValueError: pass
 def _argInChannels(d, arg):
-    try:   d['audioin']=_argAudioDevParse(d.get('audioin', []), arg, 0)
+    try:   d['audioin']=_argAudioDevParse(d.get('audioin', []), arg, 1)
     except ValueError: pass
     #d['inchannels']=int(arg)
 def _argOutChannels(d, arg):
-    try:   d['audioout']=_argAudioDevParse(d.get('audioout', []), arg, 0)
+    try:   d['audioout']=_argAudioDevParse(d.get('audioout', []), arg, 1)
     except ValueError: pass
     #d['outchannels']=int(arg)
 def _argAudioDev(d, arg):
