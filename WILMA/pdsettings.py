@@ -667,6 +667,9 @@ if __name__ == '__main__':
             #pd = parseArgs('-lib zexy:iemmatrix -stderr', pd)
             for key in pd:
                 print ("%s: %s" % (key, pd[key]))
+
+            args=getArgs(pd)
+            print("ARGS: %s" % (args))
         except int: pass
         #except:
         #    print "unable to open file: ", arg
