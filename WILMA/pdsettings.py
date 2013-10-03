@@ -671,15 +671,17 @@ if __name__ == '__main__':
     import sys
     for arg in sys.argv[1:]:
         try:
+            pd = parseArgs(getArgs(parseFile(arg), audio=True, midi=False, misc=False, gui=False))
+
             pdargs=''
-            pdargs='-lib zexy:iemmatrix:Gem -path foo -stderr -audioindev 5,2 -channels 42 -path foo'
-            #pdargs='-lib zexy:iemmatrix -stderr'
-            pd = parseFile(arg)
+            #pdargs='-lib zexy:iemmatrix:Gem -path foo -stderr -audioindev 5,2 -channels 42 -path foo'
+            #pdargs='-lib zexy:iemmatrix:Gem -path foo -stderr  -path foo'
+            pdargs='-lib zexy:iemmatrix -stderr'
             pd = parseArgs(pdargs, pd)
             for key in pd:
                 print ("%s: %s" % (key, pd[key]))
 
-            args=getArgs(pd, audio=False, midi=False, misc=True, gui=False)
+            args=getArgs(pd, audio=True, midi=True, misc=True, gui=False)
             print("ARGS: %s" % (args))
         except int: pass
         #except:
