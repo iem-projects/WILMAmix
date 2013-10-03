@@ -41,7 +41,8 @@ class StreamReceiver:
         self.server = pdserver.pdserver(mainpatch='_WILMAmix.pd',
                                         workingdir=self.settings['/path/out'],
                                         backend='gui',
-                                        pdargs=['-nogui',
+                                        pdargs=[
+                                                '-nogui',
                                                 '-nrt',
                                                 '-inchannels', '0',
                                                 '-outchannels', '12',
