@@ -29,6 +29,7 @@ _dictKeys=[
     '/proxy/server/port',
     '/proxy/client/port',
     '/proxy/client/host',
+    '/record/timestamp/offset',
     ]
 def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
 
@@ -86,6 +87,7 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         self.settings['/proxy/server/port']=self.proxy_recvPort.value()
         self.settings['/proxy/client/port'  ]=self.proxy_sendPort.value()
         self.settings['/proxy/client/host'  ]=self.proxy_sendHost.text()
+        self.settings['/record/timestamp/offset']=self.offsetTS.value()
 
     def applySettings(self, settings):
         """applies settings to the config-panel
@@ -99,6 +101,7 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         self.proxy_recvPort.setValue(int(self.settings['/proxy/server/port']))
         self.proxy_sendPort.setValue(int(self.settings['/proxy/client/port']))
         self.proxy_sendHost.setText(self.settings['/proxy/client/host'])
+        self.offsetTS.setValue(int(self.settings['/record/timestamp/offset']))
 
     def showSync(self, state):
         if(type(state) is int):
