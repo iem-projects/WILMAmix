@@ -50,6 +50,20 @@ _streamProtocols=['RTP', 'RTSP']
 _streamProfiles =['L16', 'L24']
 _streamChannels =(4,5)
 
+def _mean(x):
+    return float(sum(x))/len(x)
+def _median(x):
+     sorts = sorted(x)
+     length = len(sorts)
+     if not length % 2:
+         return (sorts[length / 2] + sorts[length / 2 - 1]) / 2.0
+     return sorts[length / 2]
+def _deviation(x, mean=None):
+    if mean is None:
+        mean=_mean(x)
+    return sum([ (v-mean)**2 for v in x ])
+
+
 class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
     def __init__(self, mixer, guiparent=None, settings={}):
         super(MIXconfig, self).__init__(guiparent)
