@@ -126,6 +126,19 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         else:
             self.label_sync.setText("freewheeling")
             self.label_syncTS.setText("")
+    def setTimestamps(self, ts):
+        if ts:
+            t=_median(ts)
+            v=_deviation(ts, t)**0.5
+            vpercent = 100.*v/t;
+            self.label_TSvalue.setText("%010d" % (int(t)))
+            tooltip=("%010d +- %03.02f%% (%d)" % (int(t), vpercent, int(v)))
+            self.label_TSvalue.setToolTip(tooltip)
+            logging.warn(tooltip)
+
+        else:
+            self.label_TSvalue.setText("--")
+            self.label_TSvalue.setToolTip("")
     def _sync(self):
         state=self.syncButton.isChecked()
         #self.syncButton.setChecked(state)
