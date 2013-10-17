@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>206</width>
-    <height>320</height>
+    <height>334</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>280</y>
+     <y>300</y>
      <width>191</width>
      <height>41</height>
     </rect>
@@ -125,7 +125,7 @@
      <x>10</x>
      <y>120</y>
      <width>191</width>
-     <height>111</height>
+     <height>131</height>
     </rect>
    </property>
    <property name="title">
@@ -135,7 +135,7 @@
     <property name="geometry">
      <rect>
       <x>24</x>
-      <y>50</y>
+      <y>70</y>
       <width>141</width>
       <height>23</height>
      </rect>
@@ -154,10 +154,13 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>20</y>
+      <y>40</y>
       <width>71</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;sync-state of the &lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;received&lt;/span&gt; streams:&lt;ul&gt;&lt;li&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;freewheeling&lt;/span&gt; (out-of-sync)&lt;/li&gt;&lt;li&gt;current &lt;span style=&quot; font-style:italic;&quot;&gt;receiver-timestamp&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
      <string>freewheeling</string>
@@ -167,7 +170,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>20</y>
+      <y>40</y>
       <width>101</width>
       <height>20</height>
      </rect>
@@ -186,7 +189,7 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>80</y>
+      <y>100</y>
       <width>91</width>
       <height>22</height>
      </rect>
@@ -202,7 +205,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>82</y>
+      <y>102</y>
       <width>52</width>
       <height>21</height>
      </rect>
@@ -214,12 +217,47 @@
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="label_TS">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TimeStamp:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_TSvalue">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>20</y>
+      <width>101</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>average time-stamp of all active SMi's</string>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
   </widget>
   <widget class="QGroupBox" name="frameDebug">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>230</y>
+     <y>250</y>
      <width>191</width>
      <height>50</height>
     </rect>
