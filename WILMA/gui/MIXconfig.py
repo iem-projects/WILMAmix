@@ -117,10 +117,12 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         self.proxy_sendHost.setText(self.settings['/proxy/client/host'])
         self.offsetTS.setValue(int(self.settings['/record/timestamp/offset']))
 
-    def showSync(self, state):
-        if(type(state) is int):
+    def showSync(self, ts):
+        ## 'ts' is the current timestamp of the stream-receiver
+        ## this only makes sense if at least one stream is received
+        if(type(ts) is int):
             self.label_sync.setText("sync @")
-            self.label_syncTS.setText(str("%010d" % state))
+            self.label_syncTS.setText(str("%010d" % ts))
         else:
             self.label_sync.setText("freewheeling")
             self.label_syncTS.setText("")
