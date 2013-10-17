@@ -211,6 +211,7 @@ class MIXgui:
         for sm in self.sm:
             sm.ping()
         self.streamreceiver.ping()
+        self.mixconfig.setTimestamps(self.getTimestamps())
 
     def selected(self):
         # FIXME: i'm sure this can be done very elegant with some lambda function
