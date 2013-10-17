@@ -267,13 +267,15 @@ class MIXgui:
             self._proxyClient()
         if proxyserverchanged:
             self._proxyServer()
-
-    def syncTimestamps(self):
+    def getTimestamps(self):
         ts=[]
         for s in self.selected():
             ts+=[s.getTimestamp()]
-        if ts:
-            return (max(ts), min(ts))
+        return ts
+
+    def syncTimestamps(self):
+        ts=self.getTimestamps()
+        if ts: return (max(ts), min(ts))
         return None
 
     def _pulled(self, sm, ret):
