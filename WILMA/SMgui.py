@@ -113,6 +113,7 @@ class SMgui:
         self.connection.add(self._smiStateSyncExternal, '/state/sync/external')
         self.connection.add(self._smiStateSyncInternal, '/state/sync/internal')
         self.connection.add(self._smiStateLogLevel,      '/log/level')
+        self.connection.add(self._smiVersion,  '/version')
 
         self.connection.add(self._smiStatePd,   '/state/process')
 
@@ -317,7 +318,9 @@ class SMgui:
         self.config.setLogLevel(value)
     def _smiProcess(self, addr, typetags, data, source):
         self.mixer.sendProxy(self.oscprefix+addr[0], data)
-
+    def _smiVersion(self, addr, typetags, data, source):
+        value=data[0]
+        self.config.setVersion(value)
     def proxyForward(self, addr, data=None, prefix=''):
         """proxy->SMi"""
         if not self.selected():
