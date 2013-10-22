@@ -83,6 +83,41 @@ def _setDict(config, section, values):
     for o in values.keys():
         if o is not '/id':
             config.set(section, o, values[o])
+
+_version=None
+def _getVersion():
+  global _version, _configpaths
+  print("VERSION: %s" % (_version))
+
+  if _version is not None:
+    return _version
+  ## check for VERSION file in the config-directories
+  versionfiles=[os.path.join(path, "VERSION") for path in _configpaths]
+
+  for vf in versionfiles:
+    print("VERSIONPATH: %s" % (vf))
+    try:
+      with open(vf) as f:
+        _version=''.join(f.read().split('\n'))
+        print("FILE: %s: %s" % (f, _version))
+    except IOError:
+      pass
+
+  ## there's no 'version.txt' file, try to guess the version from git
+  print("VERSIOn: %s" % (_version))
+  if(_version is None):
+    try:
+      from subprocess import Popen, PIPE
+      gitproc = Popen(['git', 'describe', '--always'], stdout = PIPE)
+      (stdout, stderr) = gitproc.communicate()
+      _version=''.join(stdout.split('\n'))
+    except OSError:
+      pass
+  print("VERSion: %s" % (_version))
+
+  if(_version is None):
+    return '(unknown)'
+  return _version
         
 ## DEFAULT values
 # use STRING type for everything (even for numbers)
@@ -144,6 +179,10 @@ def init(defaults={}):
     _config.read(configfiles)
     _mixConf=_getDict(_config, 'MIX')
     _smConf=_getDict(_config, 'SM')
+
+    _version = _getVersion()
+    _mixConf['/version'] = _version
+    _smConf ['/version'] = _version
 
 ###
 # public accessors
