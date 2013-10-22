@@ -4,7 +4,8 @@ OSC-messages for WILMA
 mix->SM (every message prefixed with SMi-ID: '/<ID>')
 -----------------------------------------------------
 /ping
-/log/level		20		(log-level)
+/log/level		20		(logging-level)
+/version		'20101010'      (WILMA-version)
 /gain                   0.5             (preamp gain: 0..1)
 /network/interface      'eth0'          (select network interface; UNIMPLEMENTED)
 /path/in                '/././.'        (where to send data to on the MIX-host; IGNORED)
