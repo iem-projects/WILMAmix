@@ -104,9 +104,19 @@ def _getVersion():
   if(_version is None):
     try:
       from subprocess import Popen, PIPE
+
+      ## get short-hash from git
       gitproc = Popen(['git', 'describe', '--always'], stdout = PIPE)
       (stdout, stderr) = gitproc.communicate()
       _version=''.join(stdout.split('\n'))
+
+      ## check for modified files
+      gitproc = Popen(['git', 'status', '--porcelain'], stdout = PIPE)
+      (stdout, stderr) = gitproc.communicate()
+      for line in stdout.split('\n'):
+        if line and (line[0] != ' ' or line[1] != ' '):
+          _version+='*'
+          break
     except OSError:
       pass
 
