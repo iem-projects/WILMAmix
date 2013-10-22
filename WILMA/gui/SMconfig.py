@@ -93,6 +93,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.networkInterface.addItems(self.interfaces)
         self.applySettings(settings)
         self.setLogLevel(WILMA.logger.getLevel())
+        self.setVersion('(unknown)')
         self._connect()
     def _connect(self):
         self.closeButtons.accepted.connect(self._do_accept)
@@ -244,6 +245,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.stateSyncExt.setChecked(value)
     def setSyncInternal(self, value):
         self.stateSyncInt.setChecked(value)
+    def setVersion(self, value):
+        self.label_version.setText(str(value))
 
 ######################################################################
 if __name__ == '__main__':
@@ -259,6 +262,7 @@ if __name__ == '__main__':
             self.d['/stream/protocol']='RTP'
             self.d['/stream/profile' ]='L16'
             self.d['/stream/channels']=4
+            self.d['/version']='0.0'
             self.smconf=SMconfig(name="foo", settings=self.d)
             layout = QtGui.QHBoxLayout()
             self.openButton= QtGui.QPushButton("Config")
