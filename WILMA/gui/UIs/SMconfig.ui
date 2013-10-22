@@ -173,7 +173,9 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="statemeter" name="statemeter" native="true"/>
+           <widget class="statemeter" name="statemeter" native="true">
+            <zorder>frameSync</zorder>
+           </widget>
           </item>
           <item>
            <widget class="QWidget" name="frameSync" native="true">
@@ -247,7 +249,7 @@
            <x>1</x>
            <y>190</y>
            <width>210</width>
-           <height>90</height>
+           <height>91</height>
           </rect>
          </property>
          <property name="minimumSize">
@@ -317,44 +319,6 @@
           <height>16777215</height>
          </size>
         </property>
-        <widget class="QComboBox" name="modeSelector">
-         <property name="geometry">
-          <rect>
-           <x>70</x>
-           <y>20</y>
-           <width>110</width>
-           <height>22</height>
-          </rect>
-         </property>
-         <item>
-          <property name="text">
-           <string>Streaming</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Recording</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Processing</string>
-          </property>
-         </item>
-        </widget>
-        <widget class="QLabel" name="label_mode">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>20</y>
-           <width>52</width>
-           <height>13</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Mode</string>
-         </property>
-        </widget>
         <widget class="QGroupBox" name="frameStreamSettings">
          <property name="geometry">
           <rect>
@@ -459,7 +423,7 @@
            <x>0</x>
            <y>170</y>
            <width>191</width>
-           <height>51</height>
+           <height>50</height>
           </rect>
          </property>
          <property name="title">
@@ -487,6 +451,86 @@
           <property name="text">
            <string>LogLevel</string>
           </property>
+         </widget>
+        </widget>
+        <widget class="QGroupBox" name="frameWILMA">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>240</y>
+           <width>191</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="title">
+          <string>WILMA</string>
+         </property>
+         <widget class="QLabel" name="label_versionLabel">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>15</y>
+            <width>52</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>version:</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_version">
+          <property name="geometry">
+           <rect>
+            <x>60</x>
+            <y>15</y>
+            <width>121</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QGroupBox" name="frameMode_2">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>191</width>
+           <height>51</height>
+          </rect>
+         </property>
+         <property name="title">
+          <string>Mode</string>
+         </property>
+         <widget class="QComboBox" name="modeSelector">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>20</y>
+            <width>110</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <item>
+           <property name="text">
+            <string>Streaming</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Recording</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Processing</string>
+           </property>
+          </item>
          </widget>
         </widget>
        </widget>
