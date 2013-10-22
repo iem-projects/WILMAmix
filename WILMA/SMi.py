@@ -99,7 +99,7 @@ class PdCommunicator:
         lo=int(data[1])
         ts=((hi<<16)+lo)
         self.smi.state.timestamp=ts
-        logging.debug("received TIMESTAMP %s as %s+%s = %s]" % (ts, hi, lo, data))
+        logging.info("received TIMESTAMP %s as %s+%s = [%s]" % (ts, hi, lo, data))
     def _catchall(self, addr, typetags, data, source):
         self.smi.server.sendMsg(addr[0], data)
         logging.info("got message: " + str((addr, typetags, data, source)))
@@ -305,6 +305,7 @@ class SMi:
             TSlo=int((timestamp>> 0)&0xFFFF)
             self.pd.send('/record/filename', [filename])
             self.pd.send('/record/timestamp', [TSlo, TShi])
+            logging.info("offset TIMESTAMP %s = %s+%s" % (timestamp, TShi, TSlo))
         except KeyError:
             pass
         ## hacks for specific modes: STREAM
