@@ -36,6 +36,7 @@ _dictKeys=[
     '/stream/profile',
     '/stream/channels',
     '/network/interface',
+    '/version',
     ]
 def _syncDicts(sourcedict, targetdict=None, clearFirst=True):
 
@@ -93,7 +94,6 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.networkInterface.addItems(self.interfaces)
         self.applySettings(settings)
         self.setLogLevel(WILMA.logger.getLevel())
-        self.setVersion('(unknown)')
         self._connect()
     def _connect(self):
         self.closeButtons.accepted.connect(self._do_accept)
@@ -196,6 +196,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
                 self.networkInterface.setCurrentIndex(i)
                 break
 
+        self.label_version.setText(str(self.settings['/version']))
+
     def setLogLevel(self, loglevel):
         index=0
         level=WILMA.logger.getLevel(loglevel)
@@ -245,8 +247,6 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.stateSyncExt.setChecked(value)
     def setSyncInternal(self, value):
         self.stateSyncInt.setChecked(value)
-    def setVersion(self, value):
-        self.label_version.setText(str(value))
 
 ######################################################################
 if __name__ == '__main__':

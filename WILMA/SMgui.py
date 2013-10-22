@@ -44,6 +44,7 @@ class SMgui:
         for path in ['/path/out', '/path/in']:
             p=os.path.expanduser(self.settings[path])
             self.settings[path]=p
+        self.settings['/version']='(unknown)'
         self._enabled = True
         self.running=False
         self.netconfs=netconfs
@@ -320,7 +321,7 @@ class SMgui:
         self.mixer.sendProxy(self.oscprefix+addr[0], data)
     def _smiVersion(self, addr, typetags, data, source):
         value=data[0]
-        self.config.setVersion(value)
+        self.settings['/version']=value
     def proxyForward(self, addr, data=None, prefix=''):
         """proxy->SMi"""
         if not self.selected():
