@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'SMconfig.ui'
 #
-# Created: Tue Sep 17 12:01:31 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.1.2
+# Created: Tue Oct 22 13:28:26 2013
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -107,7 +107,7 @@ class Ui_SMconfig(object):
         self.gridLayout.addWidget(self.timestamp, 0, 1, 1, 1)
         self.verticalLayout.addWidget(self.frameTimestamp)
         self.frameFileSync = QtGui.QGroupBox(self.frameMid)
-        self.frameFileSync.setGeometry(QtCore.QRect(1, 190, 210, 90))
+        self.frameFileSync.setGeometry(QtCore.QRect(1, 190, 210, 91))
         self.frameFileSync.setMinimumSize(QtCore.QSize(210, 90))
         self.frameFileSync.setObjectName("frameFileSync")
         self.pullButton = QtGui.QCommandLinkButton(self.frameFileSync)
@@ -132,15 +132,6 @@ class Ui_SMconfig(object):
         self.frameMode.setMinimumSize(QtCore.QSize(190, 0))
         self.frameMode.setMaximumSize(QtCore.QSize(190, 16777215))
         self.frameMode.setObjectName("frameMode")
-        self.modeSelector = QtGui.QComboBox(self.frameMode)
-        self.modeSelector.setGeometry(QtCore.QRect(70, 20, 110, 22))
-        self.modeSelector.setObjectName("modeSelector")
-        self.modeSelector.addItem("")
-        self.modeSelector.addItem("")
-        self.modeSelector.addItem("")
-        self.label_mode = QtGui.QLabel(self.frameMode)
-        self.label_mode.setGeometry(QtCore.QRect(10, 20, 52, 13))
-        self.label_mode.setObjectName("label_mode")
         self.frameStreamSettings = QtGui.QGroupBox(self.frameMode)
         self.frameStreamSettings.setGeometry(QtCore.QRect(0, 50, 191, 121))
         self.frameStreamSettings.setObjectName("frameStreamSettings")
@@ -167,7 +158,7 @@ class Ui_SMconfig(object):
         self.streamProfile.setObjectName("streamProfile")
         self.streamProfile.addItem("")
         self.frameDebug = QtGui.QGroupBox(self.frameMode)
-        self.frameDebug.setGeometry(QtCore.QRect(0, 170, 191, 51))
+        self.frameDebug.setGeometry(QtCore.QRect(0, 170, 191, 50))
         self.frameDebug.setObjectName("frameDebug")
         self.debugLevel = QtGui.QComboBox(self.frameDebug)
         self.debugLevel.setGeometry(QtCore.QRect(90, 20, 91, 22))
@@ -175,6 +166,26 @@ class Ui_SMconfig(object):
         self.label_debugLevel = QtGui.QLabel(self.frameDebug)
         self.label_debugLevel.setGeometry(QtCore.QRect(10, 20, 61, 16))
         self.label_debugLevel.setObjectName("label_debugLevel")
+        self.frameWILMA = QtGui.QGroupBox(self.frameMode)
+        self.frameWILMA.setGeometry(QtCore.QRect(0, 240, 191, 41))
+        self.frameWILMA.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.frameWILMA.setObjectName("frameWILMA")
+        self.label_versionLabel = QtGui.QLabel(self.frameWILMA)
+        self.label_versionLabel.setGeometry(QtCore.QRect(10, 15, 52, 20))
+        self.label_versionLabel.setObjectName("label_versionLabel")
+        self.label_version = QtGui.QLabel(self.frameWILMA)
+        self.label_version.setGeometry(QtCore.QRect(60, 15, 121, 20))
+        self.label_version.setText("")
+        self.label_version.setObjectName("label_version")
+        self.frameMode_2 = QtGui.QGroupBox(self.frameMode)
+        self.frameMode_2.setGeometry(QtCore.QRect(0, 0, 191, 51))
+        self.frameMode_2.setObjectName("frameMode_2")
+        self.modeSelector = QtGui.QComboBox(self.frameMode_2)
+        self.modeSelector.setGeometry(QtCore.QRect(40, 20, 110, 22))
+        self.modeSelector.setObjectName("modeSelector")
+        self.modeSelector.addItem("")
+        self.modeSelector.addItem("")
+        self.modeSelector.addItem("")
         self.horizontalLayout_3.addWidget(self.frameMode)
         self.verticalLayout_2.addWidget(self.frameConfig)
         self.frameButtons = QtGui.QWidget(SMconfig)
@@ -215,10 +226,6 @@ class Ui_SMconfig(object):
         self.frameFileSync.setTitle(QtGui.QApplication.translate("SMconfig", "FileSync", None, QtGui.QApplication.UnicodeUTF8))
         self.pullButton.setText(QtGui.QApplication.translate("SMconfig", "Pull data from SMi", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("SMconfig", "Push data to SMi", None, QtGui.QApplication.UnicodeUTF8))
-        self.modeSelector.setItemText(0, QtGui.QApplication.translate("SMconfig", "Streaming", None, QtGui.QApplication.UnicodeUTF8))
-        self.modeSelector.setItemText(1, QtGui.QApplication.translate("SMconfig", "Recording", None, QtGui.QApplication.UnicodeUTF8))
-        self.modeSelector.setItemText(2, QtGui.QApplication.translate("SMconfig", "Processing", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_mode.setText(QtGui.QApplication.translate("SMconfig", "Mode", None, QtGui.QApplication.UnicodeUTF8))
         self.frameStreamSettings.setTitle(QtGui.QApplication.translate("SMconfig", "Stream Settings", None, QtGui.QApplication.UnicodeUTF8))
         self.streamProtocol.setItemText(0, QtGui.QApplication.translate("SMconfig", "RTP", None, QtGui.QApplication.UnicodeUTF8))
         self.label_streamProtocol.setText(QtGui.QApplication.translate("SMconfig", "Protocol", None, QtGui.QApplication.UnicodeUTF8))
@@ -227,6 +234,12 @@ class Ui_SMconfig(object):
         self.streamProfile.setItemText(0, QtGui.QApplication.translate("SMconfig", "L16", None, QtGui.QApplication.UnicodeUTF8))
         self.frameDebug.setTitle(QtGui.QApplication.translate("SMconfig", "Debug", None, QtGui.QApplication.UnicodeUTF8))
         self.label_debugLevel.setText(QtGui.QApplication.translate("SMconfig", "LogLevel", None, QtGui.QApplication.UnicodeUTF8))
+        self.frameWILMA.setTitle(QtGui.QApplication.translate("SMconfig", "WILMA", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_versionLabel.setText(QtGui.QApplication.translate("SMconfig", "version:", None, QtGui.QApplication.UnicodeUTF8))
+        self.frameMode_2.setTitle(QtGui.QApplication.translate("SMconfig", "Mode", None, QtGui.QApplication.UnicodeUTF8))
+        self.modeSelector.setItemText(0, QtGui.QApplication.translate("SMconfig", "Streaming", None, QtGui.QApplication.UnicodeUTF8))
+        self.modeSelector.setItemText(1, QtGui.QApplication.translate("SMconfig", "Recording", None, QtGui.QApplication.UnicodeUTF8))
+        self.modeSelector.setItemText(2, QtGui.QApplication.translate("SMconfig", "Processing", None, QtGui.QApplication.UnicodeUTF8))
         self.copyConfigButton.setText(QtGui.QApplication.translate("SMconfig", "Copy to selected SMi\'s", None, QtGui.QApplication.UnicodeUTF8))
 
 from qsynthMeter import qsynthMeter
