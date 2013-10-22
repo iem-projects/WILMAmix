@@ -87,7 +87,6 @@ def _setDict(config, section, values):
 _version=None
 def _getVersion():
   global _version, _configpaths
-  print("VERSION: %s" % (_version))
 
   if _version is not None:
     return _version
@@ -95,16 +94,13 @@ def _getVersion():
   versionfiles=[os.path.join(path, "VERSION") for path in _configpaths]
 
   for vf in versionfiles:
-    print("VERSIONPATH: %s" % (vf))
     try:
       with open(vf) as f:
         _version=''.join(f.read().split('\n'))
-        print("FILE: %s: %s" % (f, _version))
     except IOError:
       pass
 
   ## there's no 'version.txt' file, try to guess the version from git
-  print("VERSIOn: %s" % (_version))
   if(_version is None):
     try:
       from subprocess import Popen, PIPE
@@ -113,7 +109,6 @@ def _getVersion():
       _version=''.join(stdout.split('\n'))
     except OSError:
       pass
-  print("VERSion: %s" % (_version))
 
   if(_version is None):
     return '(unknown)'
