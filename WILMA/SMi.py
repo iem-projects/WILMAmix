@@ -304,7 +304,7 @@ class SMi:
             TShi=int((timestamp>>16)&0xFFFF)
             TSlo=int((timestamp>> 0)&0xFFFF)
             self.pd.send('/record/filename', [filename])
-            self.pd.send('/record/timestamp', [TSlo, TShi])
+            self.pd.send('/record/timestamp', [TShi, TSlo])
             logging.info("offset TIMESTAMP %s = %s+%s" % (timestamp, TShi, TSlo))
         except KeyError:
             pass
