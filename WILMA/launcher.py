@@ -28,9 +28,10 @@ import time
 class launcher(threading.Thread):
     """ Launches an external program in a thread """
 
-    def __init__(self, prog, args=[], cwd=None, doneCb=None):
+    def __init__(self, prog, args=[], env={}, cwd=None, doneCb=None):
         threading.Thread.__init__(self)
         self.prog=[prog]+args
+        self.env=env
         self.cwd=cwd
         self.process=None
         self._starting=False
@@ -40,8 +41,10 @@ class launcher(threading.Thread):
 
     def run(self):
         out=None
+        env=os.environ.copy()
+        for k in self.env: env[k]=self.env[k]
         #out=subprocess.PIPE
-        self.process = subprocess.Popen(self.prog, cwd=self.cwd, stdout=out, stderr=out)
+        self.process = subprocess.Popen(self.prog, env=env, cwd=self.cwd, stdout=out, stderr=out)
         self._starting = False
         try:
             if out is subprocess.PIPE:
