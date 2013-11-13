@@ -133,8 +133,6 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
             vpercent = 0
             if t:
                 vpercent = 100.*v/t;
-            else:
-		print("TS: %s" % (ts))
             self.label_TSvalue.setText("%010d" % (int(t)))
             tooltip=("%010d +- %03.02f%% (%d)" % (int(t), vpercent, int(v)))
             self.label_TSvalue.setToolTip(tooltip)
