@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=WILMA Mixer
+GenericName=WILMix
+Comment=GUI for the Wireless Integrated Large-scale Microphone Array
+Icon=/usr/lib/WILMA/python/WILMA/gui/icons/micro-wireless.png
+Exec=/usr/bin/WILMix
+Terminal=false
+Categories=AudioVideo;Audio;
+
