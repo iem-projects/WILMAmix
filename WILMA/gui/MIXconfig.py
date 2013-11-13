@@ -130,7 +130,9 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         if ts:
             t=_median(ts)
             v=_deviation(ts, t)**0.5
-            vpercent = 100.*v/t;
+            vepercent = 0
+            if t:
+                vpercent = 100.*v/t;
             self.label_TSvalue.setText("%010d" % (int(t)))
             tooltip=("%010d +- %03.02f%% (%d)" % (int(t), vpercent, int(v)))
             self.label_TSvalue.setToolTip(tooltip)
