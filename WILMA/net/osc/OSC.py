@@ -187,6 +187,13 @@ def OSCArgument(next):
     (typetag, data) tuple."""
 
     typ=type(next)
+
+    ## int32 types are a bit problematic, as python reports
+    ## unsigned ints (that exceed the range of signed ints)
+    ## as 'int', but struct('>i') cannot handle these
+    if (typ == int) and (next>=0x7fffffff or next<-0x80000000):
+        typ=type(long(0))
+
     if str     == typ:
         OSCstringLength = math.ceil((len(next)+1) / 4.0) * 4
         binary  = struct.pack('>%ds' % (OSCstringLength), next)
