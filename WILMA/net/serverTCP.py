@@ -102,7 +102,7 @@ class serverTCP(serverAbstract.serverAbstract):
 
         if self.remotes is not None:
             for s in self.remotes:
-                logging.debug( "sending '%s' to %s" % (str(data), str(self.remotes[s])))
+                logging.log(1, "sending '%s' to %s" % (str(data), str(self.remotes[s])))
                 slip = SLIP();
                 slip+=data;
                 s.sendall( slip.getData() )

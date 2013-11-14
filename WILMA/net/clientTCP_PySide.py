@@ -72,7 +72,7 @@ class clientTCP(clientAbstract.clientAbstract):
         
     def _send(self, data):
         if self.socket is not None and self.remote is not None:
-            logging.debug("sending '%s' to %s" % (str(data), str(self.remote)))
+            logging.log(1, "sending '%s' to %s" % (str(data), str(self.remote)))
             slip = SLIP();
             slip+=data;
             sdata=str(slip.getData())

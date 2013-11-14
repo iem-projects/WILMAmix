@@ -75,7 +75,7 @@ class serverUDP(serverAbstract.serverAbstract):
     def _send(self, data):
         from PySide.QtNetwork import QHostAddress
         if self.socket is not None and self.remote is not None:
-            logging.debug( "serverUDPy.sending '%s' to %s" % (str(data), str(self.remote)))
+            logging.log(1, "serverUDP(PySide).sending '%s' to %s" % (str(data), str(self.remote)))
             self.socket.writeDatagram(data, QHostAddress(self.remote[0]), self.remote[1])
 
     def getPort(self):
