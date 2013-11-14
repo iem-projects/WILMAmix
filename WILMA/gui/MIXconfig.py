@@ -147,7 +147,7 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         self.mixer.setSync(state)
     def _select_debugLevel(self, value):
         lvl=self.debugLevel.currentText()
-        logging_.getLogger().setLevel(lvl)
+        WILMA.logger.setLevel(lvl)
 ######################################################################
 if __name__ == '__main__':
     import sys
