@@ -186,20 +186,21 @@ def OSCArgument(next):
     OSC binary representations, returning a
     (typetag, data) tuple."""
 
-    if type(next) == type(''):
+    typ=type(next)
+    if str     == typ:
         OSCstringLength = math.ceil((len(next)+1) / 4.0) * 4
         binary  = struct.pack('>%ds' % (OSCstringLength), next)
         tag = 's'
-    elif type(next) == type(3.1415):
+    elif float == typ:
         binary  = struct.pack('>f', next)
         tag = 'f'
-    elif type(next) == type(42):
+    elif int   == typ:
         binary  = struct.pack('>i', next)
         tag = 'i'
-    elif type(next) == type(long(0)):
+    elif long  == typ:
         binary  = struct.pack('>q', next)
         tag = 'h'
-    elif type(next) == type(True):
+    elif bool  == typ:
         binary = ''
         if next is True:
             tag = 'T'
