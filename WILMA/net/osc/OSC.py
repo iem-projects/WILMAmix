@@ -54,7 +54,7 @@ def hexDump(bytes):
 class OSCException(Exception):
     pass
 
-class OSCMessage:
+class OSCMessage(object):
     """Builds typetagged OSC messages."""
     def __init__(self):
         self.address  = ""
@@ -298,7 +298,7 @@ def decodeOSC(data):
     return decoded
 
 
-class CallbackManager:
+class CallbackManager(object):
     """This utility class maps OSC addresses to callables.
 
     The CallbackManager calls its callbacks with a list

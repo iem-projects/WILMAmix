@@ -22,7 +22,7 @@ from OSC import OSCMessage, decodeOSC
 import socket
 import struct
 
-class Bundle:
+class Bundle(object):
     def __init__(self, oscprefix=None, timestamp=None):
         b = OSCMessage()
         b.address = ""
