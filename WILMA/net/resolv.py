@@ -20,42 +20,42 @@
 
 from PySide.QtNetwork import QHostInfo, QHostAddress
 
-def getAddress(hostname, IPv4=None):
-# IPv4=true: prefer IPv4 addresses (if there are none, the function might still return IPv6)
-# IPv4=false: prefer IPv6 addresses (if there are none, the function might still return IPv4)
-# IPv4=None: first available address returned
+def getAddress(hostname, preferIPv6=None):
+# IPv6=true: prefer IPv6 addresses (if there are none, the function might still return IPv4)
+# IPv6=false: prefer IPv4 addresses (if there are none, the function might still return IPv6)
+# IPv6=None: first available address returned
     info=QHostInfo()
     adr=info.fromName(hostname).addresses()
     if not adr: return None
-    if IPv4 is None:
+    if preferIPv6 is None:
         return adr[0].toString()
     for a_ in adr:
         a=QHostAddress(a_)
-        if IPv4:
-            if a.toIPv4Address():
+        if preferIPv6:
+            if a.toIPv6Address():
                 return a.toString()
         else:
-            if a.toIPv6Address():
+            if a.toIPv4Address():
                 return a.toString()
     return adr[0].toString()
 
 if __name__ == '__main__':
-    def testfun(name, ipv4):
-        addr=getAddress(name, ipv4)
+    def testfun(name, ipv6):
+        addr=getAddress(name, ipv6)
         print("%s -> %s" % (name, addr))
 
     import sys
     progname=sys.argv[0]
-    ipv4=None
+    ipv6=None
     args=[]
     if len(sys.argv)>1:
         s=sys.argv[1]
         if s.startswith('-'):
             args=sys.argv[2:]
             if "-ipv4" == s:
-                ipv4=True
+                ipv6=False
             elif "-ipv6" == s:
-                ipv4=False
+                ipv6=True
             else:
                 print("Usage: resolv.py [-ipv4|-ipv6] <host1> [<host2> ...]")
                 sys.exit(1)
@@ -64,6 +64,6 @@ if __name__ == '__main__':
     if not args:
         args=['localhost', 'umlautq', 'example.com']
     for h in args:
-        testfun(h,ipv4)
+        testfun(h,ipv6)
         
 
