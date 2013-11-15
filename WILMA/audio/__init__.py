@@ -7,4 +7,4 @@ __license__ = "GNU General Public License"
 __all__ = ["AudioMixer", "AudioMeter" ]
 
 from mixer import AudioMixer
-from meter import AudioMeter
+#from meter import AudioMeter
