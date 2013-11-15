@@ -23,6 +23,7 @@ logging = logging_.getLogger('WILMA.net.client.UDP.PySide')
 from PySide.QtNetwork import QUdpSocket, QHostAddress
 
 import clientAbstract
+import resolv
 
 class clientUDP(clientAbstract.clientAbstract):
     """ OSC-client running on GOD.
@@ -33,11 +34,12 @@ class clientUDP(clientAbstract.clientAbstract):
     def __init__(self, host, port, oscprefix='', verbose=False):
         super(clientUDP, self).__init__(oscprefix=oscprefix, verbose=verbose)
         self.keepListening=True
+        adr=resolv.getAddress(host, False)
 
         self.socket = QUdpSocket()
         self.socket.readyRead.connect(self._callback)
-        self.socket.connectToHost(host, port);
-        self.remote = (self.socket.peerName(), self.socket.peerPort())
+        self.socket.connectToHost(adr, port);
+        self.remote = (adr, self.socket.peerPort())
 
     def __del__(self):
         self.shutdown()
