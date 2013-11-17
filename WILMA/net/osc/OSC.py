@@ -105,6 +105,8 @@ class OSCMessage(object):
 
     def __repr__(self):
         return self.getBinary()
+    def data(self):
+        return self.getBinary()
 
 def readString(data):
     length   = string.find(data,"\0")
