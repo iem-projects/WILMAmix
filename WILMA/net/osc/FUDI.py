@@ -64,6 +64,31 @@ class FUDI(object):
         self.manager.handle(osc.data())
         return self.fudiarray
 
+    def getOSC(self, fudi):
+        """get OSC from FUDI"""
+        arr=fudi.split(' ') # LATER handle escaped spaces ('\ ')
+        osc=OSC.OSCMessage()
+        addr=str(arr[0])
+        if not addr.startswith('/'):
+            addr='/'+addr
+        osc.setAddress(addr)
+        for a in arr[1:]:
+            if "bang" == a:
+                osc.append(None)
+                continue
+
+            try:
+                osc.append(int(a))
+                continue
+            except ValueError: pass
+            try:
+                osc.append(float(a))
+                continue
+            except ValueError: pass
+
+            osc.append(a)
+        return osc
+
 if __name__ == "__main__":
     #    print("Welcome to the OSC/FUDI testing program.")
     def getFUDI(msg):
