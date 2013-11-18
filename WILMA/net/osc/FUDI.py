@@ -94,6 +94,9 @@ if __name__ == "__main__":
     def getFUDI(msg):
         f=FUDI()
         return f.getFUDI(msg)
+    def getOSC(msg):
+        f=FUDI()
+        return f.getOSC(msg)
     def testFUDI():
         message = OSC.OSCMessage()
         message.setAddress("/foo/play")
@@ -103,12 +106,17 @@ if __name__ == "__main__":
         #message.append(True)
         #message.append(None)
         message.append("the white shiny cliffs of dover")
-        for a in getFUDI(message):  print a
+        print("org: %s" % (message))
+        for a in getFUDI(message):
+                o=getOSC(a)
+                print("%s -> %s" % (a,o))
 
         bundle = OSCBundle()
         bundle.append(message)
         bundle+=message
-        #print("bundle: %s" % getFUDI(bundle))
-        for a in getFUDI(bundle):  print a
+        print("bundle: %s" % (bundle))
+        for a in getFUDI(bundle):
+                o=getOSC(a)
+                print("%s -> %s" % (a,o))
 
     testFUDI()
