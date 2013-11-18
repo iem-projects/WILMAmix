@@ -59,9 +59,9 @@ class FUDI(object):
             s="] %d;" % depth
         self.fudiarray+=[s]
 
-    def getFUDI(self, msg):
+    def getFUDI(self, osc):
         self.fudiarray=[]
-        self.manager.handle(msg.data())
+        self.manager.handle(osc.data())
         return self.fudiarray
 
 if __name__ == "__main__":
