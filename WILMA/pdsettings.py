@@ -440,6 +440,8 @@ def parseArgFile(filename=None, result=dict()):
         return result
     arr=[]
     for l in content:
+        if l.startswith('#'): ## ignore comments
+            continue
         try:
             x,y=l.split(' ', 1)
             arr.append(x)
@@ -461,6 +463,8 @@ def parseFile(filename=None, result=dict()):
         ## file not found or unreadable
         return result
     for l in content:
+        if l.startswith('#'): ## ignore comments
+            continue
         x,y=l.split(':', 1)
         d[x.strip()]=y.strip()
 
