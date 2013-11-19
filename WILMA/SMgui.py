@@ -144,6 +144,9 @@ class SMgui:
         return self.timestamp
 
     def alive(self, isAlive=False):
+        ## keepalive logic
+        ## automatically disables SMgui
+        ##  if this get's called a number of times without reset
         if isAlive:
             self.pingcounter=0
         else:
@@ -162,7 +165,8 @@ class SMgui:
 
     def ping(self):
         self.alive()
-        self.connection.sendMsg('/ping')
+        if self._enabled:
+            self.connection.sendMsg('/ping')
     def send(self, msg, data=None):
         self.connection.send(msg, data)
 
@@ -319,14 +323,15 @@ class SMgui:
         value=data[0]
         self.config.setLogLevel(value)
     def _smiProcess(self, addr, typetags, data, source):
+        if not self.selected(): return
         self.mixer.sendProxy(self.oscprefix+addr[0], data)
     def _smiVersion(self, addr, typetags, data, source):
         value=data[0]
         self.settings['/version']=value
     def proxyForward(self, addr, data=None, prefix=''):
         """proxy->SMi"""
-        if not self.selected():
-            return
+        ## only forward data if this SMi is in use
+        if not self.selected(): return
         self.send(prefix+addr, data)
 
     def _processProxyCallback(self, addr, typetags, data, source):
