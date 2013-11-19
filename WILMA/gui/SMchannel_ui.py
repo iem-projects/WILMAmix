@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'SMchannel.ui'
 #
-# Created: Thu Jun 13 15:23:55 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.1.1
+# Created: Wed Nov 20 00:48:57 2013
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -39,6 +39,6 @@ class Ui_SMchannel(object):
         SMchannel.setWindowTitle(QtGui.QApplication.translate("SMchannel", "SMi", None, QtGui.QApplication.UnicodeUTF8))
         SMchannel.setTitle(QtGui.QApplication.translate("SMchannel", "SMi", None, QtGui.QApplication.UnicodeUTF8))
         self.launchButton.setText(QtGui.QApplication.translate("SMchannel", "START", None, QtGui.QApplication.UnicodeUTF8))
-        self.configButton.setText(QtGui.QApplication.translate("SMchannel", "Config", None, QtGui.QApplication.UnicodeUTF8))
+        self.configButton.setText(QtGui.QApplication.translate("SMchannel", "Settings", None, QtGui.QApplication.UnicodeUTF8))
 
 from qsynthMeter import qsynthMeter
