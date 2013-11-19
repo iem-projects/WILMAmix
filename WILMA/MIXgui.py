@@ -27,6 +27,19 @@ import net
 from gui import SMmixer, MIXctl, MIXconfig
 from gui import ThreadedInvoke
 
+def _pdargs(settings):
+    import pdsettings
+    import os.path
+    # first get the audio-settings from the ~/.pdsettings file
+    mediasettings=pdsettings.getArgs(pdsettings.parseFile(), audio=True, midi=True, gui=False, misc=False)
+    d=pdsettings.parseArgs(mediasettings)
+    d=pdsettings.parseArgs(settings, d)
+    argfile=os.path.join(os.path.expanduser('~'), '.config', 'wilma.iem.at', 'wilmix.pdrc')
+
+    d=pdsettings.parseArgFile(argfile, d)
+    return ['-noprefs']+pdsettings.getArgs(d)
+
+
 class StreamReceiver:
     def __init__(self, parent, autostart=True):
         self.parent=None
@@ -37,17 +50,17 @@ class StreamReceiver:
         self.parent=parent
         self.settings=parent.settings
         self.receiverStateCb = ThreadedInvoke.Invoker(self.parent._receiverStateCb)
+
+        pdargs=_pdargs([
+                '-nogui',
+                '-nrt',
+                ])
         import pdserver
+
         self.server = pdserver.pdserver(mainpatch='_WILMAmix.pd',
                                         workingdir=self.settings['/path/out'],
                                         backend='gui',
-                                        pdargs=[
-                                                '-nogui',
-                                                '-nrt',
-                                                '-inchannels', '0',
-                                                '-outchannels', '12',
-                                                ]
-                                        )
+                                        pdargs=pdargs)
         self.removeAll()
         if autostart:
             self.server.start()
