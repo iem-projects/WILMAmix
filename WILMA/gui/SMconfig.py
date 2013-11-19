@@ -134,7 +134,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def _select_networkInterface(self, value):
         self.settings['/network/interface']=self.interfaces[value]
     def _select_mode(self, value):
-        # ['stream', 'record', 'process']
+        # ['stream', 'record', 'process', 'idle']
         mode=self.settings['/mode']
         if value is 0:
             mode='stream'
@@ -142,6 +142,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
             mode='record'
         elif value is 2:
             mode='process'
+        elif value is 3:
+            mode='idle'
         else:
             logging.warn("invalid mode '%s': falling back to '%s'" % (str(value), mode))
         self.settings['/mode']=mode
@@ -173,6 +175,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         if   'stream'  == mode: imode=0
         elif 'record'  == mode: imode=1
         elif 'process' == mode: imode=2
+        elif 'idle'    == mode: imode=3
         self.modeSelector.setCurrentIndex(imode)
         # stream: protocol
         mode=self.settings['/stream/protocol']
