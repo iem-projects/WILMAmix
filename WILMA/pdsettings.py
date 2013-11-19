@@ -427,7 +427,11 @@ def _fileDevices(d, prefix):
                 pass
     return result
 
-def parseArgFile(filename, result=dict()):
+def parseArgFile(filename=None, result=dict()):
+    if filename is None:
+        import os.path
+        filename=os.path.join(os.path.expanduser('~'), '.pdrc')
+
     try:
         with open(filename, 'r') as f:
             content = f.readlines()
@@ -449,6 +453,7 @@ def parseFile(filename=None, result=dict()):
     if filename is None:
         import os.path
         filename=os.path.join(os.path.expanduser('~'), '.pdsettings')
+
     try:
         with open(filename, 'r') as f:
             content = f.readlines()
