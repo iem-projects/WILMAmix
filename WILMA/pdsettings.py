@@ -427,10 +427,34 @@ def _fileDevices(d, prefix):
                 pass
     return result
 
-def parseFile(filename, result=dict()):
+def parseArgFile(filename, result=dict()):
+    try:
+        with open(filename, 'r') as f:
+            content = f.readlines()
+    except IOError:
+        ## file not found or unreadable
+        return result
+    arr=[]
+    for l in content:
+        try:
+            x,y=l.split(' ', 1)
+            arr.append(x)
+            arr.append(y.strip())
+        except ValueError:
+            arr.append(l.strip())
+    return parseArgs(arr, result)
+
+def parseFile(filename=None, result=dict()):
     d=dict()
-    with open(filename, 'r') as f:
-        content = f.readlines()
+    if filename is None:
+        import os.path
+        filename=os.path.join(os.path.expanduser('~'), '.pdsettings')
+    try:
+        with open(filename, 'r') as f:
+            content = f.readlines()
+    except IOError:
+        ## file not found or unreadable
+        return result
     for l in content:
         x,y=l.split(':', 1)
         d[x.strip()]=y.strip()
