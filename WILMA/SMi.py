@@ -198,10 +198,15 @@ class SMi:
             pass
         self.pd.send('/control/load/process',[inlets, outlets, 'MAIN'])
         return True
+    def _reloadIdle(self):
+        if 'idle' == self.settings['/mode']:
+            self.pd.send('/control/load/idle',[])
+            return True
+        return False
 
     def _mode(self, addr, typetags, data, source):
         self.settings['/mode']=str(data[0]).lower()
-        if self._reloadStream() or self._reloadRecord() or self._reloadProcess():
+        if self._reloadStream() or self._reloadRecord() or self._reloadProcess() or self._reloadIdle():
             pass
     def _hasSettingChanged(self, key, value):
         if not key in self.settings:
