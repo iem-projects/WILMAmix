@@ -697,11 +697,11 @@ def getArgs(settings, audio=True, midi=True, gui=True, misc=True):
 
     return result
 
-
 ######################################################################
 
 if __name__ == '__main__':
     import sys
+    print("DEFAULTARGS: %s" % (parseFile()))
     for arg in sys.argv[1:]:
         try:
             pd = parseArgs(getArgs(parseFile(arg), audio=True, midi=False, misc=False, gui=False))
