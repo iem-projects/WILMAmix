@@ -45,7 +45,7 @@ class SMgui:
             p=os.path.expanduser(self.settings[path])
             self.settings[path]=p
         self.settings['/version']='(unknown)'
-        self._enabled = True
+        self._enabled = False
         self.running=False
         self.netconfs=netconfs
         self.connection=None
@@ -72,6 +72,7 @@ class SMgui:
         self.channels.launchButton.setText(self.settings['/mode'].upper())
         if netconfs is not None:
             warnings.warn("FIXXME: netconfs not yet used in SMgui: %s" % str(netconfs))
+        self.select(self._enabled)
 
     def __del__(self):
         self.shutdown()
