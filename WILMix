@@ -39,7 +39,7 @@ args = parser.parse_args()
 
 
 from PySide.QtGui import QDialog, QApplication, QVBoxLayout, QIcon
-
+from PySide.QtCore import Qt
 from WILMA import MIXgui, logger
 
 class _Form(QDialog):
@@ -53,6 +53,14 @@ class _Form(QDialog):
         # Set dialog layout
         self.setLayout(layout)
         self.setWindowIcon(QIcon('WILMA/gui/icons/micro-wireless.png'))
+
+    def closeEvent(self, event):
+        event.ignore()
+
+    def keyPressEvent(self, event):
+        if Qt.Key.Key_Escape != event.key():
+            super(QDialog, self).keyPressEvent(event)
+
 if __name__ == '__main__':
     if args.logfile is None:
 	    args.logfile='stderr'
