@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'SMconfig.ui'
 #
-# Created: Wed Nov 20 00:48:57 2013
+# Created: Thu Nov 21 12:57:20 2013
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -202,6 +202,8 @@ class Ui_SMconfig(object):
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.launchButton = QtGui.QPushButton(self.frameButtons)
+        self.launchButton.setMinimumSize(QtCore.QSize(120, 0))
+        self.launchButton.setCheckable(True)
         self.launchButton.setObjectName("launchButton")
         self.horizontalLayout_2.addWidget(self.launchButton)
         spacerItem = QtGui.QSpacerItem(200, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
