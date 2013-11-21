@@ -27,13 +27,17 @@ class clientAbstract(object):
     """
 
     def __init__(self, oscprefix=None, verbose=False):
-        self.addressManager = osc.CallbackManager(prefix=oscprefix, verbose=verbose)
+        self.realAddressManager = osc.CallbackManager(prefix=oscprefix, verbose=verbose)
         if oscprefix is None:
             self.oscPrefix=''
         else:
             self.oscPrefix=oscprefix
         self.verbose=verbose
         self.remote =None
+
+        self.disabled=False
+        self.addressManager=None
+        self.enable(True)
 
     def __del__(self):
         self.shutdown()
@@ -71,6 +75,7 @@ class clientAbstract(object):
             self._send(bundle.message)
     def send(self, addr, data=None):
         """send an OSC-bundle `send(bundle)` or an OSC-message `send('/address', [data])` to remote-side"""
+        if self.disabled: return
         if type(addr) is str: # it's an addr/data pair
             self.sendMsg(addr, data)
         elif data is None:    # it's a bundle
@@ -82,6 +87,14 @@ class clientAbstract(object):
         """returns a (host, port) tuple of the remote-side (aka: server)"""
         return self.remote
 
+    def enable(self, state=None):
+        if state is not None:
+            self.disabled = not bool(state)
+        if self.disabled:
+            self.addressManager = None
+        else:
+            self.realAddressManager = None
+        return self.disabled
 
 
 ######################################################################

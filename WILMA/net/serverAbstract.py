@@ -36,13 +36,18 @@ class serverAbstract(object):
 
         self.remote = None # tuple describing the remote-side (host, port)
         self.port   = port # local listening port
-        self.addressManager = osc.CallbackManager(prefix=oscprefix, verbose=verbose)
+        self.realAddressManager = osc.CallbackManager(prefix=oscprefix, verbose=verbose)
         self.publisher=None
         publishname=oscprefix
         if publishname is not None:
             while publishname.startswith('/'):
                 publishname=publishname[1:]
         self.publishname=publishname
+
+        self.disabled=False
+        self.addressManager=None
+        self.enable(True)
+
     def __del__(self):
         self.shutdown()
 
@@ -79,6 +84,7 @@ class serverAbstract(object):
             else:
                 self._send(bundle.message)
     def send(self, addr, data=None):
+        if self.disabled: return
         if type(addr) is str: # it's an addr/data pair
             self.sendMsg(addr, data)
         elif data is None:    # it's a bundle
@@ -90,6 +96,16 @@ class serverAbstract(object):
         return self.port
     def getRemote(self):
         return self.remote
+
+    def enable(self, state=None):
+        if state is not None:
+            self.disabled = not bool(state)
+        if self.disabled:
+            self.addressManager=None
+        else:
+            self.addressManager=self.realAddressManager
+
+        return self.disabled
 
 ######################################################################
 ## no testing (this is an abstract class)
