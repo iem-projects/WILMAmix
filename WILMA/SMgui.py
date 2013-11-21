@@ -68,8 +68,8 @@ class SMgui:
         self.channels=SMchannel.SMchannel(self, guiparent=guiparent, settings=self.settings, maxwidth=maxwidth)
         self.config=SMconfig.SMconfig(self, guiparent=guiparent, settings=self.settings, interfaces=interfaces)
         self.name = name
+        self._setLaunchLabel(self.settings['/mode'].upper())
 
-        self.channels.launchButton.setText(self.settings['/mode'].upper())
         if netconfs is not None:
             warnings.warn("FIXXME: netconfs not yet used in SMgui: %s" % str(netconfs))
         self.select(self._enabled)
@@ -193,7 +193,7 @@ class SMgui:
             changed|=self._hasSettingChanged(s, settings)
             bundle.append((s, [self.settings[s]]))
 
-        self.channels.launchButton.setText(self.settings['/mode'].upper())
+        self._setLaunchLabel(self.settings['/mode'].upper())
 
         ## TODO: if things have changed significantly, stop processing
         if changed:
@@ -251,17 +251,25 @@ class SMgui:
         bundle.append(('/record/timestamp', [starttime]))
         bundle.append(('/record/filename',  [_datetime.datetime.now().strftime('%Y%m%d-%H%M')]))
         bundle.append(('/process', [state]))
-        self.running=state
-        self.channels.setLaunched(self.running)
+        self.setLaunched(state)
         self.connection.send(bundle)
+
+    def setLaunched(self, state):
+        #print("SMgui: launched %s" % (state))
+        if state is not None:
+            self.running=state
+            self.channels.setLaunched(state)
+            self.config.setLaunched  (state)
+        return self.running
 
     def _smiMode(self, addr, typetags, data, source):
         self.settings['/mode']=data[0]
-        self.channels.launchButton.setText(self.settings['/mode'].upper())
+        self._setLaunchLabel(self.settings['/mode'].upper())
     def _smiState(self, addr, typetags, data, source):
         state=data[0]
-        self.running=state
-        self.channels.setLaunched(self.running)
+        running=bool(state)
+        self.running=running
+        self.setLaunched(self.running)
     def _smiStatePd(self, addr, typetags, data, source):
         state=data[0]
         # Pd either crashed or recovered; in any case, we stop
@@ -356,6 +364,9 @@ class SMgui:
         subtree=self.oscprefix+'/'
         proxy.add(self._proxyCallback, subtree)
 
+    def _setLaunchLabel(self, label):
+        self.channels.launchButton.setText(label)
+        self.config.launchButton.setText(label)
 
 ######################################################################
 if __name__ == '__main__':

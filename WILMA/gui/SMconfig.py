@@ -96,6 +96,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.setLogLevel(WILMA.logger.getLevel())
         self._connect()
     def _connect(self):
+        self.launchButton.clicked.connect(self._do_launch)
+
         self.closeButtons.accepted.connect(self._do_accept)
         self.closeButtons.rejected.connect(self._do_reject)
         self.closeButtons.button(QtGui.QDialogButtonBox.Apply).clicked.connect(self._do_accept)
@@ -113,6 +115,9 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 
         self.gainFader.valueChanged.connect(self._moved_gainFader)
         self.debugLevel.currentIndexChanged.connect(self._select_debugLevel)
+
+    def _do_launch(self):
+        self.sm.launch(self.launchButton.isChecked())
 
     def _do_accept(self):
         self.sm.applySettings(self.settings)
@@ -262,6 +267,12 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.stateSyncExt.setChecked(value)
     def setSyncInternal(self, value):
         self.stateSyncInt.setChecked(value)
+    def setLaunched(self, state):
+        """called from outside to set/get the current state.
+        MUST NOT call launch again (but should update GUI if needed)"""
+        if state is not None:
+            self.launchButton.setChecked(state)
+        return self.launchButton.isChecked()
 
 ######################################################################
 if __name__ == '__main__':
