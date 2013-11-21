@@ -131,12 +131,16 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 
     def _select_streamProtocol(self, value):
         self.settings['/stream/protocol']=_streamProtocols[value]
+        self._setApplyable(True)
     def _select_streamProfile(self, value):
         self.settings['/stream/profile']=_streamProfiles[value]
+        self._setApplyable(True)
     def _select_streamChannels(self, value):
         self.settings['/stream/channels']=value
+        self._setApplyable(True)
     def _select_networkInterface(self, value):
         self.settings['/network/interface']=self.interfaces[value]
+        self._setApplyable(True)
     def _select_mode(self, value):
         # ['stream', 'record', 'process', 'idle']
         mode=self.settings['/mode']
