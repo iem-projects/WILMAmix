@@ -303,7 +303,6 @@ class MIXgui:
 
     def _receiverStateCb(self, state):
         if(self.mixctl.scanEnable(state)):
-            print "recieverState", state
             self.scanSM(state)
 
     def proxyClientEnable(self, state):
