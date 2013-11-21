@@ -73,23 +73,24 @@ def _getGAUGE(smbus, sleep=1.0, event=None):
     runtime=0.
     state=0
 
-    exception=None
-    try:
-        charge  = smbus.read_word_data(gaugeAddr,
-                                            cmdRelativeStateOfCharge)
-        if _sleep(sleep, event):return (charge, runtime, state)
+    if False:
+        exception=None
+        try:
+            charge  = smbus.read_word_data(gaugeAddr,
+                                                cmdRelativeStateOfCharge)
+            if _sleep(sleep, event):return (charge, runtime, state)
 
-        runtime = smbus.read_word_data(gaugeAddr,
-                                            cmdRunTimeToEmpty)
-        if _sleep(sleep, event):return (charge, runtime, state)
+            runtime = smbus.read_word_data(gaugeAddr,
+                                                cmdRunTimeToEmpty)
+            if _sleep(sleep, event):return (charge, runtime, state)
 
-        state   = smbus.read_word_data(gaugeAddr,
-                                            cmdBatteryStatus)
+            state   = smbus.read_word_data(gaugeAddr,
+                                                cmdBatteryStatus)
 
-        if _sleep(sleep, event):return (charge, runtime, state)
-    except IOError as e:
-        exception=e
-        pass # hopefully a temporary error...
+            if _sleep(sleep, event):return (charge, runtime, state)
+        except IOError as e:
+            exception=e
+            pass # hopefully a temporary error...
 
     return (charge/100., runtime, state)
 def _getPIC(smbus, sleep=1.0, event=None):
