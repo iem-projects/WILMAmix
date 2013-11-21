@@ -18,16 +18,21 @@ BUG:net.serverTCP:
 BUG:WILMAsm:
   Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
 
-BUG:SMi-TimeStamps
-  Q: after soe time (e.g. when running overnight) the timestamps arriving in
-     WILMix become "None"
-     restarting Pd (sending a TERM signal) seems to fix the problem(?!)
-
 feature:WILMix.StreamReceiver
   Q: monitor current state of StreamReceiver
      (and if SR crashes, re-create the receivers)
 
+BUG:net:
+  Q: sometimes an SMi does not respond after it was successfully scanned
+     (it greys out after some secs, so it never replies any pings)
+
 ------------------------------------
+
+BUG:SMi-TimeStamps
+  Q: after some time (e.g. when running overnight) the timestamps arriving in
+     WILMix become "None"
+     restarting Pd (sending a TERM signal) seems to fix the problem(?!)
+  A: turned out to be a problem with 64bit integers. fixed
 
 GUI.MIXConfig:
   Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
