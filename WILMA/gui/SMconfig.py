@@ -116,10 +116,10 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 
     def _do_accept(self):
         self.sm.applySettings(self.settings)
-        self._setApplyable(False)
+        self._significantChange(False)
     def _do_reject(self):
         self.sm.showConfig()
-        self._setApplyable(False)
+        self._significantChange(False)
 
     def _do_copyConfig(self):
         self.sm.copySettings(self.settings)
@@ -131,16 +131,16 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 
     def _select_streamProtocol(self, value):
         self.settings['/stream/protocol']=_streamProtocols[value]
-        self._setApplyable(True)
+        self._significantChange(True)
     def _select_streamProfile(self, value):
         self.settings['/stream/profile']=_streamProfiles[value]
-        self._setApplyable(True)
+        self._significantChange(True)
     def _select_streamChannels(self, value):
         self.settings['/stream/channels']=value
-        self._setApplyable(True)
+        self._significantChange(True)
     def _select_networkInterface(self, value):
         self.settings['/network/interface']=self.interfaces[value]
-        self._setApplyable(True)
+        self._significantChange(True)
     def _select_mode(self, value):
         # ['stream', 'record', 'process', 'idle']
         mode=self.settings['/mode']
@@ -155,8 +155,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         else:
             logging.warn("invalid mode '%s': falling back to '%s'" % (str(value), mode))
         self.settings['/mode']=mode
-        self._setApplyable(True)
-    def _setApplyable(self, state):
+        self._significantChange(True)
+    def _significantChange(self, state):
         self.closeButtons.setEnabled(state)
         self.copyConfigButton.setEnabled(not state)
     def _select_debugLevel(self, value):
