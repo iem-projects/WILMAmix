@@ -93,7 +93,7 @@ class clientAbstract(object):
         if self.disabled:
             self.addressManager = None
         else:
-            self.realAddressManager = None
+            self.addressManager = self.realAddressManager
         return self.disabled
 
 
