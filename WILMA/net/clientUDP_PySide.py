@@ -62,7 +62,8 @@ class clientUDP(clientAbstract.clientAbstract):
         '''Asynchronous connection listener. Receives data and passes it to OSC-addressManager.'''
         while self.socket.hasPendingDatagrams():
             datagram, sender, senderPort = self.socket.readDatagram(self.socket.pendingDatagramSize())
-            self.addressManager.handle(datagram.data(), (sender.toString(), senderPort))
+            if self.addressManager:
+                self.addressManager.handle(datagram.data(), (sender.toString(), senderPort))
 
     def _send(self, data):
         if self.socket is not None and self.remote is not None:

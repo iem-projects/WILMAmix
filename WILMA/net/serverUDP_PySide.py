@@ -69,8 +69,9 @@ class serverUDP(serverAbstract.serverAbstract):
         '''Asynchronous connection listener. Receives data and passes it to OSC-addressManager.'''
         while self.socket.hasPendingDatagrams():
             datagram, sender, senderPort = self.socket.readDatagram(self.socket.pendingDatagramSize())
-            self.remote=(sender.toString(), senderPort)
-            self.addressManager.handle(datagram.data(), self.remote)
+            if self.addressManager is not None:
+                self.remote=(sender.toString(), senderPort)
+                self.addressManager.handle(datagram.data(), self.remote)
 
     def _send(self, data):
         from PySide.QtNetwork import QHostAddress
