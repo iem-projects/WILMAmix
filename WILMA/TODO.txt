@@ -9,58 +9,7 @@ pd.SMi:
 				bufsize:0 dacoffset:0
 	abstraction: adc2send (multichannel)
 
-RTP.recvr.packetloss:
-  Q: request re-transmission of lost packets
-
-BUG:net.serverTCP:
-  Q: quitting might result in: "socket.error: [Errno 104] Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
-
-BUG:WILMAsm:
-  Q: KeyboardInterrupt restarts Pd (on umlautO, not ferrari)
-
-feature:WILMix.StreamReceiver
-  Q: monitor current state of StreamReceiver
-     (and if SR crashes, re-create the receivers)
-
-BUG:net:
-  Q: sometimes an SMi does not respond after it was successfully scanned
-     (it greys out after some secs, so it never replies any pings)
-
 ------------------------------------
-
-BUG:SMi-TimeStamps
-  Q: after some time (e.g. when running overnight) the timestamps arriving in
-     WILMix become "None"
-     restarting Pd (sending a TERM signal) seems to fix the problem(?!)
-  A: turned out to be a problem with 64bit integers. fixed
-
-GUI.MIXConfig:
-  Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
-  A: done
-
-Proxy:
-  Q: proxy data for external application (sendto 'host:port', recv 'port'; recv is a server)
-  A: done
-
-GUI.SMi/SMiConfig:
-  Q: reflect current mode in "START" button
-  A: done
-
-sync:
-  Q: write modules for file sync
-  A: rsync
-
-sfwrite:
-  Q: write module that dumps audio to file
-  A: done (via Pd)
-
-process:
-  Q: write module that runs Pd
-  A: done (via Pd)
-
-OSC:
-  Q: sub-tree patterns (e.g. '/foo/' matches '/foo/bar/baz')
-  A: done
 
 RTPclient:
   Q: implement RTP-receiver (in Pd)
@@ -79,10 +28,6 @@ RTSPserver:
 import:
   Q: WILMAsm.py requires 'python-psutil'?
 
-naming:
-  Q: rename WILMA to WILMA (WILMA is really only the fund that sponsors the project)
-  A: done
-
 BUG:udpclient
   Q: sometimes iemnet's [udpclient] does not receive any data
   A: probably fixed with iemnet#ce45ba70026adfe992ec11193a7edfbb2ee1c1ec
@@ -90,43 +35,3 @@ BUG:udpclient
 BUG:udpclient
   Q: every 2nd automatically assigned does not receive data
   A: probably fixed with iemnet#ce45ba70026adfe992ec11193a7edfbb2ee1c1ec
-
-BUG:modeswitching
-  Q: switching between modes will send a "/<newmode>/stop" message to the SMi before "/control/load/<newmode>"
-     it really should send "/<oldmode>/stop"!
-  A: we only send "/stop" which will stop everything
-
-RTP.recvr.sync:
-  Q: implement RTP-receiver synchronization
-  A: done
-
-GUI.recvr.sync:
-  Q: allow user to manually trigger a sync request (or receive streams without sync)
-     ideally, only 'selected' SMis would try to sync
-  A: sync-all is implemented
-
-BUG:disk-usage
-   Q: disk-usage should work on path/out
-   A: implemented
-
-BUG:record
-   Q: if the harddisk is full, Pd hangs...
-   A: stop recording if the disk is full
-   A: implemented
-
-recovery:
-   Q: when Pd-crashes, we should recover the last state (if possible)
-      (and if not possible and this was the SMi-Pd, turn off the "play" button)
-   A: implemented the simple solution (turning OFF the play-button)
-
-BUG:inout-paths
-  Q: WILMAsm fails to start if the out-path is not existing
-  A: create in/out paths at startup
-  A: implemented (and try to gracefully handle vanishing paths in 'systemhealth'
-
-BUG:daemon
-  Q: WILMAsm fails to start as daemon
-  A: fixed with python-daemon (well-behaved daemon)
-  A: fixed with start-stop-daemon (starting as non-root)
-
-
