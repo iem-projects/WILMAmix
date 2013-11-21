@@ -98,6 +98,7 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def _connect(self):
         self.closeButtons.accepted.connect(self._do_accept)
         self.closeButtons.rejected.connect(self._do_reject)
+        self.closeButtons.clicked.connect(self._do_selfapply)
 
         self.copyConfigButton.clicked.connect(self._do_copyConfig)
         self.pullButton.clicked.connect(self._do_pull)
@@ -113,10 +114,18 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.debugLevel.currentIndexChanged.connect(self._select_debugLevel)
 
     def _do_accept(self):
-        self.hide()
-        self.sm.applySettings(self.settings)
+        print("accept")
+#        self.hide()
+#        self.sm.applySettings(self.settings)
+        self._setApplyable(False)
     def _do_reject(self):
-        self.hide()
+        print("reject")
+#        self.hide()
+        self.closeButtons.setDisabled()
+        self._setApplyable(False)
+    def _do_selfapply(self, button):
+        print("apply? %s " %(button))
+
     def _do_copyConfig(self):
         self.sm.copySettings(self.settings)
 
@@ -147,6 +156,9 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         else:
             logging.warn("invalid mode '%s': falling back to '%s'" % (str(value), mode))
         self.settings['/mode']=mode
+        self._setApplyable(True)
+    def _setApplyable(self, state):
+        self.closeButtons.setEnabled(True)
     def _select_debugLevel(self, value):
         lvl=int(logging_.getLevelName(self.debugLevel.currentText()))
         self.sm.send('/log/level', [lvl])
