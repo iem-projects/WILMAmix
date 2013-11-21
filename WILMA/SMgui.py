@@ -138,6 +138,7 @@ class SMgui:
         else:             ## deselected
             self._enabled=False
         self.channels.setChecked(self._enabled)
+        self.pingcounter=0
     def selected(self):
         return self._enabled and self.channels.isChecked()
     def getTimestamp(self):
