@@ -155,7 +155,8 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
         self.settings['/mode']=mode
         self._setApplyable(True)
     def _setApplyable(self, state):
-        self.closeButtons.setEnabled(True)
+        self.closeButtons.setEnabled(state)
+        self.copyConfigButton.setEnabled(not state)
     def _select_debugLevel(self, value):
         lvl=int(logging_.getLevelName(self.debugLevel.currentText()))
         self.sm.send('/log/level', [lvl])
