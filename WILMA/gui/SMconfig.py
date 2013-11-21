@@ -98,7 +98,6 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
     def _connect(self):
         self.closeButtons.accepted.connect(self._do_accept)
         self.closeButtons.rejected.connect(self._do_reject)
-        self.closeButtons.clicked.connect(self._do_selfapply)
 
         self.copyConfigButton.clicked.connect(self._do_copyConfig)
         self.pullButton.clicked.connect(self._do_pull)
@@ -123,8 +122,6 @@ class SMconfig(QtGui.QDialog, SMconfig_ui.Ui_SMconfig):
 #        self.hide()
         self.closeButtons.setDisabled()
         self._setApplyable(False)
-    def _do_selfapply(self, button):
-        print("apply? %s " %(button))
 
     def _do_copyConfig(self):
         self.sm.copySettings(self.settings)
