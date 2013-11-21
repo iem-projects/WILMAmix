@@ -89,6 +89,8 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
         self.closeButtons.rejected.connect(self._do_reject)
         self.syncButton.clicked.connect(self._sync)
         self.debugLevel.currentIndexChanged.connect(self._select_debugLevel)
+        self.proxy_recvEnable.clicked.connect(self._select_recvEnable)
+        self.proxy_sendEnable.clicked.connect(self._select_sendEnable)
     def _do_accept(self):
         self.hide()
         self._getSettings()
@@ -148,6 +150,11 @@ class MIXconfig(QtGui.QDialog, MIXconfig_ui.Ui_MIXconfig):
     def _select_debugLevel(self, value):
         lvl=self.debugLevel.currentText()
         WILMA.logger.setLevel(lvl)
+    def _select_recvEnable(self):
+        self.mixer.proxyServerEnable(self.proxy_recvEnable.checkState())
+    def _select_sendEnable(self):
+        self.mixer.proxyClientEnable(self.proxy_recvEnable.checkState())
+
 ######################################################################
 if __name__ == '__main__':
     import sys
