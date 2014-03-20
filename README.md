@@ -35,6 +35,13 @@ All control communication is done via [OSC](http://opensoundcontrol.org).
 Audio data is sent back to the CU using RTSP/RTP, using a user-selected codec
 (currently: L16).
 
+Dependencies
+----
+dependencies refer to the Debian package names (unless indicated otherwise).
+deps prefixed with "+" are *absolute* (you really need them).
+deps prefixed with "=" are *optional* (you probably want them).
+
+
 Dependencies (WILMix)
 ----------------------
 + python
