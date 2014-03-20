@@ -52,6 +52,10 @@ Dependencies (WILMix)
 + python-netifaces
 + python-numpy
 + avahi-daemon
++ puredata
++ pd-iemnet
++ pd-osc
++ pd-iemrtp
 
 Dependencies (WILMAsm)
 ---------------------
@@ -60,14 +64,10 @@ Dependencies (WILMAsm)
 + python-pyalsa
 = python-smbus 
 = python-psutil
-//+ python-gst0.10
-//+ python-gst0.10-rtsp
 + avahi-daemon
-- gstreamer0.10-alsa
 + puredata
-
-
-Installation
-------------
-a patched version of 'puredata' (as found on
-http://github.com/umlaeute/pd-vanilla#beaglebone) must be available as 'pd'.
+ * for proper timestamping of audio data, a specially patched version of Pd is
+   used, available in the 'WILMA' branch at http://github.com/umlaeute/pd-vanilla
++ pd-iemnet
++ pd-osc
++ pd-iemrtp
