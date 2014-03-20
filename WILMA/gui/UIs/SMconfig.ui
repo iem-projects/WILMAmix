@@ -263,7 +263,7 @@
          <widget class="QComboBox" name="debugLevel">
           <property name="geometry">
            <rect>
-            <x>110</x>
+            <x>70</x>
             <y>20</y>
             <width>91</width>
             <height>22</height>
@@ -281,6 +281,22 @@
           </property>
           <property name="text">
            <string>LogLevel</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="debugIdentify">
+          <property name="geometry">
+           <rect>
+            <x>170</x>
+            <y>20</y>
+            <width>31</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="toolTip">
+           <string>identify SMi (blink)</string>
+          </property>
+          <property name="text">
+           <string>ID</string>
           </property>
          </widget>
         </widget>
