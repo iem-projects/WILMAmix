@@ -38,7 +38,7 @@
 #X obj 63 434 t a a;
 #X obj 289 261 t s b;
 #X obj 289 354 pack s s s s;
-#X msg 289 376 symbol \$4/\$3_\$1\$2.wav;
+#X msg 289 376 symbol \$4/\$3_\$1\$2.snd;
 #X obj 425 283 list prepend \$1;
 #X obj 425 305 route symbol;
 #X obj 425 327 symbol;
